@@ -1,0 +1,175 @@
+/**
+ * Cookie Consent Banner Styles
+ * Matches the Resplast design with light blue background and red buttons
+ */
+
+.cookie-consent-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 32px 100px;
+  align-items: start;
+  gap: 16px;
+  display: flex;
+  border-radius: 16px 16px 0 0;
+  background: var(--Extended-Extended-2, #dff2fd);
+  box-shadow: 0 -34px 60.5px 0 rgba(0, 0, 0, 0.16);
+  z-index: 9999;
+  transform: translateY(100%);
+  opacity: 0;
+  transition:
+    transform 0.3s ease-out,
+    opacity 0.3s ease-out;
+}
+
+.cookie-consent-banner.cookie-consent-visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.cookie-consent-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.cookie-consent-text {
+  flex: 1;
+  color: #1a1a1a;
+}
+
+.cookie-consent-title {
+  color: var(--Grey-Grey-1, #222);
+
+  /* DESKTOP/Header/Header 3 - 24px - Semibold */
+  font-family: 'Instrument Sans';
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 120%; /* 28.8px */
+  letter-spacing: -0.48px;
+  margin-bottom: 16px;
+}
+
+.cookie-consent-description {
+  color: var(--Grey-Grey-2, #3d3d3d);
+
+  /* DESKTOP/Body/Body 2/Body 2 - 16px - Regular */
+  font-family: 'Instrument Sans';
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 22.4px */
+}
+
+.cookie-policy-link {
+  color: var(--Grey-Grey-1, #222);
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.cookie-policy-link:hover {
+  color: #b91c1c;
+}
+
+.cookie-consent-actions {
+  display: flex;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+.cookie-btn {
+  padding: 0.875rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  font-family: inherit;
+}
+
+.cookie-btn-reject {
+  background: transparent;
+  color: #dc2626;
+  border-color: #dc2626;
+}
+
+.cookie-btn-reject:hover {
+  background: #dc2626;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+.cookie-btn-accept {
+  background: #dc2626;
+  color: white;
+  border-color: #dc2626;
+}
+
+.cookie-btn-accept:hover {
+  background: #b91c1c;
+  border-color: #b91c1c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+}
+
+/* .cookie-btn:focus {
+  outline: 2px solid #dc2626;
+  outline-offset: 2px;
+} */
+
+.cookie-btn:active {
+  transform: translateY(0);
+}
+
+/* Tablet and below */
+@media (max-width: 1024px) {
+  .cookie-consent-content {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cookie-consent-actions {
+    justify-content: flex-end;
+  }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .cookie-consent-banner {
+    padding: 1.5rem 1rem;
+  }
+
+  .cookie-consent-title {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .cookie-consent-description {
+    font-size: 0.875rem;
+  }
+
+  .cookie-consent-actions {
+    flex-direction: column-reverse;
+    gap: 0.75rem;
+  }
+
+  .cookie-btn {
+    padding: 0.75rem 1.5rem;
+    width: 100%;
+  }
+}
+
+/* Print styles - hide banner when printing */
+@media print {
+  .cookie-consent-banner {
+    display: none !important;
+  }
+}

@@ -1,0 +1,144 @@
+{
+    "key": "group_reports_meta",
+    "title": "Report Details",
+    "fields": [
+        {
+            "key": "field_report_published_date",
+            "label": "Published Date",
+            "name": "published_date",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "e.g., Sept 2024, March 2023",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 1,
+            "placeholder": "Sept 2024",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_report_document_file",
+            "label": "Document File",
+            "name": "document_file",
+            "aria-label": "",
+            "type": "file",
+            "instructions": "Upload the report document (PDF, DOC, XLS, etc.)",
+            "required": false,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "array",
+            "library": "all",
+            "mime_types": "pdf,doc,docx,xls,xlsx,ppt,pptx",
+            "min_size": 0,
+            "max_size": 0
+        },
+        {
+            "key": "field_report_download_link",
+            "label": "External Download Link",
+            "name": "download_link",
+            "aria-label": "",
+            "type": "url",
+            "instructions": "Use this if the file is hosted externally (optional if file is uploaded above)",
+            "required": false,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placeholder": "https:\/\/example.com\/report.pdf",
+            "default_value": ""
+        },
+        {
+            "key": "field_report_file_size",
+            "label": "File Size",
+            "name": "file_size",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "e.g., 2.5 MB, 1.2 GB (optional - for display purposes)",
+            "required": false,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placeholder": "2.5 MB",
+            "default_value": "",
+            "maxlength": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_report_featured",
+            "label": "Featured Report",
+            "name": "featured_report",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Mark this report as featured to highlight it",
+            "required": false,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 0,
+            "message": "",
+            "ui": 0,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_report_custom_order",
+            "label": "Custom Order (within category)",
+            "name": "custom_order",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Set a custom order number for this report within its category. Lower numbers appear first. Leave empty to use default sorting.",
+            "required": false,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "min": 0,
+            "max": "",
+            "step": 1,
+            "placeholder": "e.g., 1, 2, 3..."
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "reports"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 1,
+    "display_title": "",
+    "modified": 1761279186
+}

@@ -1,0 +1,229 @@
+{
+  "key": "group_accordion_block",
+  "title": "Accordion Block",
+  "fields": [
+    {
+      "key": "field_hide_accordion_block",
+      "label": "Hide Block",
+      "name": "hide_block",
+      "aria-label": "",
+      "type": "true_false",
+      "instructions": "Hide this block from displaying",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "message": "",
+      "ui": 1,
+      "ui_on_text": "",
+      "ui_off_text": ""
+    },
+    {
+      "key": "field_accordion_title",
+      "label": "Title",
+      "name": "title",
+      "aria-label": "",
+      "type": "text",
+      "instructions": "Main title for the accordion section",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "default_value": "Legal & Privacy Policy",
+      "placeholder": "",
+      "prepend": "",
+      "append": "",
+      "maxlength": ""
+    },
+    {
+      "key": "field_accordion_subtitle",
+      "label": "Subtitle",
+      "name": "subtitle",
+      "aria-label": "",
+      "type": "textarea",
+      "instructions": "Optional subtitle or description",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "default_value": "",
+      "placeholder": "",
+      "maxlength": ""
+    },
+    {
+      "key": "field_accordion_items",
+      "label": "Accordion Items",
+      "name": "accordion_items",
+      "aria-label": "",
+      "type": "repeater",
+      "instructions": "Add accordion items with title and content",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "collapsed": "",
+      "min": 0,
+      "max": 0,
+      "layout": "table",
+      "button_label": "Add Item",
+      "sub_fields": [
+        {
+          "key": "field_accordion_item_title",
+          "label": "Title",
+          "name": "item_title",
+          "aria-label": "",
+          "type": "text",
+          "instructions": "Title for this accordion item",
+          "required": 1,
+          "conditional_logic": 0,
+          "wrapper": {
+            "width": "50",
+            "class": "",
+            "id": ""
+          },
+          "default_value": "",
+          "placeholder": "e.g., Disclaimer",
+          "prepend": "",
+          "append": "",
+          "maxlength": ""
+        },
+        {
+          "key": "field_accordion_item_content",
+          "label": "Content",
+          "name": "item_content",
+          "aria-label": "",
+          "type": "wysiwyg",
+          "instructions": "Content for this accordion item",
+          "required": 1,
+          "conditional_logic": 0,
+          "wrapper": {
+            "width": "50",
+            "class": "",
+            "id": ""
+          },
+          "default_value": "",
+          "delay": 0,
+          "toolbar": "full",
+          "media_upload": 0,
+          "tabs": "all"
+        }
+      ]
+    },
+    {
+      "key": "field_accordion_settings",
+      "label": "Accordion Settings",
+      "name": "accordion_settings",
+      "aria-label": "",
+      "type": "group",
+      "instructions": "Configure accordion behavior",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "layout": "block",
+      "sub_fields": [
+        {
+          "key": "field_accordion_allow_multiple",
+          "label": "Allow Multiple Open",
+          "name": "allow_multiple",
+          "aria-label": "",
+          "type": "true_false",
+          "instructions": "Allow multiple accordion items to be open simultaneously",
+          "required": 0,
+          "conditional_logic": 0,
+          "wrapper": {
+            "width": "",
+            "class": "",
+            "id": ""
+          },
+          "message": "",
+          "ui": 1,
+          "ui_on_text": "",
+          "ui_off_text": "",
+          "default_value": 0
+        },
+        {
+          "key": "field_accordion_animated",
+          "label": "Animated",
+          "name": "animated",
+          "aria-label": "",
+          "type": "true_false",
+          "instructions": "Enable smooth animations for accordion transitions",
+          "required": 0,
+          "conditional_logic": 0,
+          "wrapper": {
+            "width": "",
+            "class": "",
+            "id": ""
+          },
+          "message": "",
+          "ui": 1,
+          "ui_on_text": "",
+          "ui_off_text": "",
+          "default_value": 1
+        },
+        {
+          "key": "field_accordion_background",
+          "label": "Background Color",
+          "name": "background_color",
+          "aria-label": "",
+          "type": "select",
+          "instructions": "Choose background color for accordion",
+          "required": 0,
+          "conditional_logic": 0,
+          "wrapper": {
+            "width": "",
+            "class": "",
+            "id": ""
+          },
+          "choices": {
+            "light-blue": "Light Blue",
+            "white": "White",
+            "grey": "Grey"
+          },
+          "default_value": "light-blue",
+          "return_format": "value",
+          "multiple": 0,
+          "ui": 0,
+          "ajax": 0,
+          "placeholder": "",
+          "allow_null": 0,
+          "search_placeholder": ""
+        }
+      ]
+    }
+  ],
+  "location": [
+    [
+      {
+        "param": "flexible_content",
+        "operator": "==",
+        "value": "accordion_block"
+      }
+    ]
+  ],
+  "menu_order": 0,
+  "position": "normal",
+  "style": "default",
+  "label_placement": "top",
+  "instruction_placement": "label",
+  "hide_on_screen": "",
+  "active": true,
+  "description": "",
+  "show_in_rest": 0
+}

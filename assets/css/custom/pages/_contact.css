@@ -1,0 +1,83 @@
+/*********************************/
+/*             Contact           */
+/*===============================*/
+
+/* Validation */
+.error {
+  @apply mx-0 my-2 hidden text-red-600;
+}
+
+#ajaxsuccess {
+  @apply clear-both mx-0 my-2 hidden w-full text-base;
+}
+
+.error_message,
+#success_page {
+  @apply mb-5 rounded-md p-2.5 text-center;
+}
+
+.error_message {
+  @apply bg-red-600/5 text-red-600;
+}
+
+.contact-loader {
+  @apply hidden;
+}
+
+#success_page {
+  @apply bg-emerald-600/5 text-emerald-600;
+}
+
+.get-in-touch-block {
+  .frm_form_title {
+    @apply hidden;
+  }
+  .form-field,
+  .frm_verify,
+  #frm_field_13_container {
+    label {
+      @apply hidden;
+    }
+  }
+
+  input {
+    &::placeholder {
+      @apply !text-grey-3;
+    }
+  }
+  input::placeholder {
+    color: var(--grey-3) !important;
+  }
+  .curve-shape {
+    content: url('../images/home/curve-long.svg');
+    cursor: none;
+    @media (max-width: 767px) {
+      content: url('../images/home/curve.svg');
+      width: 56px;
+    }
+  }
+  .frm_error {
+    color: #e90000 !important;
+  }
+
+  .custom-select select {
+    appearance: none; /* Standard */
+    -webkit-appearance: none; /* Safari/Chrome */
+    -moz-appearance: none; /* Firefox */
+
+    width: 100%;
+    padding-right: 10px;
+
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 1rem center; /* position of arrow */
+    background-size: 1rem;
+  }
+  .frm_message h3 {
+    margin: 0;
+  }
+}
+
+.page-template-page-contact .contact-shape {
+  display: none;
+}

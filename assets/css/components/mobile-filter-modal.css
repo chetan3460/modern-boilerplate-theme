@@ -1,0 +1,141 @@
+/* Mobile Filter Modal - ScrollSmoother Compatible */
+
+/* Hide the filter modal by default on mobile - use visibility instead of display:none so content can be cloned */
+.mobile-filter-modal {
+  position: absolute;
+  left: -9999px;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Desktop: show as normal sidebar */
+@media (min-width: 1024px) {
+  .mobile-filter-modal {
+    position: static;
+    left: auto;
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    display: block;
+  }
+}
+
+/* Modal overlay wrapper */
+.mobile-filter-overlay-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+  pointer-events: auto;
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Modal content container */
+.mobile-filter-content {
+  max-width: max-content;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  animation: slideUp 0.3s ease-out;
+
+  display: block;
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Make all content visible in modal */
+.mobile-filter-content * {
+  visibility: visible;
+  opacity: 1;
+}
+
+.mobile-filter-content .product-filters {
+  display: block;
+  visibility: visible;
+  opacity: 1;
+  position: static;
+  left: auto;
+  background-color: #ecf7fe;
+  border-radius: 1rem;
+  padding: 1rem;
+  width: 100%;
+}
+
+/* Accordion behavior for filter sections */
+.mobile-filter-content .filter-section .filter-options {
+  transition: all 0.3s ease;
+  display: block;
+}
+
+.mobile-filter-content .filter-section .filter-options.accordion-closed {
+  display: none;
+}
+
+.mobile-filter-content .filter-section .filter-options.accordion-open {
+  display: block;
+}
+
+/* Icon states for accordion */
+.mobile-filter-content .filter-section button svg.icon-hidden {
+  display: none;
+}
+
+.mobile-filter-content .filter-section button svg.icon-visible {
+  display: block;
+}
+
+/* Default state - hide all icons initially */
+/* .mobile-filter-content .filter-section button svg {
+  display: none;
+} */
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .mobile-filter-content {
+    max-width: none;
+    width: 100%;
+    height: 100%;
+    max-height: 85vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mobile-filter-overlay-wrapper {
+    padding: 20px;
+  }
+}

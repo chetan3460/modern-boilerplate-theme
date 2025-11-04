@@ -1,0 +1,13 @@
+.privacy_accordion_block {
+  .accordion-content {
+    p {
+      @apply text-grey-2 mb-2 text-sm leading-relaxed font-normal md:text-[18px] md:leading-[27px];
+    }
+    ul {
+      @apply text-grey-2 mb-3 list-outside list-[square] pl-6 text-sm leading-relaxed font-normal last:mb-0 last:pb-0 md:text-[18px] md:leading-[27px];
+      li {
+        @apply mb-2 last:mb-0;
+      }
+    }
+  }
+}

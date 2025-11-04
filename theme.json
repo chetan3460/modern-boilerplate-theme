@@ -1,0 +1,58 @@
+{
+  "version": 2,
+  "settings": {
+    "appearanceTools": true,
+    "useRootPaddingAwareAlignments": true,
+    "layout": {
+      "contentSize": "1200px",
+      "wideSize": "1400px"
+    },
+    "spacing": {
+      "padding": true,
+      "margin": true
+    },
+    "typography": {
+      "fontFamilies": [
+        {
+          "fontFamily": "Nunito, sans-serif",
+          "name": "Nunito",
+          "slug": "nunito"
+        }
+      ]
+    },
+    "color": {
+      "palette": [
+        {
+          "name": "Dark",
+          "slug": "dark",
+          "color": "#3c4858"
+        },
+        {
+          "name": "Black",
+          "slug": "black", 
+          "color": "#161c2d"
+        },
+        {
+          "name": "Dark Red",
+          "slug": "dark-red",
+          "color": "#BA3333"
+        },
+        {
+          "name": "Charcoal",
+          "slug": "charcoal",
+          "color": "#111111"
+        },
+        {
+          "name": "White",
+          "slug": "white",
+          "color": "#ffffff"
+        }
+      ]
+    }
+  },
+  "styles": {
+    "typography": {
+      "fontFamily": "var(--wp--preset--font-family--nunito)"
+    }
+  }
+}

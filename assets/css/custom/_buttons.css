@@ -1,0 +1,73 @@
+/* _buttons.css */
+
+/* Tailwind-based button */
+/* .btn {
+  @apply bg-primary inline-flex justify-center rounded-full px-6 py-2 text-sm leading-[24px] font-medium tracking-[-0.3px] text-white md:text-base md:font-bold;
+} */
+
+/* Button Base */
+/* Tailwind + @apply version */
+.btn,
+.button {
+  @apply bg-primary relative z-10 inline-flex items-center justify-center overflow-hidden rounded-full px-6 py-2 text-sm leading-[24px] font-medium tracking-[-0.3px] text-white transition-all duration-300 md:text-base md:font-bold;
+
+  &:before {
+    content: '';
+    @apply absolute top-full left-0 -z-10 h-full w-full bg-[#ab000b] transition-all duration-500;
+  }
+
+  &:hover {
+    @apply text-white;
+
+    &:before {
+      @apply top-0;
+    }
+  }
+
+  &:focus {
+    @apply shadow-none outline-none;
+  }
+
+  &.btn-outline {
+    @apply border-primary text-primary border bg-transparent;
+
+    &:hover {
+      @apply bg-white text-white;
+    }
+  }
+}
+
+/* Ripple Effect */
+/* .btnSpan {
+  @apply bg-dark-red absolute top-0 left-0 -z-[999] h-0 w-0 -translate-x-1/2 -translate-y-1/2 transform rounded-full transition-[width,height] duration-[700ms] ease-in-out;
+} */
+
+/* Hover Expansion */
+.btn:hover .btnSpan {
+  @apply h-[75rem] w-[75rem];
+}
+
+/* .btn:hover {
+  @apply bg-dark-red;
+} */
+
+.btn:active {
+  @apply scale-95;
+}
+
+.btn:focus-visible {
+  @apply ring-primary/40 ring-2 outline-none;
+}
+
+.btn:disabled,
+.btn[aria-disabled='true'] {
+  @apply cursor-not-allowed opacity-60;
+}
+
+.swiper-btn-prev,
+.swiper-btn-next {
+  @apply border-primary flex h-9 w-9 shrink-0 items-center justify-center rounded-full border p-[11px];
+  svg {
+    @apply flex items-center justify-center gap-1;
+  }
+}

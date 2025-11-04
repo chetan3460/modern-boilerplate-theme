@@ -1,0 +1,930 @@
+/*********************************/
+/*         Menu                  */
+/*===============================*/
+#topnav {
+  @apply fixed start-0 end-0 top-0 z-50 border-0 bg-white py-5 duration-500;
+  .logo {
+    @apply text-black ltr:float-left rtl:float-right;
+    .l-dark {
+      @apply hidden;
+    }
+    .l-light {
+      @apply inline-block;
+    }
+    &:focus {
+      @apply outline-none;
+    }
+  }
+  .has-submenu {
+    @apply relative;
+    &.active {
+      .submenu {
+        li {
+          &.active {
+            > a {
+              @apply !text-primary;
+            }
+          }
+        }
+      }
+      &.active {
+        .menu-arrow {
+          @apply border-primary dark:border-primary;
+        }
+      }
+    }
+    .submenu {
+      .submenu-arrow {
+        border-width: 0px 0.125rem 0.125rem 0px;
+        @apply absolute end-[1.25rem] top-[15px] inline-block rounded-[0.5px] border-black p-[2px] ltr:-rotate-[45deg] rtl:rotate-[135deg] dark:border-white;
+      }
+      .has-submenu {
+        &:hover {
+          > .submenu-arrow {
+            @apply border-primary dark:border-primary;
+          }
+        }
+        .submenu {
+          .has-submenu {
+            &:hover {
+              .submenu-arrow {
+                @apply border-primary dark:border-primary;
+              }
+              > .submenu-arrow {
+                @apply border-primary dark:border-primary;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .navigation-menu {
+    & > li {
+      .submenu {
+        li {
+          @apply relative ms-0;
+        }
+      }
+    }
+  }
+  .navbar-toggle {
+    @apply relative m-0 cursor-pointer border-0 p-0;
+
+    .lines {
+      @apply relative me-0 block h-6 w-6;
+    }
+
+    span {
+      @apply mb-[7px] block h-[2px] w-full bg-black dark:bg-white;
+
+      &:last-child {
+        @apply mb-0;
+      }
+    }
+
+    &.open {
+      span {
+        @apply absolute;
+
+        &:first-child {
+          @apply top-[6px];
+          transform: rotate(45deg);
+        }
+
+        &:nth-child(2) {
+          opacity: 0;
+        }
+
+        &:last-child {
+          @apply top-[6px] w-full;
+          transform: rotate(-45deg);
+        }
+      }
+    }
+  }
+
+  .navigation-menu {
+    @apply m-0 list-none p-0;
+    > li {
+      @apply relative my-0 mr-7 last:mr-0 max-lg:mr-3 ltr:float-left rtl:float-right;
+      > a {
+        @apply block text-base leading-5 font-medium tracking-[-0.2px] text-black capitalize;
+        &:hover,
+        &:active {
+          @apply text-primary;
+        }
+      }
+      &:hover,
+      &.active {
+        > a {
+          @apply text-primary;
+        }
+      }
+      .submenu.megamenu {
+        li {
+          .megamenu-head {
+            @apply px-5 py-[10px] text-xs font-bold tracking-[0.04em] whitespace-nowrap text-slate-400 uppercase;
+          }
+        }
+      }
+    }
+    .has-submenu {
+      .menu-arrow {
+        @apply transition-all duration-500;
+      }
+      &:hover {
+        .menu-arrow {
+          @apply lg:rotate-180;
+          svg {
+            path {
+              @apply lg:fill-primary;
+            }
+          }
+        }
+      }
+    }
+  }
+  .menu-extras {
+    @apply ltr:float-right rtl:float-left;
+  }
+  &.nav-sticky {
+    @apply fixed bg-white shadow dark:bg-slate-900 dark:shadow-gray-800;
+  }
+}
+
+
+@media (min-width: 1025px) {
+  #topnav {
+    .navigation-menu {
+      > li {
+        .submenu {
+          &.megamenu {
+            @apply w-[1120px];
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1024px) and (min-width: 992px) {
+  #topnav {
+    .navigation-menu {
+      > li {
+        .submenu {
+          &.megamenu {
+            @apply w-[936px];
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Mega panel base visibility (CSS fallback if JS doesn't run) */
+.mega-panel {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  margin-top: 0;
+  will-change: opacity;
+  transition:
+    opacity 0.2s ease,
+    visibility 0s linear 0.2s;
+}
+#topnav .navigation-menu > li.has-mega:hover > .mega-panel,
+#topnav .navigation-menu > li.has-mega:focus-within > .mega-panel {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition:
+    opacity 0.2s ease,
+    visibility 0s linear 0s;
+}
+/* Ensure submenu inside mega panel becomes visible when panel is visible */
+#topnav .navigation-menu > li.has-mega:hover > .mega-panel .submenu,
+#topnav .navigation-menu > li.has-mega:focus-within > .mega-panel .submenu {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+#topnav .navigation-menu > li.has-mega:hover > .mega-panel .submenu li a,
+#topnav .navigation-menu > li.has-mega:focus-within > .mega-panel .submenu li a {
+  color: #111;
+  opacity: 1;
+}
+
+/* Mega panel custom card */
+.mega-panel .mega-card {
+  display: grid;
+  width: 667px;
+  max-width: calc(100vw - 24px);
+  padding: 32px;
+  align-items: flex-start;
+  gap: 40px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 14px 20px 0 rgba(0, 0, 0, 0.25);
+}
+/* Ensure submenu inside mega panel is visible and not absolutely positioned */
+.mega-panel .submenu {
+  position: static;
+  margin-top: 0;
+  padding: 0;
+  min-width: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+/* Desktop: align mega panel to navigation-menu UL width (CSS only) */
+@media (min-width: 992px) {
+  #navigation {
+    position: relative;
+  }
+  #navigation .navigation-menu > li.has-mega {
+    position: static;
+  }
+  #navigation .navigation-menu > li.has-mega > .mega-panel {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: calc(100% + 10px); /* directly under nav UL */
+    width: 667px; /* fixed width */
+    pointer-events: none; /* enable only inside content */
+  }
+  .mega-panel > .container {
+    max-width: 667px;
+    margin-inline: auto;
+    padding-inline: 0;
+    pointer-events: auto;
+  }
+  .mega-panel .mega-card {
+    width: 667px; /* fixed */
+    max-width: 100%;
+    margin-inline: auto;
+  }
+}
+
+/* Mobile: hide left column, make submenu full width, tighten spacing */
+@media (max-width: 1023px) {
+  /* Make panel part of the flow on mobile */
+  #topnav .navigation-menu > li.has-mega > .mega-panel {
+    position: static !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    display: none;
+  }
+  #topnav .navigation-menu > li.has-mega.open > .mega-panel {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    display: block;
+  }
+
+  /* On small screens, also allow the 'open' class to show the panel */
+  .has-mega.open > .mega-panel {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .mega-panel .mega-left {
+    display: none;
+  }
+  .mega-panel .mega-right {
+    width: 100%;
+  }
+  .mega-panel .mega-card {
+    width: 100%;
+    padding: 16px;
+    gap: 16px;
+    border-radius: 12px;
+    box-shadow: none; /* no shadow on mobile */
+  }
+}
+
+@media (min-width: 992px) {
+  #navigation-mobile {
+    display: none;
+  }
+  #nav-overlay {
+    display: none;
+  }
+  #topnav {
+    .navigation-menu {
+      @apply flex flex-wrap justify-center;
+
+      &.justify-end {
+        li {
+          &:last-child {
+            @apply me-0;
+            .sub-menu-item {
+              @apply pe-0;
+            }
+          }
+        }
+      }
+
+      &.justify-start {
+        > li {
+          &:first-child {
+            @apply ms-0;
+            .sub-menu-item {
+              @apply ps-0;
+            }
+          }
+        }
+      }
+
+      > .has-submenu {
+        &:hover .menu-arrow {
+          @apply top-[34px];
+        }
+        &.active .menu-arrow {
+          @apply top-8;
+        }
+      }
+      > li {
+        .submenu {
+          transition: all 0.2s ease;
+          @apply invisible absolute start-0 top-full z-[1000] mt-2 min-w-[180px] list-none rounded-md bg-white px-0 py-[15px] opacity-0 shadow dark:bg-slate-900 dark:shadow-gray-800;
+          li {
+            @apply relative border-b border-b-neutral-50 last:border-0;
+            a {
+              transition: all 0.3s;
+              @apply clear-both block px-2.5 py-4 text-base leading-normal font-normal whitespace-nowrap text-neutral-900 capitalize last:border-0;
+              &:hover {
+                border-radius: 8px;
+                background: rgba(204, 217, 239, 0.2);
+                color: #da000e !important;
+              }
+            }
+            ul {
+              @apply m-0 list-none ps-0;
+            }
+          }
+          &.megamenu {
+            @apply fixed start-1/2 top-auto flex whitespace-nowrap ltr:-translate-x-1/2 rtl:translate-x-1/2;
+            > li {
+              @apply w-1/5 overflow-hidden align-top;
+              .submenu {
+                @apply start-full top-0 ms-[10px] -mt-px;
+              }
+            }
+          }
+          > li {
+            .submenu {
+              @apply start-[101%] top-0 ms-[10px] -mt-px;
+            }
+          }
+        }
+
+        /* OVERRIDE for mega panel: show submenu inside mega panel */
+        .mega-panel .submenu {
+          position: static !important;
+          margin-top: 0 !important;
+          min-width: 0 !important;
+          background: transparent !important;
+          box-shadow: none !important;
+        }
+
+        > a {
+          @apply min-h-[0] py-0;
+        }
+        &:hover {
+          > .menu-arrow {
+            @apply border-primary dark:border-primary;
+          }
+        }
+        &:hover,
+        &.active {
+          > a {
+            @apply text-primary;
+          }
+        }
+        &.last-elements {
+          .submenu {
+            @apply start-auto end-0 before:start-auto before:end-[10px];
+            > li {
+              &.has-submenu {
+                .submenu {
+                  @apply start-auto end-full ms-0 me-[10px];
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    .navbar-toggle {
+      @apply hidden;
+    }
+    #navigation {
+      @apply block;
+    }
+  }
+}
+
+@media (max-width: 991px) {
+  #navigation {
+    display: none !important;
+  }
+  #topnav {
+    @apply min-h-[74px] bg-white;
+    /* Place hamburger next to logo on the left (mobile only) */
+    > .container {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start; /* override justify-between from markup */
+      gap: 8px;
+    }
+    .site-logo {
+      order: 1; /* logo after hamburger */
+    }
+    .menu-extras {
+      order: 0; /* hamburger first */
+      float: none; /* ignore previous float rules inside flex */
+    }
+    .logo {
+      .l-dark {
+        @apply inline-block;
+      }
+      .l-light {
+        @apply hidden;
+      }
+    }
+    .container {
+      @apply w-auto;
+    }
+    .navigation-menu {
+      @apply float-none;
+      > li {
+        @apply float-none;
+        /* default hidden; will open via .open class on LI or submenu */
+        .submenu {
+          @apply !mt-0 hidden list-none !px-0 pt-2 !pb-0;
+          /* Ensure mega panel submenu shows when parent is open */
+          .has-mega.open & {
+            display: block !important;
+          }
+          li {
+            a {
+            }
+          }
+          &.megamenu {
+            li {
+              .megamenu-head {
+                @apply px-[15px] py-[7px];
+              }
+            }
+            > li {
+              > ul {
+                @apply list-none ps-0;
+                > li {
+                  > span {
+                    @apply relative block px-[15px] py-[10px] text-xs tracking-[2px] text-slate-200 uppercase;
+                  }
+                }
+              }
+            }
+          }
+          &.open {
+            @apply block;
+          }
+          .submenu {
+            li {
+              @apply !border-0;
+            }
+            @apply hidden list-none;
+            &.open {
+              @apply block;
+            }
+          }
+        }
+        /* show direct child submenu when parent li has .open */
+        &.has-submenu.open > .submenu {
+          @apply block;
+        }
+      }
+      > li.has-submenu > a {
+        position: relative;
+        color: var(--Neutral-Grey-8, var(--color-neutral-900, #1c1c1c));
+        font-family: var(--font-instrument, 'Instrument Sans'), 'Instrument Sans', sans-serif;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+      }
+      > li > a:hover,
+      .submenu li a:hover,
+      &.has-submenu.open > a {
+        @apply !text-primary;
+      }
+      /* Active state for mobile submenu links */
+      .submenu a.active {
+        @apply text-primary;
+      }
+      /* Active state for mobile top-level links */
+      > li > a.active {
+        @apply text-primary;
+      }
+      /* Ensure parent items (with submenus) show active color when a child is active */
+      > li.has-submenu.active > a {
+        @apply text-primary;
+      }
+      > li.has-submenu .submenu > a {
+        @apply text-primary;
+      }
+    }
+  }
+  .menu-extras {
+    .menu-item {
+      @apply border-gray-200 dark:border-gray-700;
+    }
+  }
+  .has-submenu {
+    .submenu {
+      .submenu-arrow {
+        @apply absolute end-5 top-3 rotate-[45deg];
+      }
+    }
+  }
+}
+
+#navigation-mobile {
+  /* Full-screen mobile menu that slides down from header with enhanced animations */
+  @apply pointer-events-none fixed start-0 end-0 top-0 bottom-0 z-[999] w-[100vw] -translate-y-full overflow-y-auto bg-white dark:bg-slate-900;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.open {
+    @apply pointer-events-auto translate-y-0;
+  }
+
+  /* Animate menu items ONLY on first open - ONLY top-level items */
+  &.open.first-open {
+    .mobile-header {
+      animation: slideInFromTop 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    > ul.navigation-menu > li {
+      animation: slideInFromLeft 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      opacity: 1;
+      transform: translateX(0);
+
+      /* Stagger animation for each menu item */
+      &:nth-child(1) {
+        animation-delay: 0.1s;
+      }
+      &:nth-child(2) {
+        animation-delay: 0.18s;
+      }
+      &:nth-child(3) {
+        animation-delay: 0.26s;
+      }
+      &:nth-child(4) {
+        animation-delay: 0.34s;
+      }
+      &:nth-child(5) {
+        animation-delay: 0.42s;
+      }
+      &:nth-child(6) {
+        animation-delay: 0.5s;
+      }
+      &:nth-child(7) {
+        animation-delay: 0.58s;
+      }
+      &:nth-child(8) {
+        animation-delay: 0.66s;
+      }
+      &:nth-child(9) {
+        animation-delay: 0.74s;
+      }
+      &:nth-child(10) {
+        animation-delay: 0.82s;
+      }
+    }
+  }
+
+  /* On subsequent opens, show menu items immediately */
+  &.open:not(.first-open) > ul.navigation-menu > li {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  /* Initial state for TOP-LEVEL menu items only - hidden */
+  > ul.navigation-menu > li {
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: all 0.3s ease;
+  }
+
+  /* Submenu items always visible, no animation */
+  .submenu li {
+    opacity: 1 !important;
+    transform: translateX(0) !important;
+    animation: none !important;
+  }
+
+  /* Header area with logo and close button */
+  .mobile-header {
+    @apply flex items-center gap-2 px-5 pt-4 pb-0;
+
+    .site-logo {
+      opacity: 0;
+      transform: translateX(-20px);
+      animation: slideInFromLeft 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.2s forwards;
+
+      img {
+        transition: transform 0.3s ease;
+
+        &:hover {
+          transform: scale(1.05);
+        }
+      }
+    }
+
+    .mobile-close {
+      @apply relative m-0 cursor-pointer border-0 p-0;
+
+      .lines {
+        @apply relative me-0 block h-6 w-6;
+      }
+
+      span {
+        @apply bg-primary mb-[7px] block h-[2px] w-full;
+
+        &:last-child {
+          @apply mb-0;
+        }
+      }
+
+      /* Always show as X (close icon) in mobile menu */
+      span {
+        @apply absolute;
+
+        &:first-child {
+          @apply top-[6px];
+          transform: rotate(45deg);
+        }
+
+        &:nth-child(2) {
+          opacity: 0;
+        }
+
+        &:last-child {
+          @apply top-[6px] w-full;
+          transform: rotate(-45deg);
+        }
+      }
+    }
+  }
+
+  /* Make inner list fill remaining height */
+  > ul.navigation-menu {
+    @apply mx-auto flex flex-col overflow-y-scroll px-5 py-0;
+  }
+
+  /* Mobile menu items styling */
+  > ul.navigation-menu > li {
+    @apply border-b border-neutral-200/50 last:border-0;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateX(8px);
+    }
+
+    a {
+      @apply text-lg font-medium text-black;
+      display: block;
+      padding: 0 0;
+      transition: all 0.3s ease;
+
+      &:hover {
+        @apply text-primary;
+      }
+    }
+
+    &.has-submenu {
+      .menu-arrow {
+        @apply text-black;
+        transition: transform 0.3s ease;
+      }
+
+      &:hover .menu-arrow {
+        transform: translateX(4px);
+      }
+
+      &.open .menu-arrow {
+        transform: rotate(180deg);
+      }
+    }
+
+    /* Submenu items */
+    .submenu {
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.4s ease-out;
+
+      &.open {
+        max-height: 500px; /* Adjust based on your needs */
+      }
+
+      li {
+        &:hover {
+          @apply bg-neutral-100;
+          transform: translateX(4px);
+        }
+
+        a {
+          @apply text-base;
+        }
+      }
+    }
+  }
+
+  .submenu {
+    @apply !p-2 !pl-2;
+  }
+}
+
+/* Backdrop overlay - hidden when mobile menu is full screen */
+#nav-overlay {
+  @apply pointer-events-none fixed start-0 end-0 top-0 bottom-0 bg-black/40 opacity-0 transition-opacity duration-300;
+  z-index: 998; /* below drawer (999), above page */
+}
+#nav-overlay.active {
+  @apply pointer-events-auto opacity-100;
+}
+
+/* Hide overlay when mobile menu is open since menu covers full screen */
+@media (max-width: 991px) {
+  #nav-overlay {
+    @apply hidden;
+  }
+}
+
+/* Mobile Menu Animations */
+@keyframes slideInFromTop {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+
+/* Mobile arrow positioning */
+#navigation-mobile li.has-submenu {
+  position: relative;
+}
+#navigation-mobile li.has-submenu > .menu-arrow {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  /* transform: translateY(-50%); */
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  color: var(--color-black);
+  transition: transform 0.2s ease;
+  cursor: pointer;
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+#navigation-mobile li.has-submenu.open > .menu-arrow {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+/* Force submenus to stack vertically on mobile */
+#navigation-mobile ul.submenu {
+  position: static !important;
+  left: auto !important;
+  right: auto !important;
+  top: auto !important;
+  inset: auto !important;
+  transform: none !important;
+  width: 100% !important;
+  margin: 0;
+  padding-left: 12px; /* indent */
+  background: transparent !important;
+  box-shadow: none !important;
+  visibility: visible;
+  opacity: 1;
+}
+#navigation-mobile li.has-submenu.open > ul.submenu {
+  display: block !important;
+}
+
+@media (max-width: 768px) {
+  #topnav {
+    .navigation-menu {
+      .has-submenu {
+        .menu-arrow {
+          @apply end-2 top-4;
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 991px) {
+  #topnav {
+    .navigation-menu {
+      > li {
+        &.has-submenu {
+          &:hover {
+            > .submenu {
+              @apply visible mt-0 opacity-100;
+              > li {
+                &.has-submenu {
+                  &:hover {
+                    > .submenu {
+                      @apply visible ms-0 opacity-100;
+                      > li {
+                        &:hover {
+                          > .submenu {
+                            @apply visible ms-0 opacity-100;
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .navbar-toggle {
+    @apply block;
+  }
+}
+
+
+@media (max-width: 991px) {
+  .submenu {
+    @apply !mt-6 flex flex-col gap-6;
+
+    li {
+      @apply mb-6 border-0;
+      a {
+        @apply !text-sm !leading-3.25 font-normal text-neutral-900;
+      }
+    }
+  }
+}
+#topnav {
+  #menu-mobile-menu {
+    li {
+      &.open {
+        .menu-arrow {
+          transform: rotate(180deg);
+          color: var(--color-primary);
+        }
+      }
+      .sub-menu-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        color: var(--Neutral-Grey-8);
+        .menu-arrow {
+          width: 20px;
+          height: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+    }
+  }
+}

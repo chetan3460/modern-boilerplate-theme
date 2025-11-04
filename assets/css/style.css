@@ -1,0 +1,710 @@
+/* Essential Swiper CSS - Core functionality */
+@import 'swiper/css';
+@import 'swiper/css/pagination';
+@import 'swiper/css/autoplay';
+@import 'swiper/css/navigation';
+@import 'swiper/css/effect-fade';
+@import 'swiper/css/grid';
+
+/* Base Styles */
+@import './base/utilities.css';
+
+/* // FONTS */
+@import './custom/_fonts.css';
+
+/* // general */
+@import './custom/_general.css';
+
+/* Buttons */
+@import './custom/_buttons.css';
+
+/* Components */
+@import './components/scroll-to-top.css'; /* If you created this */
+@import './components/mobile-filter-modal.css';
+@import './components/filter-accordion.css';
+@import './cookie-consent.css';
+
+/* // structure */
+@import './custom/structure/_topnav.css';
+@import './custom/structure/_footer.css';
+
+/* // pages */
+@import './custom/pages/_helper.css';
+@import './custom/pages/_hero.css';
+@import './custom/pages/_countdown.css';
+@import './custom/pages/_contact.css';
+
+/* // blocks */
+/* Manual imports for existing blocks */
+@import './custom/blocks/homeTabBlock.css';
+@import './custom/blocks/distribution-map.css';
+@import './custom/blocks/accordion_block.css';
+@import './team-members-block.css';
+@import './custom/blocks/certificate_block.css';
+@import './custom/blocks/testimonials-block.css';
+@import './custom/blocks/global-banner-block.css';
+@import './custom/blocks/products.css';
+@import './custom/blocks/privacy_accordion_block.css';
+/* @import './sustainability-impact-block.css'; */
+
+/* AUTO-GENERATED BLOCKS - Add new imports below */
+@import './custom/blocks/service_block_css.css';
+/* END AUTO-GENERATED BLOCKS */
+
+/* // Plugins */
+@import './custom/plugins/_swiper-slider.css';
+@import './custom/plugins/_datepicker.css';
+@import './custom/plugins/reports-filter.css';
+
+/* // News Detail Page */
+@import './news-detail.css';
+
+@import './milestones-timeline.css';
+/* Custom Swiper Button Disabled States */
+.swiper-btn-prev-pagination.swiper-button-disabled,
+.swiper-btn-next-pagination.swiper-button-disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+  transform: none !important;
+}
+
+/* Prevent hero content flicker - hidden until GSAP initializes */
+.hero-slider .hero-subtitle,
+.hero-slider .hero-description,
+.hero-slider .cta-block {
+  opacity: 0;
+}
+
+@config "../../tailwind.config.js";
+
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Tailwind v4 Theme Configuration */
+html {
+  scrollbar-color: var(--scrollbar-color) transparent;
+}
+
+body {
+  scrollbar-color: var(--scrollbar-color) transparent;
+}
+
+@theme {
+  /* Custom Breakpoints */
+  --breakpoint-xs: 540px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-sl: 992px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1440px;
+
+  /* Custom Colors (base) */
+  --color-primary: #da000e; /* Primary / Brand Red – #DA000E */
+  --color-black: #1c1c1c; /* Neutral 900 / Near Black – #1C1C1C */
+  --color-light-gray: #ccd9ef; /* Legacy light gray (check usage) – #CCD9EF */
+  --color-mid-gray: #f4f4f4; /* Neutral 100 – light gray – #F4F4F4 */
+  --color-gray-50: #d9d9d9;
+  --color-gray-150: #6c6c6c;
+
+  --color-light-blue: #dff2fd; /* Sky 50 / Very light blue – #DFF2FD */
+
+  --color-dark: #3c4858; /* Dark text – #3C4858 */
+  --color-dark-footer: #192132; /* Dark footer background – #192132 */
+  --color-white: #ffffff; /* White – #FFFFFF */
+  --color-charcoal: #111111; /* Charcoal – #111111 */
+  --color-dark-100: #010101; /* Charcoal – #111111 */
+
+  --color-pink-50: #ffb6b0;
+
+  /* New Color Palette */
+  /* Neutrals */
+  --color-neutral-1: #f4f4f4; /* Neutral 1 – #F4F4F4 */
+  --color-neutral-2: #ffffff; /* Neutral 2 – #FFFFFF */
+
+  /* Greys */
+  --color-grey-1: #222222; /* Grey 1 – #222222 */
+  --color-grey-2: #3d3d3d; /* Grey 2 – #3D3D3D */
+  --color-grey-3: #828282; /* Grey 3 – #828282 */
+  --color-grey-4: #bdbdbd; /* Grey 4 – #BDBDBD */
+  --color-grey-5: #e0e0e0; /* Grey 5 – #E0E0E0 */
+  --color-grey-6: #f2f2f2; /* Grey 6 – #F2F2F2 */
+  --color-grey-7: #333; /* Grey 6 – #F2F2F2 */
+
+  /* Chip & Extended Colors */
+  --color-chip-stroke: #ba3333; /* Chip Stroke – #BA3333 */
+  --color-extended-1: linear-gradient(180deg, #dd575f 0%, #b02932 100%); /* Extended 1 gradient */
+  --color-extended-2: #dff2fd; /* Extended 2 – #DFF2FD */
+  --color-extended-3: #eef7e7; /* Extended 3 – #EEF7E7 */
+
+  /* Legacy palette additions (semantic) */
+  /* Usage examples: text-neutral-900, bg-neutral-50, border-neutral-300, text-brand-red, bg-sky-50 */
+  --color-neutral-900: #1c1c1c; /* Neutral 900 – near-black text – #1C1C1C */
+  --color-neutral-50: #f2f2f2; /* Neutral 50 – ultra light gray background – #F2F2F2 */
+  --color-brand-red: #da000e; /* Brand Red – actions/accents – #DA000E */
+  --color-dark-red: #ba3333; /* Brand Red – actions/accents – #DA000E */
+  --color-sky-50: #dff2fd; /* Sky 50 – pale blue background – #DFF2FD */
+  --color-neutral-100: #f4f4f4; /* Neutral 100 – light gray background – #F4F4F4 */
+  --color-neutral-200: #eaeaea; /* Neutral 200 – divider gray – #EAEAEA */
+  --color-neutral-300: #cbcbcb; /* Neutral 300 – border gray – #CBCBCB */
+  --color-neutral-500: #8f8f8f; /* Neutral 500 – medium gray text – #8F8F8F */
+
+  /* Custom Font Families */
+  --font-instrument: 'Instrument Sans', sans-serif;
+
+  /* Custom Spacing */
+  --spacing-0_75: 0.1875rem;
+  --spacing-3_25: 0.8125rem;
+
+  /* Custom border radius */
+  --rounded-40: 40px;
+  --rounded-20: 20px;
+  --spacing-3_25: 0.8125rem;
+  --scrollbar-color: #da000e;
+  --scrollbar-hover: #ba3333;
+}
+.text-black {
+  color: var(--color-black);
+}
+
+.bg-black {
+  background-color: var(--color-black);
+}
+
+.border-black {
+  border-color: var(--color-black);
+}
+
+/* Charcoal helpers */
+.text-charcoal {
+  color: var(--color-charcoal);
+}
+
+.bg-charcoal {
+  background-color: var(--color-charcoal);
+}
+
+.border-charcoal {
+  border-color: var(--color-charcoal);
+}
+
+/* New Color Palette Utility Classes */
+/* Neutrals */
+.text-neutral-1 {
+  color: var(--color-neutral-1);
+}
+.bg-neutral-1 {
+  background-color: var(--color-neutral-1);
+}
+.border-neutral-1 {
+  border-color: var(--color-neutral-1);
+}
+
+.text-neutral-2 {
+  color: var(--color-neutral-2);
+}
+.bg-neutral-2 {
+  background-color: var(--color-neutral-2);
+}
+.border-neutral-2 {
+  border-color: var(--color-neutral-2);
+}
+
+/* Greys */
+.text-grey-1 {
+  color: var(--color-grey-1);
+}
+.bg-grey-1 {
+  background-color: var(--color-grey-1);
+}
+.border-grey-1 {
+  border-color: var(--color-grey-1);
+}
+
+.text-grey-2 {
+  color: var(--color-grey-2);
+}
+.bg-grey-2 {
+  background-color: var(--color-grey-2);
+}
+.border-grey-2 {
+  border-color: var(--color-grey-2);
+}
+
+.text-grey-3 {
+  color: var(--color-grey-3);
+}
+.bg-grey-3 {
+  background-color: var(--color-grey-3);
+}
+.border-grey-3 {
+  border-color: var(--color-grey-3);
+}
+
+.text-grey-4 {
+  color: var(--color-grey-4);
+}
+.bg-grey-4 {
+  background-color: var(--color-grey-4);
+}
+.border-grey-4 {
+  border-color: var(--color-grey-4);
+}
+
+.text-grey-5 {
+  color: var(--color-grey-5);
+}
+.bg-grey-5 {
+  background-color: var(--color-grey-5);
+}
+.border-grey-5 {
+  border-color: var(--color-grey-5);
+}
+
+.text-grey-6 {
+  color: var(--color-grey-6);
+}
+.bg-grey-6 {
+  background-color: var(--color-grey-6);
+}
+.border-grey-6 {
+  border-color: var(--color-grey-6);
+}
+
+/* Chip & Extended Colors */
+.text-chip-stroke {
+  color: var(--color-chip-stroke);
+}
+.bg-chip-stroke {
+  background-color: var(--color-chip-stroke);
+}
+.border-chip-stroke {
+  border-color: var(--color-chip-stroke);
+}
+
+.bg-extended-1 {
+  background: var(--color-extended-1);
+}
+
+.text-extended-2 {
+  color: var(--color-extended-2);
+}
+.bg-extended-2 {
+  background-color: var(--color-extended-2);
+}
+.border-extended-2 {
+  border-color: var(--color-extended-2);
+}
+
+.text-extended-3 {
+  color: var(--color-extended-3);
+}
+.bg-extended-3 {
+  background-color: var(--color-extended-3);
+}
+.border-extended-3 {
+  border-color: var(--color-extended-3);
+}
+
+* {
+  scrollbar-width: thin;
+}
+body {
+  @apply font-instrument text-grey-2;
+}
+html,
+body {
+  /* height: 100%; */
+  overflow-x: hidden;
+}
+@media (max-width: 768px) {
+  html,
+  body {
+    overflow-x: auto !important;
+  }
+}
+body::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-color);
+  border-radius: 10px;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scrollbar-hover);
+}
+
+body::-webkit-scrollbar-track {
+  background-color: var(--scrollbar-color);
+  border-radius: 10px;
+}
+
+body::-webkit-scrollbar-corner {
+  background-color: var(--scrollbar-color);
+}
+
+body {
+  scrollbar-width: thin;
+  /* scrollbar-color: var(--scrollbar-color) var(--scrollbar-color); */
+}
+#smooth-wrapper {
+  height: 100%;
+  overflow: hidden;
+}
+#smooth-content {
+  will-change: transform;
+}
+
+/* Container Configuration */
+@utility container {
+  padding-inline: 12px;
+  margin-inline: auto;
+}
+@utility container-fluid {
+  @apply px-4 lg:px-5 2xl:px-24;
+  margin-inline: auto;
+}
+/* Custom Utility Classes */
+.font-nunito {
+  font-family: var(--font-instrument);
+}
+/* Form */
+@layer components {
+  /* All placeholders inside Formidable forms */
+  .frm_form_field input::placeholder,
+  .frm_form_field textarea::placeholder {
+    @apply !text-grey-3;
+  }
+
+  /* “Placeholder” style for a <select> first option */
+  .frm_form_field select option {
+    @apply !text-grey-3;
+  }
+  .frm_form select {
+    @apply pr-8; /* Add more if you need bigger gap */
+  }
+  @media only screen and (max-width: 782px) {
+    .with_frm_style .iti {
+      width: 100% !important;
+    }
+  }
+}
+/*  */
+.fade-in {
+  opacity: 0;
+}
+/* StatsCounter digits: ensure consistent digit width */
+.stats-counter {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Section Heading */
+.section-heading {
+  @apply mx-auto mb-6 max-w-full lg:mb-8 lg:max-w-[852px];
+  h2 {
+    @apply mb-2;
+  }
+  p {
+    @apply text-base leading-[21px] font-normal md:text-[18px] md:leading-[25px];
+  }
+}
+/* Breadcrump */
+.breadcrumb_last {
+  @apply text-primary;
+}
+
+/* Global Banner Block  */
+.global_banner_block {
+}
+.inner_banner_image-wrapper {
+  .curve-shape {
+    content: url('../images/home/curve-long.svg');
+    cursor: none;
+    @media (max-width: 767px) {
+      content: url('../images/home/curve.svg');
+      width: 56px;
+    }
+  }
+}
+.feature_items-item {
+  .curve-shape {
+    content: url('../images/home/curve.svg');
+    cursor: none;
+  }
+}
+.top-curve-shape {
+  content: url('../images/values/top-curve.png');
+
+  @media (max-width: 767px) {
+  }
+}
+
+/*  */
+.custom-rounded {
+  border-radius: var(--rounded-40) !important;
+  @media (max-width: 767px) {
+    border-radius: var(--rounded-20) !important;
+  }
+}
+/* Prevent body scroll when menu is open */
+body.menu-open {
+  overflow: hidden;
+}
+
+.innovations-card,
+.quote-card {
+  .curve-shape {
+    content: url('../images/home/card-curve.svg');
+    cursor: none;
+    right: -10px;
+    bottom: -10px;
+    width: 90px;
+    @media (max-width: 767px) {
+      right: -6px;
+      bottom: -6px;
+      width: 56px;
+    }
+  }
+}
+
+.get-in-touch-block {
+  .frm_form_title {
+    @apply hidden;
+  }
+  .form-field,
+  .frm_verify,
+  #frm_field_13_container {
+    label {
+      @apply hidden;
+    }
+  }
+
+  input {
+    &::placeholder {
+      @apply !text-grey-3;
+    }
+  }
+  input::placeholder {
+    color: var(--grey-3) !important;
+  }
+  .curve-shape {
+    content: url('../images/home/curve-long.svg');
+    cursor: none;
+    @media (max-width: 767px) {
+      content: url('../images/home/curve.svg');
+      width: 56px;
+    }
+  }
+  .frm_error {
+    color: #e90000 !important;
+  }
+
+  .custom-select select {
+    appearance: none; /* Standard */
+    -webkit-appearance: none; /* Safari/Chrome */
+    -moz-appearance: none; /* Firefox */
+
+    width: 100%;
+    padding-right: 10px;
+
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 1rem center; /* position of arrow */
+    background-size: 1rem;
+  }
+  .frm_message h3 {
+    margin: 0;
+  }
+}
+
+.page-template-page-Initiatives {
+  .feature_items-item {
+    background: #eef7e7;
+  }
+}
+.bottom-right {
+  --r: 25px;
+  --s: 25px;
+  border-radius: var(--r);
+  --_m: /calc(2 * var(--r)) calc(2 * var(--r)) radial-gradient(#000 70%, #0000 72%) no-repeat;
+  mask:
+    right 0 bottom calc(var(--s) + var(--r)) var(--_m),
+    right calc(var(--s) + var(--r)) bottom 0 var(--_m),
+    radial-gradient(var(--s) at 100% 100%, #0000 99%, #000 calc(100% + 1px)) calc(-1 * var(--r))
+      calc(-1 * var(--r)) no-repeat,
+    conic-gradient(
+      from 90deg at calc(100% - var(--s) - 2 * var(--r)) calc(100% - var(--s) - 2 * var(--r)),
+      #0000 25%,
+      #000 0
+    );
+  @media (max-width: 767px) {
+    --r: 15px;
+    --s: 15px;
+  }
+}
+.page-template-page-about {
+  .stats-block {
+    .stats-grid-items {
+      @apply !w-full grid-cols-2 py-0 md:grid-cols-3 lg:grid-cols-5;
+    }
+    .floating-item-left,
+    .floating-item-right {
+      @apply hidden;
+    }
+  }
+  .timeline-ruler {
+    position: relative;
+
+    .ruler-x {
+      position: absolute;
+      top: -5px;
+      width: 100%;
+      display: flex;
+      align-items: end;
+      justify-content: space-evenly;
+      li {
+        width: 1.5px;
+        height: 12px;
+        background-color: #d9d9d9;
+        top: 0;
+        &:nth-child(3) {
+          position: relative;
+          &:before {
+            background: #ed8086;
+            width: 1.5px;
+            height: 23px;
+            position: absolute;
+            content: '';
+            left: 0;
+            transition: all ease-in;
+            z-index: 1;
+          }
+        }
+      }
+    }
+  }
+  .top-line {
+    background: #d9d9d9;
+    width: 100%;
+    height: 1px;
+    z-index: 1;
+    position: relative;
+  }
+  .line {
+    width: 1.5px;
+    height: 12px;
+    top: -5px;
+    position: absolute;
+    background-color: #d9d9d9;
+  }
+  .milestone-card {
+    .bottom-right {
+      --r: 15px;
+      --s: 15px;
+    }
+  }
+}
+@use '../utils' as *;
+
+.inner_banner_image-wrapper {
+  &.bottom-right {
+    --r: 40px;
+    --s: 40px;
+    @media (max-width: 767px) {
+      --r: 20px;
+      --s: 20px;
+    }
+  }
+}
+.certificate-slider {
+  .bottom-right {
+    --r: 23px;
+    --s: 23px;
+  }
+}
+.news-item,
+.gallery_items-item {
+  &.bottom-right {
+    --r: 23px;
+    --s: 23px;
+  }
+}
+
+/* .long {
+  --w: 280px;
+  --r: 0.5em;
+  --_x: calc(var(--w) - 3 * var(--r) - 0.5lh);
+  transition: --_x 0.5s;
+  border-radius: var(--r);
+  --_m: /calc(2 * var(--r)) calc(2 * var(--r)) radial-gradient(#000 69%, #0000 72%);
+  --_g: conic-gradient(
+    from 90deg at calc(100% - var(--r)) calc(100% - var(--r)),
+    #0000 25%,
+    #000 0
+  );
+  --_d: (0.5lh + var(--r));
+  mask:
+    calc(100% - var(--_d) - var(--_x)) 100% var(--_m),
+    100% calc(100% - var(--_d)) var(--_m),
+    radial-gradient(0.5lh at 100% 100%, #0000 99%, #000 calc(100% + 1px))
+      calc(-1 * var(--r) - var(--_x)) calc(-1 * var(--r)),
+    var(--_g) calc(-1 * var(--_d) - var(--_x)) 0,
+    var(--_g) 0 calc(-1 * var(--_d));
+  mask-repeat: no-repeat;
+} */
+.sustainability_impact_block {
+  .section-heading {
+    max-width: 1000px;
+  }
+}
+
+/* Prevent body scroll when popup is active */
+body.mobile-popup-open {
+  overflow: hidden;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .mobile-popup {
+    padding: 10px;
+  }
+
+  .mobile-popup-content {
+    max-height: 95vh;
+  }
+}
+
+.fade-up-stagger {
+  opacity: 0;
+  transform: translateY(40px);
+}
+.uncover {
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+.uncover_slice {
+  height: 100%;
+  flex-grow: 1;
+  background: #ffffff;
+}
+
+.feature_items-item {
+  position: relative;
+  &::before {
+    content: url('../images/values/bg-shape.png');
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: -1;
+  }
+}

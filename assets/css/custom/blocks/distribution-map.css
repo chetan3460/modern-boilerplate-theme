@@ -1,0 +1,454 @@
+/* Distribution Map Block Styles */
+.distribution_block {
+  .section-heading {
+    max-width: 1000px;
+  }
+}
+/* Tab Navigation Styles */
+.distribution-tabs {
+  position: relative;
+  z-index: 10;
+}
+
+.distribution-tabs .bg-gray-100 {
+  background: #fff;
+  border: 1px solid rgba(218, 0, 14, 0.5);
+  padding: 0.375rem;
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+.distribution-tab {
+  position: relative;
+  color: var(--color-primary);
+  font: 16px;
+  font-weight: 400;
+  line-height: 24px; /* 150% */
+  letter-spacing: -0.3px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  z-index: 1;
+  margin: 0;
+  flex: 1;
+  text-align: center;
+  padding: 10px 30px;
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.distribution-tab:hover {
+  color: #fff;
+  background: var(--color-primary);
+}
+
+.distribution-tab.active {
+  color: white;
+  background: #dc2626;
+  box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+  z-index: 2;
+  font-weight: 700;
+}
+
+/* Remove the blue background for India tab - keep consistent red */
+.distribution-tab.active[data-tab='india'] {
+  background: #dc2626;
+  box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+}
+
+/* Legend Styles */
+.distribution-legend {
+  position: relative;
+  z-index: 5;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 2rem;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(8px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* .legend-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+} */
+
+.legend-dot {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* .legend-dot::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0.375rem;
+  height: 0.375rem;
+  background: white;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+} */
+
+.legend-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+  letter-spacing: 0.025em;
+}
+
+/* Map Container Styles */
+.distribution-map-container {
+  position: relative;
+}
+
+.map-background {
+  position: relative;
+  /* overflow: hidden; */
+  width: 1104px;
+  height: 365px;
+  margin: 0 auto;
+  transition: all 0.4s ease-in-out;
+}
+
+/* Specific dimensions for India map when India tab is active */
+.distribution_block.india-active .map-background {
+  width: 383px;
+  height: 427px;
+}
+
+/* Location Container Management */
+.locations-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.locations-container.active {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 2;
+}
+
+/* Ensure mixed-locations shows both pin types */
+.mixed-locations.active {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 2;
+}
+
+.mixed-locations.active .location-pin {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Location Pin Styles */
+.location-pin {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.location-pin:hover {
+  z-index: 20;
+}
+
+/* Pin Marker Styles */
+.pin-marker {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pin-marker svg {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.location-pin:hover .pin-marker svg {
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.3));
+}
+
+/* Pin pulse animation */
+.pin-marker::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  background: currentColor;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.3;
+  animation: pinPulse 2s infinite;
+  pointer-events: none;
+}
+
+.international-pin .pin-marker::before {
+  background: #dc2626;
+}
+
+.india-pin .pin-marker::before {
+  background: #3b82f6;
+}
+
+@keyframes pinPulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 0.1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0;
+  }
+}
+
+/* Pin Label Styles */
+.pin-label {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  margin-bottom: 5px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.pin-type {
+  font-size: 0.75rem;
+  font-weight: 600;
+  opacity: 0.8;
+  margin-bottom: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.pin-location {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.pin-label::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid rgba(0, 0, 0, 0.9);
+}
+
+/* Different pin colors for international vs India */
+.international-pin .pin-marker path[fill='#DC2626'] {
+  fill: #dc2626;
+}
+
+.india-pin .pin-marker path[fill='#3B82F6'] {
+  fill: #3b82f6;
+}
+
+/* Responsive Design - Simple Direct Approach */
+@media (max-width: 768px) {
+  /* Force global overflow */
+  /* html {
+    overflow-x: auto !important;
+  }
+  body {
+    overflow-x: auto !important;
+  } */
+
+  /* Distribution block setup */
+
+  /* Wrapper container - Drag scrolling */
+  .distribution-map-wrapper {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 1rem 0;
+    position: relative;
+    /* Drag scrolling setup */
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    /* Smooth scrolling */
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .distribution-map-wrapper:active,
+  .distribution-map-wrapper.dragging {
+    cursor: grabbing;
+  }
+
+  /* Map container */
+  .distribution-map-container {
+    width: 1200px; /* Fixed width larger than viewport */
+    margin: 0 auto;
+    position: relative;
+    /* Prevent pin interference with scrolling */
+    pointer-events: none;
+  }
+
+  /* Re-enable pointer events only for pins */
+  .location-pin {
+    pointer-events: auto;
+    /* Reduce pin touch interference */
+    touch-action: none;
+    /* Improve touch target size on mobile */
+    padding: 10px;
+    margin: -10px;
+  }
+
+  /* Active pin state for mobile */
+  .location-pin.active-pin .pin-marker {
+    z-index: 21;
+  }
+
+  /* Ensure labels are always on top */
+  .location-pin .pin-label {
+    z-index: 50;
+  }
+
+  /* Map background */
+  .map-background {
+    margin: 0 auto;
+    /* Allow scroll through background */
+    pointer-events: none;
+  }
+
+  /* India map dimensions */
+  .distribution_block.india-active .map-background {
+    width: 383px !important;
+    height: 427px !important;
+  }
+
+  /* Ensure container is always larger for India map too */
+  .distribution_block.india-active .distribution-map-container {
+    width: 600px;
+  }
+
+  /* Visible scrollbar */
+  .distribution-map-wrapper::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .distribution-map-wrapper::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 6px;
+  }
+
+  .distribution-map-wrapper::-webkit-scrollbar-thumb {
+    background: #dc2626;
+    border-radius: 6px;
+  }
+
+  .distribution-map-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #b91c1c;
+  }
+}
+
+/* Loading state */
+.distribution_block[data-component]:not(.init) .location-pin {
+  opacity: 0;
+  transform: translate(-50%, -100%) scale(0);
+}
+
+/* Enhanced animation states */
+.location-pin {
+  will-change: transform, opacity;
+}
+
+.pin-marker {
+  will-change: transform;
+}
+
+/* Focus states for accessibility */
+/* .distribution-tab:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+} */
+
+.location-pin:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 4px;
+  border-radius: 50%;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .distribution-tab.active {
+    border: 2px solid currentColor;
+  }
+
+  .pin-label {
+    background: #000;
+    border: 1px solid #fff;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .distribution-tab,
+  .location-pin,
+  .pin-marker,
+  .pin-label,
+  .locations-container {
+    transition: none;
+  }
+
+  .pin-marker::before {
+    animation: none;
+  }
+}

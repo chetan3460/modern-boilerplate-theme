@@ -1,0 +1,61 @@
+{
+  "key": "group_megamenu_menu_item",
+  "title": "Mega Menu (Menu Item)",
+  "fields": [
+    {
+      "key": "field_mega_title",
+      "label": "Mega Title",
+      "name": "mega_title",
+      "type": "text",
+      "instructions": "Optional. Defaults to the menu item title.",
+      "required": 0,
+      "wrapper": {"width": "", "class": "", "id": ""},
+      "default_value": "",
+      "maxlength": "",
+      "placeholder": ""
+    },
+    {
+      "key": "field_mega_description",
+      "label": "Mega Description",
+      "name": "mega_description",
+      "type": "textarea",
+      "instructions": "Optional. Defaults to the menu item description or the linked page excerpt.",
+      "required": 0,
+      "wrapper": {"width": "", "class": "", "id": ""},
+      "default_value": "",
+      "rows": 3,
+      "new_lines": "br"
+    },
+    {
+      "key": "field_mega_image",
+      "label": "Mega Image",
+      "name": "mega_image",
+      "type": "image",
+      "instructions": "Optional. Recommended 800x500 or larger.",
+      "required": 0,
+      "wrapper": {"width": "", "class": "", "id": ""},
+      "return_format": "array",
+      "preview_size": "medium",
+      "library": "all"
+    }
+  ],
+  "location": [
+    [
+      {
+        "param": "nav_menu_item",
+        "operator": "==",
+        "value": "all"
+      }
+    ]
+  ],
+  "menu_order": 0,
+  "position": "normal",
+  "style": "default",
+  "label_placement": "top",
+  "instruction_placement": "label",
+  "hide_on_screen": "",
+  "active": true,
+  "description": "",
+  "show_in_rest": 0
+}
+

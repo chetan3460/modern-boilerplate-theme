@@ -1,0 +1,226 @@
+/* Simple Team Tabs - Clear Mobile/Desktop Separation */
+
+/* Sliding Toggle Tab Styles - Similar to Sustainability Impact Block */
+.team-tabs .relative.inline-flex {
+  background: transparent;
+  border: 2px solid #DA000E;
+  border-radius: 9999px;
+  position: relative;
+  overflow: hidden;
+}
+
+.team-tab-slider {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  background-color: #DA000E;
+  border-radius: 9999px;
+  transition: all 0.3s ease-out;
+  width: calc(50% - 4px);
+  left: 4px;
+}
+
+.team-slide-tab {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 10;
+  user-select: none;
+  outline: none;
+  font-weight: 400; /* Default to normal weight */
+  padding: 12px 24px;
+  border-radius: 9999px;
+  transition: all 0.3s ease;
+  flex: 1;
+  text-align: center;
+  font-size: 14px;
+  min-width: auto;
+  white-space: nowrap;
+}
+
+/* Active tab - white text and bold font */
+.team_members_block .team-slide-tab.active {
+  color: white !important;
+  font-weight: 700 !important;
+}
+
+.team_members_block .team-tabs .team-slide-tab.active {
+  color: white !important;
+  font-weight: bold !important;
+}
+
+/* Inactive tab - primary color text and normal font */
+.team_members_block .team-slide-tab:not(.active) {
+  color: #DA000E !important;
+  font-weight: 400 !important;
+}
+
+.team_members_block .team-tabs .team-slide-tab:not(.active) {
+  color: #DA000E !important;
+  font-weight: normal !important;
+}
+
+/* Hover effect */
+.team-slide-tab:hover {
+  transform: scale(1.02);
+}
+
+/* Legacy tab class for compatibility */
+.tab {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 10 !important;
+  user-select: none;
+}
+
+.tab:hover {
+  opacity: 0.8;
+  transform: translateY(-1px);
+}
+
+.tab.active {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Use swiper layout for both desktop and mobile */
+.team-desktop-layout {
+  display: none !important;
+}
+
+.team-mobile-layout {
+  display: block !important;
+}
+
+/* Swiper styling */
+.swiper {
+  overflow: visible;
+  padding-bottom: 60px;
+}
+
+.swiper-slide {
+  height: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Desktop: Grid-style swiper */
+@media (min-width: 1024px) {
+  .swiper {
+    padding-bottom: 80px;
+  }
+  
+  .swiper-wrapper {
+    align-items: stretch;
+  }
+  
+  .swiper-slide {
+    margin-bottom: 32px; /* Space between rows in grid */
+  }
+  
+  /* Ensure team member cards fill the slide height */
+  .swiper-slide .team-member-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.swiper-pagination {
+  position: absolute;
+  bottom: 0;
+}
+
+.swiper-btn-prev,
+.swiper-btn-next {
+  width: 44px;
+  height: 44px;
+  background: #fff;
+  border: 2px solid #e5e7eb;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.swiper-btn-prev:hover,
+.swiper-btn-next:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
+
+.swiper-btn-prev::after,
+.swiper-btn-next::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid #6b7280;
+  border-right: 2px solid #6b7280;
+}
+
+.swiper-btn-prev::after {
+  transform: rotate(-135deg);
+  margin-left: 2px;
+}
+
+.swiper-btn-next::after {
+  transform: rotate(45deg);
+  margin-right: 2px;
+}
+
+.swiper-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+/* Hide/show content based on active state */
+.team-category-wrapper {
+  display: none;
+}
+
+.team-category-wrapper.active {
+  display: block;
+}
+
+/* Mobile responsiveness for tabs */
+@media (max-width: 640px) {
+  .team-tabs .relative.inline-flex {
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+
+  .team-slide-tab {
+    padding: 10px 16px !important;
+    font-size: 13px !important;
+    min-width: auto;
+  }
+
+  .team-tab-slider {
+    width: calc(50% - 3px) !important;
+    left: 3px !important;
+  }
+
+  /* Legacy tab support */
+  .tab {
+    padding: 12px 20px;
+    font-size: 14px;
+    min-width: auto;
+  }
+}
+
+
+/* Debug styles (remove in production) */
+.debug .tab.active {
+  border: 2px solid red !important;
+}
+
+.debug .team-category-wrapper.active {
+  outline: 2px solid blue !important;
+}

@@ -1,0 +1,259 @@
+{
+    "key": "group_news_blocks_2024",
+    "title": "News Page Blocks",
+    "fields": [
+        {
+            "key": "field_news_panels_2024",
+            "label": "News Panels",
+            "name": "news_panels",
+            "aria-label": "",
+            "type": "flexible_content",
+            "instructions": "Add flexible content blocks for news pages",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layouts": {
+                "layout_news_content": {
+                    "key": "layout_news_content",
+                    "name": "news_content_block",
+                    "label": "Content Block",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_news_content_hide",
+                            "label": "Hide Block",
+                            "name": "hide_block",
+                            "type": "true_false",
+                            "default_value": 0
+                        },
+                        {
+                            "key": "field_news_content_type",
+                            "label": "Content Type",
+                            "name": "content_type",
+                            "type": "select",
+                            "choices": {
+                                "text": "Text Only",
+                                "image_text": "Image + Text",
+                                "quote": "Quote Block",
+                                "gallery": "Image Gallery"
+                            },
+                            "default_value": "text"
+                        },
+                        {
+                            "key": "field_news_content_title",
+                            "label": "Title",
+                            "name": "title",
+                            "type": "text"
+                        },
+                        {
+                            "key": "field_news_content_subtitle",
+                            "label": "Subtitle",
+                            "name": "subtitle",
+                            "type": "text"
+                        },
+                        {
+                            "key": "field_news_content_content",
+                            "label": "Content",
+                            "name": "content",
+                            "type": "wysiwyg",
+                            "tabs": "all",
+                            "toolbar": "full",
+                            "media_upload": 1
+                        },
+                        {
+                            "key": "field_news_content_image",
+                            "label": "Image",
+                            "name": "image",
+                            "type": "image",
+                            "return_format": "array",
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_news_content_type",
+                                        "operator": "==",
+                                        "value": "image_text"
+                                    }
+                                ]
+                            ]
+                        },
+                        {
+                            "key": "field_news_content_gallery",
+                            "label": "Gallery Images",
+                            "name": "gallery_images",
+                            "type": "gallery",
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_news_content_type",
+                                        "operator": "==",
+                                        "value": "gallery"
+                                    }
+                                ]
+                            ]
+                        },
+                        {
+                            "key": "field_news_content_bg",
+                            "label": "Background Color",
+                            "name": "background_color",
+                            "type": "select",
+                            "choices": {
+                                "white": "White",
+                                "gray": "Gray",
+                                "blue": "Blue Tint",
+                                "gradient": "Gradient"
+                            },
+                            "default_value": "white"
+                        }
+                    ]
+                },
+                "layout_related_news": {
+                    "key": "layout_related_news",
+                    "name": "related_news_block",
+                    "label": "Related News Block",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_related_news_hide",
+                            "label": "Hide Block",
+                            "name": "hide_block",
+                            "type": "true_false",
+                            "default_value": 0
+                        },
+                        {
+                            "key": "field_related_news_title",
+                            "label": "Section Title",
+                            "name": "section_title",
+                            "type": "text",
+                            "default_value": "Related Articles"
+                        },
+                        {
+                            "key": "field_related_news_count",
+                            "label": "Posts to Show",
+                            "name": "posts_to_show",
+                            "type": "number",
+                            "default_value": 3,
+                            "min": 1,
+                            "max": 6
+                        },
+                        {
+                            "key": "field_related_news_show_category",
+                            "label": "Show Category Badge",
+                            "name": "show_category",
+                            "type": "true_false",
+                            "default_value": 1
+                        },
+                        {
+                            "key": "field_related_news_show_date",
+                            "label": "Show Date",
+                            "name": "show_date",
+                            "type": "true_false",
+                            "default_value": 1
+                        }
+                    ]
+                },
+                "layout_news_listing": {
+                    "key": "layout_news_listing",
+                    "name": "news_listing_block",
+                    "label": "News Listing Block",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_news_listing_hide",
+                            "label": "Hide Block",
+                            "name": "hide_block",
+                            "type": "true_false",
+                            "default_value": 0
+                        },
+                        {
+                            "key": "field_news_listing_title",
+                            "label": "Section Title",
+                            "name": "section_title",
+                            "type": "text",
+                            "default_value": "All News"
+                        },
+                        {
+                            "key": "field_news_listing_posts_per_page",
+                            "label": "Posts Per Page",
+                            "name": "posts_per_page",
+                            "type": "number",
+                            "default_value": 6,
+                            "min": 1,
+                            "max": 24
+                        },
+                        {
+                            "key": "field_news_listing_show_filters",
+                            "label": "Show Category Filters",
+                            "name": "show_filters",
+                            "type": "true_false",
+                            "default_value": 1
+                        },
+                        {
+                            "key": "field_news_listing_show_search",
+                            "label": "Show Search",
+                            "name": "show_search",
+                            "type": "true_false",
+                            "default_value": 1
+                        }
+                    ]
+                },
+                "layout_news_featured": {
+                    "key": "layout_news_featured",
+                    "name": "news_featured_block",
+                    "label": "Featured News Block",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_news_featured_hide",
+                            "label": "Hide Block",
+                            "name": "hide_block",
+                            "type": "true_false",
+                            "default_value": 0
+                        },
+                        {
+                            "key": "field_news_featured_title",
+                            "label": "Section Title",
+                            "name": "section_title",
+                            "type": "text",
+                            "default_value": "Featured News"
+                        },
+                        {
+                            "key": "field_news_featured_posts",
+                            "label": "Featured Posts",
+                            "name": "featured_posts",
+                            "type": "relationship",
+                            "post_type": ["news"],
+                            "filters": ["search", "post_type", "taxonomy"],
+                            "max": 3,
+                            "return_format": "object"
+                        }
+                    ]
+                }
+            },
+            "button_label": "Add Block",
+            "collapsed": "",
+            "min": "",
+            "max": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "news"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "Flexible content blocks for news pages"
+}

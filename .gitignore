@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+
+# Build artifacts
+dist/
+.vite/
+
+# Temporary files
+.DS_Store
+*.log
+*.swp
+*.swo
+*~
+.idea/
+.vscode/settings.json
+
+# Environment variables
+.env
+.env.local
+
+# IDE
+*.sublime-project
+*.sublime-workspace
+
+# OS
+Thumbs.db
+.AppleDouble
+.LSOverride
+
+# Cache
+.cache/
+cache/
+
+# Compiled files
+*.min.js
+*.min.css

@@ -1,0 +1,36 @@
+/* Filter Accordion Icon Controls */
+
+/* Default state: show plus icon, hide minus icon */
+.filter-toggle .minus-icon {
+  display: none !important;
+}
+
+.filter-toggle .plus-icon {
+  display: block !important;
+}
+
+/* When section is expanded: show minus icon, hide plus icon */
+.filter-section.expanded .filter-toggle .minus-icon {
+  display: block !important;
+}
+
+.filter-section.expanded .filter-toggle .plus-icon {
+  display: none !important;
+}
+
+/* Ensure icons are properly positioned */
+.filter-toggle svg {
+  transition: opacity 0.2s ease;
+  cursor: pointer;
+}
+
+/* Make sure only one icon is visible at a time */
+/* .filter-toggle svg + svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+} */
+
+.filter-toggle {
+  position: relative;
+}

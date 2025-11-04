@@ -1,0 +1,369 @@
+/**
+ * Reports Filter Styles
+ * Additional styles for the Reports & Investor Updates filtering functionality
+ */
+
+/* Smooth transitions for report cards */
+.report-card {
+  transition:
+    opacity 0.3s ease-in-out,
+    transform 0.2s ease-in-out;
+}
+
+.report-card.hidden {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+/* Category filter button states */
+.category-filter {
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  border: 2px solid transparent;
+  @apply text-base;
+}
+
+/* Desktop category styles */
+@media (min-width: 768px) {
+  .category-filter.active {
+    @apply bg-primary font-semibold text-white;
+  }
+}
+
+.category-filter.active {
+  @apply bg-primary font-semibold text-white;
+}
+
+.category-filter:hover {
+  border-color: rgba(239, 68, 68, 0.2);
+  transform: translateY(-1px);
+}
+
+.category-filter.bg-red-600 {
+  border-color: rgba(239, 68, 68, 0.3);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+.category-filter.active {
+  @apply bg-primary font-semibold text-white;
+}
+
+/* Search input focus styles */
+
+/* Filter dropdown focus styles */
+/* select:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: #3b82f6;
+} */
+
+/* Load more button states */
+
+#load-more-btn:active {
+  transform: translateY(0);
+}
+
+/* Loading state for load more button */
+#load-more-btn.loading {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+#load-more-btn.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -10px 0 0 -10px;
+  width: 20px;
+  height: 20px;
+  border: 2px solid transparent;
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Custom dropdown label styling */
+.dd-label {
+  color: #333;
+  font-family: 'Instrument Sans';
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 130%; /* 18.2px */
+  transition: color 0.2s ease-in-out;
+}
+
+/* Selected state for dropdown labels */
+.dd-label.selected {
+  color: black;
+}
+
+/* Dropdown menu scrolling fixes */
+.dd-menu,
+#categories-dropdown {
+  /* Override any smooth scrolling behavior */
+  scroll-behavior: auto !important;
+  /* Ensure proper scrolling on all devices */
+  -webkit-overflow-scrolling: touch;
+  /* Force hardware acceleration for smooth scrolling */
+  transform: translateZ(0);
+  /* Prevent scroll events from bubbling up */
+  overscroll-behavior: contain;
+  /* Mobile scrolling optimizations */
+  touch-action: pan-y;
+  /* Ensure scrolling works on iOS */
+  -webkit-transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  /* Force layer creation for smooth scrolling */
+  will-change: scroll-position;
+}
+
+/* Fix scrollbar styling */
+.dd-menu::-webkit-scrollbar,
+#categories-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+
+.dd-menu::-webkit-scrollbar-track,
+#categories-dropdown::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.dd-menu::-webkit-scrollbar-thumb,
+#categories-dropdown::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.dd-menu::-webkit-scrollbar-thumb:hover,
+#categories-dropdown::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}
+
+/* Mobile Categories Select Styling */
+#mobile-categories-select {
+  /* Keep some native select behavior for functionality */
+  -webkit-appearance: menulist;
+  -moz-appearance: menulist;
+  appearance: menulist;
+
+  /* Ensure text is visible and properly styled */
+  font-family: 'Instrument Sans', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.5;
+  color: white !important;
+
+  /* Style the select */
+  background-color: #dc2626 !important;
+  border: none;
+  border-radius: 0.5rem;
+
+  /* Ensure text is readable */
+  text-shadow: none;
+  -webkit-text-fill-color: white;
+
+  /* Ensure proper z-index */
+  position: relative;
+  z-index: 20;
+
+  /* Ensure it's clickable and functional */
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+/* Force text color on webkit browsers */
+#mobile-categories-select::-webkit-color-swatch-wrapper {
+  color: white !important;
+}
+
+/* Style the select options - note: limited cross-browser support */
+#mobile-categories-select option {
+  background-color: white !important;
+  color: #374151 !important;
+  padding: 12px 16px;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 1.5;
+  border: none;
+}
+
+/* Style the selected/highlighted option */
+#mobile-categories-select option:checked,
+#mobile-categories-select option[selected] {
+  background-color: #fee2e2 !important;
+  color: #dc2626 !important;
+  font-weight: 600;
+}
+
+/* Hover state for options */
+#mobile-categories-select option:hover {
+  background-color: #f3f4f6 !important;
+  color: #374151 !important;
+}
+
+/* Focus state for the select */
+#mobile-categories-select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.3);
+  border-color: #dc2626;
+}
+
+/* Ensure the custom arrow stays in place and is visible */
+
+/* Clear filters button */
+
+/* No results message animation */
+#no-results-found {
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Results count styling */
+#results-count {
+  transition: color 0.2s ease-in-out;
+}
+
+/* Featured report highlighting */
+.report-card[data-featured='1'] {
+  position: relative;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.03), rgba(239, 68, 68, 0.01));
+}
+
+.report-card[data-featured='1']::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 2px solid rgba(239, 68, 68, 0.1);
+  border-radius: 1rem;
+  pointer-events: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .category-filter {
+    font-size: 0.875rem;
+    padding: 0.75rem 1rem;
+  }
+
+  #search-reports {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+
+  /* Stack filters vertically on mobile */
+  .filter-controls {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .filter-controls > div {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  /* Enhanced mobile scrolling for categories dropdown */
+  #categories-dropdown {
+    max-height: 300px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    padding: 10px;
+  }
+
+  /* Optimize dropdown items for touch */
+  #categories-dropdown .category-item {
+    /* Prevent text selection issues */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    /* Better touch targets */
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+}
+
+/* Improved focus indicators for accessibility */
+/* .category-filter:focus,
+#search-reports:focus,
+select:focus,
+#load-more-btn:focus,
+#clear-filters:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+} */
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .category-filter.bg-red-600 {
+    background-color: #000;
+    color: #fff;
+    border-color: #fff;
+  }
+
+  .report-card {
+    border: 2px solid #000;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .report-card,
+  .category-filter,
+  #load-more-btn,
+  #clear-filters {
+    transition: none;
+  }
+
+  #load-more-btn.loading::after {
+    animation: none;
+  }
+
+  #no-results-found {
+    animation: none;
+  }
+}
+
+/* Print styles */
+@media print {
+  .category-filter,
+  #search-reports,
+  select,
+  #load-more-btn,
+  #clear-filters,
+  #no-results-found {
+    display: none !important;
+  }
+
+  .report-card {
+    break-inside: avoid;
+    margin-bottom: 1rem;
+  }
+}

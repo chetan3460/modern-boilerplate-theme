@@ -1,0 +1,127 @@
+/**
+ * Team Members Block Styles
+ * Minimal custom CSS using Tailwind CSS utilities
+ */
+
+/* Team Swiper Styles - Simple and clean */
+.team-members-swiper {
+  @apply relative;
+  padding-bottom: 50px; /* Space for pagination */
+}
+
+.team-members-swiper .swiper-wrapper {
+  @apply items-stretch;
+}
+
+.team-members-swiper .swiper-slide {
+  @apply h-auto;
+}
+
+/* Mobile swiper container - allow partial slides */
+/* .team-mobile-layout .swiper {
+  overflow: visible !important;
+  width: 100%;
+  padding-right: 40px;
+  margin-right: -40px;
+} */
+
+/* .team-mobile-layout .swiper-wrapper {
+  padding-right: 40px;
+} */
+
+/* .team-mobile-layout .swiper-slide {
+  width: 280px !important;
+  flex-shrink: 0 !important;
+} */
+
+/* @media (max-width: 480px) {
+  .team-mobile-layout .swiper-slide {
+    width: 250px !important;
+  }
+} */
+
+/* @media (min-width: 640px) {
+  .team-mobile-layout .swiper-slide {
+    width: 300px !important;
+  }
+} */
+
+/* Standard Swiper Navigation */
+.team-members-swiper .swiper-button-next,
+.team-members-swiper .swiper-button-prev {
+  color: var(--swiper-theme-color, #007aff);
+}
+
+.team-members-swiper .swiper-pagination {
+  position: absolute;
+  bottom: 0;
+}
+
+.team-members-swiper .swiper-pagination-bullet {
+  background-color: var(--swiper-theme-color, #007aff);
+}
+
+/* Ensure hidden content stays hidden */
+.team-category-content.hidden {
+  display: none !important;
+}
+
+.team-category-content[style*='display: none'] {
+  display: none !important;
+}
+
+/* Team Member Card Hover Effect */
+.team-member-card {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+.team-member-card:hover {
+  @apply shadow-lg;
+}
+
+/* Category Tab Styles */
+.team-category-tab {
+  @apply font-medium transition-all duration-300 ease-in-out;
+}
+
+/* Mobile specific adjustments */
+@media (max-width: 767px) {
+  .team-members-mobile {
+    @apply px-4;
+  }
+}
+
+/* Content visibility for category switching */
+.team-category-content.hidden {
+  @apply hidden;
+}
+
+.team-category-content.active {
+  @apply block;
+}
+
+/* Explicit show/hide classes for JavaScript control */
+.team-content-hidden {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  position: absolute !important;
+  left: -9999px !important;
+  transform: translateX(-9999px) !important;
+}
+
+.team-content-visible {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: static !important;
+  left: auto !important;
+  transform: none !important;
+}
+
+/* Ensure desktop grid shows when active on larger screens */
+@media (min-width: 768px) {
+  .team-category-content.active .hidden.md\:grid {
+    @apply grid;
+  }
+}

@@ -1,0 +1,1742 @@
+<?php
+
+// Include product helper functions
+require_once get_template_directory() . '/inc/product-helpers.php';
+
+// Include reports sorting helper
+require_once get_template_directory() . '/inc/reports-sorting-helper.php';
+
+require_once __DIR__ . '/inc/core/init.php';
+
+if (!defined('T_PREFIX')) {
+    define('T_PREFIX', 'replast');
+}
+
+// Load performance optimization modules
+require_once get_template_directory() . '/performance-config.php';
+require_once get_template_directory() . '/inc/performance-helpers.php';
+require_once get_template_directory() . '/inc/critical-css.php';
+require_once get_template_directory() . '/inc/ajax/product-filter.php';
+
+// Include Formidable Forms optimization test script
+require_once get_template_directory() . '/test-formidable-optimization.php';
+
+// Load WebP handling functionality
+require_once get_template_directory() . '/inc/webp-handler.php';
+
+// Load cookie consent helpers
+require_once get_template_directory() . '/inc/cookie-helpers.php';
+
+
+// Load ACF custom product attributes (disabled; managed via ACF JSON/UI)
+// require_once get_template_directory() . '/inc/acf-custom-product-attributes.php';
+
+// ACF JSON save and load paths
+add_filter('acf/settings/save_json', function ($path) {
+    return get_stylesheet_directory() . '/acf-json';
+});
+
+add_filter('acf/settings/load_json', function ($paths) {
+    unset($paths[0]);
+    $paths[] = get_stylesheet_directory() . '/acf-json';
+    return $paths;
+});
+
+/**
+ * Add resource hints for faster external resource loading
+ * Improves page load performance by establishing early connections to external resources
+ */
+function add_resource_hints() {
+    if (is_admin()) return;
+    
+    // Preconnect to unpkg.com for web-vitals library (saves ~100-200ms)
+    echo '<link rel="preconnect" href="https://unpkg.com" crossorigin>' . "\n";
+    echo '<link rel="dns-prefetch" href="https://unpkg.com">' . "\n";
+    
+    // If using Google Fonts or other CDNs, add them here
+    // echo '<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>' . "\n";
+}
+add_action('wp_head', 'add_resource_hints', 1); // Priority 1 to load early
+
+/**
+ * Core Web Vitals Monitoring (2025 Standards)
+ */
+function add_core_web_vitals_monitoring()
+{
+    if (is_admin()) return;
+
+?>
+    <script type="module">
+        // Core Web Vitals monitoring with attribution
+        import {
+            onLCP,
+            onINP,
+            onCLS
+        } from 'https://unpkg.com/web-vitals@4/dist/web-vitals.attribution.js';
+
+        const send = (name, value, id, attribution) => {
+            // Create form data for WordPress AJAX compatibility
+            const formData = new FormData();
+            formData.append('action', 'core_web_vitals');
+            formData.append('name', name);
+            formData.append('value', Math.round(value));
+            formData.append('id', id || '');
+            formData.append('url', location.pathname);
+            formData.append('timestamp', Date.now());
+
+            // Send to WordPress AJAX endpoint
+            fetch(ajaxurl, {
+                method: 'POST',
+                body: formData,
+                keepalive: true
+            }).catch(error => {
+                console.log('Web Vitals data sent:', name, Math.round(value) + 'ms');
+                // Don't log errors to avoid console noise
+            });
+        };
+
+        // Monitor Core Web Vitals
+        onLCP(({
+            value,
+            id,
+            attribution
+        }) => send('LCP', value, id, attribution));
+        onINP(({
+            value,
+            id,
+            attribution
+        }) => send('INP', value, id, attribution));
+        onCLS(({
+            value,
+            id,
+            attribution
+        }) => send('CLS', value, id, attribution));
+    </script>
+    <?php
+}
+add_action('wp_footer', 'add_core_web_vitals_monitoring');
+
+/**
+ * AJAX handler for Core Web Vitals data
+ */
+function handle_core_web_vitals_data()
+{
+    // Get content type - WordPress might use different header names
+    $content_type = '';
+    if (isset($_SERVER['HTTP_CONTENT_TYPE'])) {
+        $content_type = $_SERVER['HTTP_CONTENT_TYPE'];
+    } elseif (isset($_SERVER['CONTENT_TYPE'])) {
+        $content_type = $_SERVER['CONTENT_TYPE'];
+    } elseif (function_exists('getallheaders')) {
+        $headers = getallheaders();
+        $content_type = $headers['Content-Type'] ?? '';
+    }
+
+    // For debugging - log the request
+    error_log('Web Vitals AJAX Request - Content-Type: ' . $content_type);
+
+    // Get the JSON data
+    $json = file_get_contents('php://input');
+    $data = json_decode($json, true);
+
+    // Also try POST data if JSON parsing failed
+    if (!$data && !empty($_POST)) {
+        $data = $_POST;
+    }
+
+    if (!$data || !isset($data['name']) || !isset($data['value'])) {
+        error_log('Web Vitals AJAX Error - Invalid data: ' . print_r($data, true));
+        wp_send_json_error('Invalid data format');
+        return;
+    }
+
+    // Sanitize the data
+    $metric_name = sanitize_text_field($data['name']);
+    $metric_value = floatval($data['value']);
+    $metric_id = isset($data['id']) ? sanitize_text_field($data['id']) : '';
+    $page_url = isset($data['url']) ? sanitize_text_field($data['url']) : '';
+    $timestamp = isset($data['timestamp']) ? intval($data['timestamp']) : time();
+
+    // Log the data (you can also save to database if needed)
+    error_log(sprintf(
+        'Core Web Vitals: %s = %.2fms on %s (ID: %s) at %s',
+        $metric_name,
+        $metric_value,
+        $page_url,
+        $metric_id,
+        date('Y-m-d H:i:s', $timestamp / 1000)
+    ));
+
+    // Optional: Save to WordPress options for dashboard display
+    $vitals_data = get_option('resplast_web_vitals', []);
+    $vitals_data[] = [
+        'name' => $metric_name,
+        'value' => $metric_value,
+        'id' => $metric_id,
+        'url' => $page_url,
+        'timestamp' => $timestamp,
+        'date' => current_time('Y-m-d H:i:s')
+    ];
+
+    // Keep only last 100 entries
+    $vitals_data = array_slice($vitals_data, -100);
+    update_option('resplast_web_vitals', $vitals_data);
+
+    // Return success response
+    wp_send_json_success([
+        'message' => 'Web Vitals data received',
+        'metric' => $metric_name,
+        'value' => $metric_value
+    ]);
+}
+
+// Register AJAX handlers for both logged in and logged out users
+add_action('wp_ajax_core_web_vitals', 'handle_core_web_vitals_data');
+add_action('wp_ajax_nopriv_core_web_vitals', 'handle_core_web_vitals_data');
+
+/**
+ * Enhanced image function with 2025 performance attributes
+ */
+function resplast_hero_image($image_id, $alt = '', $class = '')
+{
+    return resplast_optimized_image($image_id, 'full', [
+        'priority' => true,
+        'class' => $class,
+        'alt' => $alt,
+        'lazy' => false,
+        'content_visibility' => false,
+        'avif_support' => true
+    ]);
+}
+
+/**
+ * Conditional loading for Formidable Forms (172KB savings)
+ * Only load scripts on pages that actually have forms
+ */
+function optimize_formidable_loading()
+{
+    // Don't run on admin or if Formidable isn't active
+    if (is_admin() || !class_exists('FrmFormsController')) {
+        return;
+    }
+
+    // Check if current page/post has forms
+    $has_forms = false;
+
+    // Method 1: Check if current post content contains formidable shortcodes
+    global $post;
+    if ($post && is_object($post)) {
+        $content = $post->post_content;
+        if (strpos($content, '[formidable') !== false) {
+            $has_forms = true;
+        }
+
+        // Method 2: Safely check ACF flexible content if ACF is active
+        if (function_exists('have_rows') && function_exists('get_sub_field')) {
+            // Check page_builder field
+            if (have_rows('page_builder', $post->ID)) {
+                while (have_rows('page_builder', $post->ID)) {
+                    the_row();
+                    if (get_row_layout() == 'get_in_touch_block') {
+                        $form_id = get_sub_field('form_id');
+                        if (!empty($form_id)) {
+                            $has_forms = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Also check home_panels field (for homepage)
+            if (have_rows('home_panels', $post->ID)) {
+                while (have_rows('home_panels', $post->ID)) {
+                    the_row();
+                    if (get_row_layout() == 'get_in_touch_block') {
+                        $form_id = get_sub_field('form_id');
+                        if (!empty($form_id)) {
+                            $has_forms = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Also check careers_panels field (for careers page)
+            if (have_rows('careers_panels', $post->ID)) {
+                while (have_rows('careers_panels', $post->ID)) {
+                    the_row();
+                    if (get_row_layout() == 'get_in_touch_block') {
+                        $form_id = get_sub_field('form_id');
+                        if (!empty($form_id)) {
+                            $has_forms = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Method 3: Check specific pages/templates that always have forms
+    $pages_with_forms = ['contact', 'about', 'careers']; // Add page slugs that always have forms
+    if (is_page($pages_with_forms)) {
+        $has_forms = true;
+    }
+
+    // Method 4: Check for Formidable widgets in sidebar
+    if (is_active_widget(false, false, 'frm_show_form')) {
+        $has_forms = true;
+    }
+
+    // If no forms detected, dequeue the scripts
+    if (!$has_forms) {
+        // Dequeue Formidable Forms scripts
+        wp_dequeue_script('formidable');
+        wp_dequeue_script('frm-dom-ready');
+        wp_dequeue_script('frm_form_action_js');
+        wp_dequeue_script('frm-validate');
+        wp_dequeue_script('frm-show-form');
+        wp_dequeue_script('frm_smooth_scroll_js');
+        wp_dequeue_script('bootstrap_tooltip');
+
+        // Also dequeue some CSS if not needed
+        wp_dequeue_style('formidable');
+        wp_dequeue_style('frm_form_styles');
+        wp_dequeue_style('formidable-foundation');
+
+        // For debugging - log which pages are optimized
+        if (WP_DEBUG) {
+            error_log('Formidable scripts dequeued on: ' . (is_page() ? 'Page - ' . get_the_title() : get_post_type() . ' - ' . get_the_ID()));
+        }
+    }
+}
+
+// Hook after all scripts are registered but before they're printed
+// add_action('wp_enqueue_scripts', 'optimize_formidable_loading', 999); // DISABLED - Using interaction-based loading instead
+
+/**
+ * SIMPLIFIED APPROACH: Just ensure jQuery is available for Formidable Forms
+ * Instead of complex lazy loading, just make sure jQuery loads properly
+ */
+function ensure_jquery_for_formidable()
+{
+    // Don't run on admin or if Formidable isn't active
+    if (is_admin() || !class_exists('FrmFormsController')) {
+        return;
+    }
+
+    // Ensure jQuery is enqueued for Formidable Forms
+    wp_enqueue_script('jquery');
+}
+
+// Hook to ensure jQuery is available
+add_action('wp_enqueue_scripts', 'ensure_jquery_for_formidable', 5);
+
+/**
+ * Alternative: Manual loading for specific pages
+ * Uncomment this if the automatic detection doesn't work well
+ */
+/*
+function manual_formidable_loading() {
+    if (is_admin() || !class_exists('FrmFormsController')) {
+        return;
+    }
+    
+    // Define pages that need Formidable Forms
+    $pages_needing_forms = [
+        'contact',           // Contact page
+        'about',            // About page (if it has forms)
+        // Add more page slugs as needed
+    ];
+    
+    // Check if we're on a page that needs forms
+    $load_forms = false;
+    
+    if (is_page($pages_needing_forms)) {
+        $load_forms = true;
+    }
+    
+    // Also load on posts that contain formidable shortcodes
+    global $post;
+    if ($post && strpos($post->post_content, '[formidable') !== false) {
+        $load_forms = true;
+    }
+    
+    // If not needed, dequeue all formidable assets
+    if (!$load_forms) {
+        wp_dequeue_script('formidable');
+        wp_dequeue_script('frm-dom-ready');
+        wp_dequeue_script('frm_form_action_js');
+        wp_dequeue_script('frm-validate');
+        wp_dequeue_script('frm-show-form');
+        wp_dequeue_style('formidable');
+        wp_dequeue_style('frm_form_styles');
+    }
+}
+// add_action('wp_enqueue_scripts', 'manual_formidable_loading', 999);
+*/
+
+/**
+ * Performance budget alerts
+ */
+function check_performance_budgets()
+{
+    if (!current_user_can('manage_options')) return;
+
+    // Example: Check if CSS files are getting too large
+    $css_files = glob(get_template_directory() . '/assets/css/*.css');
+    $total_css_size = 0;
+
+    foreach ($css_files as $file) {
+        $total_css_size += filesize($file);
+    }
+
+    // Alert if CSS bundle exceeds 300KB (as per 2025 playbook)
+    if ($total_css_size > 300000) {
+        add_action('admin_notices', function () use ($total_css_size) {
+            printf(
+                '<div class="notice notice-warning"><p><strong>Performance Alert:</strong> CSS bundle size is %s (exceeds 300KB budget)</p></div>',
+                size_format($total_css_size)
+            );
+        });
+    }
+}
+add_action('admin_init', 'check_performance_budgets');
+
+/**
+ * Add Core Web Vitals dashboard widget
+ */
+function add_web_vitals_dashboard_widget()
+{
+    wp_add_dashboard_widget(
+        'resplast_web_vitals_widget',
+        '🚀 Core Web Vitals Monitor (Live Data)',
+        'display_web_vitals_widget'
+    );
+}
+add_action('wp_dashboard_setup', 'add_web_vitals_dashboard_widget');
+
+/**
+ * Display Web Vitals dashboard widget content
+ */
+function display_web_vitals_widget()
+{
+    $vitals_data = get_option('resplast_web_vitals', []);
+    $recent_data = array_slice($vitals_data, -10); // Last 10 entries
+
+    if (empty($recent_data)) {
+        echo '<p>📊 No Web Vitals data collected yet. Visit your site pages to start collecting performance metrics.</p>';
+        echo '<p><em>Data will appear here as users interact with your site.</em></p>';
+        return;
+    }
+
+    // Calculate averages
+    $metrics = ['LCP' => [], 'INP' => [], 'CLS' => []];
+    foreach ($recent_data as $entry) {
+        if (isset($metrics[$entry['name']])) {
+            $metrics[$entry['name']][] = $entry['value'];
+        }
+    }
+
+    echo '<div class="web-vitals-summary">';
+
+    // Display averages
+    foreach ($metrics as $name => $values) {
+        if (!empty($values)) {
+            $avg = array_sum($values) / count($values);
+            $status = get_vitals_status($name, $avg);
+
+            echo '<div class="vitals-metric">';
+            echo '<strong>' . $name . '</strong>: ';
+            echo '<span class="vitals-value vitals-' . $status['class'] . '">';
+
+            if ($name === 'CLS') {
+                echo number_format($avg, 3);
+            } else {
+                echo number_format($avg, 0) . 'ms';
+            }
+
+            echo ' ' . $status['icon'] . '</span>';
+            echo ' <small>(' . count($values) . ' samples)</small>';
+            echo '</div>';
+        }
+    }
+
+    echo '</div>';
+
+    // Display recent entries
+    echo '<h4>📈 Recent Measurements:</h4>';
+    echo '<table class="widefat" style="font-size: 12px;">';
+    echo '<thead><tr><th>Metric</th><th>Value</th><th>Page</th><th>Time</th></tr></thead>';
+    echo '<tbody>';
+
+    foreach (array_reverse($recent_data) as $entry) {
+        $status = get_vitals_status($entry['name'], $entry['value']);
+        echo '<tr>';
+        echo '<td><strong>' . $entry['name'] . '</strong></td>';
+        echo '<td class="vitals-' . $status['class'] . '">';
+
+        if ($entry['name'] === 'CLS') {
+            echo number_format($entry['value'], 3);
+        } else {
+            echo number_format($entry['value'], 0) . 'ms';
+        }
+
+        echo ' ' . $status['icon'] . '</td>';
+        echo '<td>' . $entry['url'] . '</td>';
+        echo '<td>' . $entry['date'] . '</td>';
+        echo '</tr>';
+    }
+
+    echo '</tbody></table>';
+
+    // Add CSS
+    echo '<style>
+    .vitals-good { color: #00a32a; }
+    .vitals-needs-improvement { color: #dba617; }
+    .vitals-poor { color: #d63638; }
+    .vitals-metric { margin: 5px 0; }
+    .web-vitals-summary { margin-bottom: 15px; padding: 10px; background: #f9f9f9; border-radius: 4px; }
+    </style>';
+}
+
+/**
+ * Get status for Web Vitals metric
+ */
+function get_vitals_status($metric, $value)
+{
+    $thresholds = [
+        'LCP' => ['good' => 2500, 'poor' => 4000],
+        'INP' => ['good' => 200, 'poor' => 500],
+        'CLS' => ['good' => 0.1, 'poor' => 0.25]
+    ];
+
+    if (!isset($thresholds[$metric])) {
+        return ['class' => 'good', 'icon' => '✅'];
+    }
+
+    $t = $thresholds[$metric];
+
+    if ($value <= $t['good']) {
+        return ['class' => 'good', 'icon' => '✅'];
+    } elseif ($value <= $t['poor']) {
+        return ['class' => 'needs-improvement', 'icon' => '⚠️'];
+    } else {
+        return ['class' => 'poor', 'icon' => '❌'];
+    }
+}
+
+// Disable Gutenberg site-wide
+add_filter('use_block_editor_for_post', '__return_false');
+
+// WordPress Performance Optimizations
+remove_action('wp_head', 'wp_generator');
+remove_action('wp_head', 'wlwmanifest_link');
+remove_action('wp_head', 'rsd_link');
+remove_action('wp_head', 'wp_shortlink_wp_head');
+remove_action('wp_head', 'adjacent_posts_rel_link_wp_head', 10);
+remove_action('wp_head', 'feed_links_extra', 3);
+remove_action('wp_head', 'feed_links', 2);
+remove_action('wp_head', 'rest_output_link_wp_head', 10);
+remove_action('wp_head', 'wp_oembed_add_discovery_links', 10);
+remove_action('template_redirect', 'rest_output_link_header', 11);
+
+// Disable emoji scripts
+remove_action('wp_head', 'print_emoji_detection_script', 7);
+remove_action('wp_print_styles', 'print_emoji_styles');
+remove_action('admin_print_scripts', 'print_emoji_detection_script');
+remove_action('admin_print_styles', 'print_emoji_styles');
+
+// Limit WordPress heartbeat
+function slow_heartbeat($settings)
+{
+    $settings['interval'] = 60; // 60 seconds instead of 15
+    return $settings;
+}
+add_filter('heartbeat_settings', 'slow_heartbeat');
+
+// Reduce revisions
+if (!defined('WP_POST_REVISIONS')) {
+    define('WP_POST_REVISIONS', 3);
+}
+
+// Increase memory limit if needed
+ini_set('memory_limit', '256M');
+
+// Additional Performance Optimizations
+// Disable WordPress auto-updates for better performance
+add_filter('automatic_updater_disabled', '__return_true');
+
+// Remove query strings from static resources
+function remove_query_strings()
+{
+    if (!is_admin()) {
+        add_filter('script_loader_src', 'remove_query_strings_split', 15);
+        add_filter('style_loader_src', 'remove_query_strings_split', 15);
+    }
+}
+function remove_query_strings_split($src)
+{
+    $output = preg_split('/(&ver|\?ver|&v=|\?v=)/', $src);
+    return $output[0];
+}
+add_action('init', 'remove_query_strings');
+
+// Enable Gzip compression
+function enable_gzip_compression()
+{
+    if (ob_get_level() == 0) {
+        ob_start('ob_gzhandler');
+    }
+}
+if (!is_admin()) {
+    add_action('init', 'enable_gzip_compression', 1);
+}
+
+// Optimize database queries
+function limit_post_revisions($num, $post)
+{
+    return 3;
+}
+add_filter('wp_revisions_to_keep', 'limit_post_revisions', 10, 2);
+
+// Remove unnecessary meta tags
+remove_action('wp_head', 'wp_resource_hints', 2);
+
+/**
+ * Calculate estimated reading time for a post
+ * @param int|null $post_id Post ID (defaults to current post)
+ * @return int Reading time in minutes
+ */
+function calculate_post_read_time($post_id = null)
+{
+    if (!$post_id) {
+        $post_id = get_the_ID();
+    }
+
+    // Check if we have a cached version
+    $cached_time = get_post_meta($post_id, '_post_read_time', true);
+    if (!empty($cached_time)) {
+        return (int) $cached_time;
+    }
+
+    // Get post content
+    $content = get_post_field('post_content', $post_id);
+
+    // Strip HTML tags, shortcodes, and extra whitespace
+    $content = wp_strip_all_tags(strip_shortcodes($content));
+    $content = preg_replace('/\s+/', ' ', trim($content));
+
+    // Count words (more accurate method)
+    $word_count = str_word_count($content);
+
+    // Average reading speed: 200-250 words per minute
+    // Using 200 for conservative estimate
+    $words_per_minute = 200;
+
+    // Calculate reading time in minutes
+    $reading_time = ceil($word_count / $words_per_minute);
+
+    // Minimum 1 minute, maximum 30 minutes for reasonable limits
+    $reading_time = max(1, min(30, $reading_time));
+
+    // Cache the result
+    update_post_meta($post_id, '_post_read_time', $reading_time);
+
+    return $reading_time;
+}
+
+/**
+ * Clear read time cache when post is updated
+ */
+function clear_read_time_cache($post_id)
+{
+    delete_post_meta($post_id, '_post_read_time');
+}
+add_action('save_post', 'clear_read_time_cache');
+add_action('post_updated', 'clear_read_time_cache');
+
+/**
+ * Load homepage-specific CSS
+ */
+function load_homepage_css()
+{
+    // If Vite's production enqueuer already handled home.css, skip
+    if (function_exists('did_action') && did_action('vite_enqueued_home_css')) {
+        return;
+    }
+    // Keep as fallback only; otherwise Vite enqueues CSS from manifest.
+}
+
+// Note: Vite CSS enqueuing now handles homepage CSS. Keeping hook disabled to avoid duplicates.
+// add_action('wp_enqueue_scripts', 'load_homepage_css', 15);
+add_action('wp_enqueue_scripts', 'load_homepage_css', 15);
+
+/* ==========================================================
+ * News Listing utilities (CPT: news)
+ * - Card renderer
+ * - AJAX handler for filtering/sorting/pagination
+ * - Shortcode [news_listing]
+ * ========================================================== */
+
+if (!function_exists('resplast_get_news_card_html')) {
+    /**
+     * Return HTML for a single news card using Tailwind utility classes
+     *
+     * @param int|null $post_id
+     * @return string
+     */
+    function resplast_get_news_card_html($post_id = null)
+    {
+        $post = get_post($post_id);
+        if (!$post) {
+            return '';
+        }
+
+        $post_id = $post->ID;
+
+        // Featured image lookup (ACF optional, then thumbnail, else placeholder)
+        $image_id = null;
+        if (function_exists('get_field')) {
+            $acf_thumb = get_field('post_thumbnail', $post_id);
+            if ($acf_thumb) {
+                $image_id = is_array($acf_thumb) ? $acf_thumb['ID'] : $acf_thumb;
+            }
+        }
+        if (!$image_id && has_post_thumbnail($post_id)) {
+            $image_id = get_post_thumbnail_id($post_id);
+        }
+
+        $title = get_the_title($post_id);
+        $permalink = get_permalink($post_id);
+        $date = get_the_date('j M', $post_id);
+        $read_time = function_exists('calculate_post_read_time') ? (int) calculate_post_read_time($post_id) : 1;
+
+        ob_start();
+    ?>
+        <article class="bg-white rounded-3xl shadow-sm hover:shadow-md transition overflow-hidden flex flex-col">
+            <a href="<?php echo esc_url($permalink); ?>" class="relative block aspect-[16/10] bg-gray-100">
+                <?php
+                if ($image_id && function_exists('resplast_optimized_image')) {
+                    echo resplast_optimized_image($image_id, 'large', [
+                        'class' => 'absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-out hover:scale-105',
+                        'alt' => $title,
+                        'lazy' => true,
+                        'content_visibility' => true,
+                        'avif_support' => true
+                    ]);
+                } elseif ($image_id) {
+                    echo wp_get_attachment_image($image_id, 'large', false, [
+                        'class' => 'absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-out hover:scale-105',
+                        'alt' => $title,
+                        'loading' => 'lazy',
+                        'decoding' => 'async'
+                    ]);
+                } else {
+                    // SVG placeholder for missing images
+                    $svg = "<svg xmlns='http://www.w3.org/2000/svg' width='800' height='600'><rect width='100%' height='100%' fill='#f3f4f6'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='#9ca3af' font-size='24'>Image</text></svg>";
+                    echo '<img src="data:image/svg+xml;base64,' . base64_encode($svg) . '" alt="' . esc_attr($title) . '" class="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async"/>';
+                }
+                ?>
+            </a>
+            <div class="p-6 flex flex-col gap-3">
+                <a href="<?php echo esc_url($permalink); ?>" class="text-lg font-semibold text-black hover:text-red-600 transition">
+                    <?php echo esc_html($title); ?>
+                </a>
+                <div class="flex items-center justify-between text-sm text-gray-500">
+                    <time datetime="<?php echo esc_attr(get_the_date('c', $post_id)); ?>"><?php echo esc_html($date); ?></time>
+                    <span><?php echo esc_html($read_time); ?> min read</span>
+                </div>
+            </div>
+        </article>
+<?php
+        return trim(ob_get_clean());
+    }
+}
+
+if (!function_exists('resplast_handle_news_ajax')) {
+    /**
+     * AJAX: filter/sort/paginate news
+     */
+    function resplast_handle_news_ajax()
+    {
+        check_ajax_referer('resplast_news_nonce', 'nonce');
+
+        $paged  = max(1, absint($_POST['paged'] ?? 1)); // kept for backward compatibility
+        $ppp    = isset($_POST['posts_per_page']) ? max(1, min(24, absint($_POST['posts_per_page']))) : 6;
+        $offset = isset($_POST['offset']) ? max(0, absint($_POST['offset'])) : 0;
+
+        $sort = isset($_POST['sort']) ? sanitize_text_field(wp_unslash($_POST['sort'])) : 'newest';
+        $order = (in_array(strtolower($sort), ['asc', 'oldest'], true)) ? 'ASC' : 'DESC';
+
+        // Use news_category taxonomy specifically for news posts
+        $taxonomy = 'news_category';
+        if (!empty($_POST['taxonomy'])) {
+            $tx = sanitize_text_field(wp_unslash($_POST['taxonomy']));
+            if (taxonomy_exists($tx)) {
+                $taxonomy = $tx;
+            }
+        }
+
+        $category = isset($_POST['category']) ? sanitize_text_field(wp_unslash($_POST['category'])) : '';
+        $search   = isset($_POST['search']) ? sanitize_text_field(wp_unslash($_POST['search'])) : '';
+
+        $args = [
+            'post_type'      => 'news',
+            'post_status'    => 'publish',
+            'orderby'        => 'date',
+            'order'          => $order,
+            'posts_per_page' => $ppp,
+            'offset'        => $offset,
+            'no_found_rows'  => false,
+            's'              => $search,
+        ];
+
+        if (!empty($category) && $category !== 'all') {
+            $term = null;
+            if (is_numeric($category)) {
+                $term = get_term_by('id', (int) $category, $taxonomy);
+            }
+            if (!$term) {
+                $term = get_term_by('slug', $category, $taxonomy);
+            }
+            if ($term) {
+                $args['tax_query'] = [
+                    [
+                        'taxonomy' => $taxonomy,
+                        'field'    => 'term_id',
+                        'terms'    => (int) $term->term_id,
+                    ],
+                ];
+            }
+        }
+
+        $q = new WP_Query($args);
+
+        ob_start();
+        if ($q->have_posts()) {
+            while ($q->have_posts()) {
+                $q->the_post();
+                // Use the same card template as listing.php for consistency
+                get_template_part('templates/parts/news_card_new');
+            }
+            wp_reset_postdata();
+        }
+        $html = trim(ob_get_clean());
+        $returned = (int) $q->post_count;
+        $total    = (int) $q->found_posts;
+        $has_more = ($offset + $returned) < $total;
+
+        // Do not inject a "No news found" placeholder here to avoid duplicates on load-more.
+        // Frontend decides when to show an empty-state message (only on full refresh/search results).
+
+        wp_send_json_success([
+            'html'         => $html,
+            'found_posts'  => $total,
+            'returned'     => $returned,
+            'has_more'     => $has_more,
+            'current'      => $paged,
+            'empty'        => ($html === ''),
+        ]);
+    }
+    add_action('wp_ajax_resplast_news_query', 'resplast_handle_news_ajax');
+    add_action('wp_ajax_nopriv_resplast_news_query', 'resplast_handle_news_ajax');
+}
+
+if (!function_exists('resplast_news_listing_shortcode')) {
+    /**
+     * Shortcode to embed the News Listing section without header/footer
+     * Usage: [news_listing]
+     */
+    function resplast_news_listing_shortcode($atts = [])
+    {
+        $template = locate_template('templates/news/listing.php', false, false);
+        if (!$template) {
+            return '<div class="text-red-600">News listing template not found.</div>';
+        }
+        ob_start();
+        include $template;
+        return ob_get_clean();
+    }
+    add_shortcode('news_listing', 'resplast_news_listing_shortcode');
+}
+
+/**
+ * AJAX handler for product filtering
+ */
+if (!function_exists('resplast_handle_product_filter_ajax')) {
+    function resplast_handle_product_filter_ajax()
+    {
+        check_ajax_referer('resplast_products_nonce', 'nonce');
+
+        // Get parameters
+        $ppp = isset($_POST['posts_per_page']) ? max(1, min(50, absint($_POST['posts_per_page']))) : 12;
+        $offset = isset($_POST['offset']) ? max(0, absint($_POST['offset'])) : 0;
+        $sort = isset($_POST['sort']) ? sanitize_text_field(wp_unslash($_POST['sort'])) : 'name';
+        $search = isset($_POST['search']) ? sanitize_text_field(wp_unslash($_POST['search'])) : '';
+        $view_mode = isset($_POST['view']) ? sanitize_text_field(wp_unslash($_POST['view'])) : 'grid';
+
+        // Get filter arrays
+        $chemistry_filters = !empty($_POST['chemistry']) ? array_filter(explode(',', sanitize_text_field(wp_unslash($_POST['chemistry'])))) : [];
+        $brand_filters = !empty($_POST['brand']) ? array_filter(explode(',', sanitize_text_field(wp_unslash($_POST['brand'])))) : [];
+        $application_filters = !empty($_POST['applications']) ? array_filter(explode(',', sanitize_text_field(wp_unslash($_POST['applications'])))) : [];
+
+        $args = [
+            'post_type' => 'product',
+            'post_status' => 'publish',
+            'posts_per_page' => $ppp,
+            'offset' => $offset,
+            'no_found_rows' => false,
+            's' => $search,
+            'ignore_sticky_posts' => true,
+            'orderby' => 'title',
+            'order' => 'ASC'
+        ];
+
+        // Log query for debugging
+        error_log(sprintf(
+            'Product query args: ppp=%d, offset=%d, paged=%d',
+            $ppp,
+            $offset,
+            floor($offset / $ppp) + 1
+        ));
+
+        // Add sorting like news
+        switch ($sort) {
+            case 'newest':
+                $args['orderby'] = 'date';
+                $args['order'] = 'DESC';
+                break;
+            case 'oldest':
+                $args['orderby'] = 'date';
+                $args['order'] = 'ASC';
+                break;
+            case 'name':
+            default:
+                $args['orderby'] = 'title';
+                $args['order'] = 'ASC';
+                break;
+        }
+
+        // Build tax_query for filters
+        $tax_query = ['relation' => 'AND'];
+
+        if (!empty($chemistry_filters)) {
+            $tax_query[] = [
+                'taxonomy' => 'product_chemistry',
+                'field' => 'slug',
+                'terms' => $chemistry_filters,
+                'operator' => 'IN'
+            ];
+        }
+
+        if (!empty($brand_filters)) {
+            $tax_query[] = [
+                'taxonomy' => 'product_brand',
+                'field' => 'slug',
+                'terms' => $brand_filters,
+                'operator' => 'IN'
+            ];
+        }
+
+        if (!empty($application_filters)) {
+            $tax_query[] = [
+                'taxonomy' => 'product_application',
+                'field' => 'slug',
+                'terms' => $application_filters,
+                'operator' => 'IN'
+            ];
+        }
+
+        if (!empty($tax_query) && count($tax_query) > 1) {
+            $args['tax_query'] = $tax_query;
+        }
+
+        // Execute query
+        $products_query = new WP_Query($args);
+        $total = (int) $products_query->found_posts;
+        $returned = (int) $products_query->post_count;
+
+        // Log query results
+        error_log(sprintf(
+            'Product query results: found_posts=%d, post_count=%d, max_num_pages=%d',
+            $products_query->found_posts,
+            $products_query->post_count,
+            $products_query->max_num_pages
+        ));
+
+        // Generate HTML
+        ob_start();
+        if ($products_query->have_posts()) {
+            while ($products_query->have_posts()) {
+                $products_query->the_post();
+                if ($view_mode === 'list') {
+                    get_template_part('templates/products/card-list');
+                } else {
+                    get_template_part('templates/products/card-grid');
+                }
+            }
+            wp_reset_postdata();
+        }
+        $html = trim(ob_get_clean());
+
+        $returned = (int) $products_query->post_count;
+        $total = (int) $products_query->found_posts;
+        // Only show more if we have at least one more full page
+        $remaining = $total - ($offset + $returned);
+        $has_more = $remaining > 0;
+
+        // Calculate filter counts
+        $filter_counts = [];
+        if ($returned > 0) {
+            $filter_counts = [
+                'chemistry' => get_taxonomy_filter_counts('product_chemistry', $args),
+                'brand' => get_taxonomy_filter_counts('product_brand', $args),
+                'applications' => get_taxonomy_filter_counts('product_application', $args)
+            ];
+        }
+
+        // Log values for debugging
+        error_log(sprintf(
+            'Products Query: total=%d, offset=%d, returned=%d, has_more=%d',
+            $total,
+            $offset,
+            $returned,
+            $has_more ? 1 : 0
+        ));
+
+        wp_send_json_success([
+            'html' => $html,
+            'total' => $total,
+            'returned' => $returned,
+            'has_more' => $has_more,
+            'next_offset' => $offset + $returned,
+            'debug_info' => [
+                'initial_offset' => $offset,
+                'posts_per_page' => $ppp,
+                'actual_returned' => $returned,
+                'total_found' => $total
+            ],
+            'filter_counts' => $filter_counts,
+            'view' => $view_mode
+        ]);
+    }
+    add_action('wp_ajax_resplast_filter_products', 'resplast_handle_product_filter_ajax');
+    add_action('wp_ajax_nopriv_resplast_filter_products', 'resplast_handle_product_filter_ajax');
+}
+
+/**
+ * Helper function to get filter counts for taxonomies
+ */
+if (!function_exists('get_taxonomy_filter_counts')) {
+    function get_taxonomy_filter_counts($taxonomy, $base_args)
+    {
+        $counts = [];
+
+        // Get all terms for this taxonomy
+        $terms = get_terms([
+            'taxonomy' => $taxonomy,
+            'hide_empty' => true,
+        ]);
+
+        if (!is_wp_error($terms)) {
+            foreach ($terms as $term) {
+                // Create a modified query to count posts for this specific term
+                $count_args = $base_args;
+                $count_args['posts_per_page'] = -1;
+                $count_args['fields'] = 'ids';
+                unset($count_args['offset']);
+
+                // Add this term to tax_query
+                if (!isset($count_args['tax_query'])) {
+                    $count_args['tax_query'] = [];
+                }
+
+                $count_args['tax_query'][] = [
+                    'taxonomy' => $taxonomy,
+                    'field' => 'term_id',
+                    'terms' => [$term->term_id],
+                    'operator' => 'IN'
+                ];
+
+                $count_query = new WP_Query($count_args);
+                $counts[$term->slug] = $count_query->found_posts;
+            }
+        }
+
+        return $counts;
+    }
+}
+
+// Add ACF Diagnostics admin page
+function add_acf_diagnostics_admin_page()
+{
+    add_menu_page(
+        'ACF Diagnostics',
+        'ACF Diagnostics',
+        'manage_options',
+        'acf-diagnostics',
+        'acf_diagnostics_page_content',
+        'dashicons-search',
+        99
+    );
+}
+add_action('admin_menu', 'add_acf_diagnostics_admin_page');
+
+function acf_diagnostics_page_content()
+{
+    echo '<div class="wrap">';
+    echo '<h1>ACF Diagnostics</h1>';
+
+    // Check if ACF is active
+    if (!function_exists('acf_get_field_groups')) {
+        echo '<div class="notice notice-error"><p><strong>❌ ACF is not active or not installed!</strong></p></div>';
+        echo '</div>';
+        return;
+    } else {
+        echo '<div class="notice notice-success"><p><strong>✅ ACF is active</strong></p></div>';
+    }
+
+    // Get all ACF field groups
+    $field_groups = acf_get_field_groups();
+
+    echo '<h2>Field Groups (' . count($field_groups) . ' found)</h2>';
+
+    if (empty($field_groups)) {
+        echo '<p>No field groups found.</p>';
+    } else {
+        foreach ($field_groups as $field_group) {
+            echo '<div style="border: 1px solid #ddd; margin: 15px 0; padding: 15px; background: #fff; border-radius: 5px;">';
+            echo '<h3>' . esc_html($field_group['title']) . '</h3>';
+            echo '<p><strong>Key:</strong> ' . esc_html($field_group['key']) . '</p>';
+
+            // Check location rules
+            if (!empty($field_group['location'])) {
+                echo '<p><strong>Location Rules:</strong></p>';
+                echo '<ul>';
+                foreach ($field_group['location'] as $location_group) {
+                    foreach ($location_group as $rule) {
+                        $operator = $rule['operator'] === '==' ? 'equals' : 'not equals';
+                        echo '<li style="color: ' . ($rule['param'] === 'post_type' && $rule['value'] === 'product' ? 'green' : 'inherit') . ';"><strong>' . $rule['param'] . '</strong> ' . $operator . ' <strong>' . $rule['value'] . '</strong></li>';
+                    }
+                }
+                echo '</ul>';
+            }
+
+            // Get fields in this group
+            $fields = acf_get_fields($field_group);
+            if (!empty($fields)) {
+                echo '<p><strong>Fields (' . count($fields) . '):</strong></p>';
+                echo '<ul>';
+                foreach ($fields as $field) {
+                    echo '<li><strong>' . $field['name'] . '</strong> (' . $field['type'] . ')';
+                    if ($field['type'] === 'repeater' && !empty($field['sub_fields'])) {
+                        echo '<ul>';
+                        foreach ($field['sub_fields'] as $sub_field) {
+                            echo '<li>└─ <strong>' . $sub_field['name'] . '</strong> (' . $sub_field['type'] . ')</li>';
+                        }
+                        echo '</ul>';
+                    }
+                    echo '</li>';
+                }
+                echo '</ul>';
+            }
+
+            echo '</div>';
+        }
+    }
+
+    // Check products and their ACF data
+    echo '<h2>Products with ACF Data (Latest 5)</h2>';
+
+    $products = get_posts([
+        'post_type' => 'product',
+        'posts_per_page' => 5,
+        'post_status' => 'publish',
+        'orderby' => 'date',
+        'order' => 'DESC'
+    ]);
+
+    if (empty($products)) {
+        echo '<div class="notice notice-warning"><p>❌ No products found. Make sure you have products created with post_type "product".</p></div>';
+    } else {
+        foreach ($products as $product) {
+            echo '<div style="border: 1px solid #ddd; margin: 15px 0; padding: 15px; background: #fff; border-radius: 5px;">';
+            echo '<h3>Product: ' . esc_html($product->post_title) . ' <small>(ID: ' . $product->ID . ')</small></h3>';
+            echo '<p><strong>Edit:</strong> <a href="' . get_edit_post_link($product->ID) . '" target="_blank">Edit this product</a></p>';
+
+            // Get all ACF fields for this product
+            $all_fields = get_fields($product->ID);
+
+            if (empty($all_fields)) {
+                echo '<div class="notice notice-error inline"><p>❌ No ACF fields found for this product.</p></div>';
+            } else {
+                echo '<div class="notice notice-success inline"><p>✅ ' . count($all_fields) . ' ACF fields found:</p></div>';
+                echo '<table class="wp-list-table widefat fixed striped" style="margin-top: 10px;">';
+                echo '<thead><tr><th>Field Name</th><th>Type</th><th>Value Preview</th></tr></thead>';
+                echo '<tbody>';
+
+                foreach ($all_fields as $field_name => $field_value) {
+                    echo '<tr>';
+                    echo '<td><strong>' . esc_html($field_name) . '</strong></td>';
+                    echo '<td>' . gettype($field_value) . '</td>';
+                    echo '<td>';
+
+                    if (is_array($field_value)) {
+                        if (empty($field_value)) {
+                            echo '<em style="color: #666;">Empty array</em>';
+                        } else {
+                            echo '<details><summary>Array (' . count($field_value) . ' items)</summary>';
+                            echo '<pre style="font-size: 11px; max-height: 200px; overflow: auto; background: #f1f1f1; padding: 10px; margin: 5px 0;">' . esc_html(print_r($field_value, true)) . '</pre>';
+                            echo '</details>';
+                        }
+                    } elseif (is_string($field_value) || is_numeric($field_value)) {
+                        $preview = substr($field_value, 0, 100);
+                        echo esc_html($preview);
+                        if (strlen($field_value) > 100) echo '<em>... (truncated)</em>';
+                    } else {
+                        echo '<em style="color: #666;">' . gettype($field_value) . '</em>';
+                    }
+
+                    echo '</td>';
+                    echo '</tr>';
+                }
+
+                echo '</tbody></table>';
+            }
+
+            echo '</div>';
+        }
+    }
+
+    echo '<h2>🔍 Troubleshooting Tips</h2>';
+    echo '<div class="notice notice-info"><ul>';
+    echo '<li><strong>No products found:</strong> Make sure your custom post type is registered as "product"</li>';
+    echo '<li><strong>No ACF fields:</strong> Check that field groups are assigned to "Post Type equals Product"</li>';
+    echo '<li><strong>Wrong field names:</strong> Use the exact field names shown above in your templates</li>';
+    echo '<li><strong>Empty data:</strong> Edit the products and make sure ACF data is saved</li>';
+    echo '</ul></div>';
+
+    echo '</div>';
+}
+
+/**
+ * Reports Custom Post Type and Taxonomies
+ */
+
+/**
+ * Register Reports Custom Post Type
+ */
+function register_reports_post_type()
+{
+    $labels = array(
+        'name'                  => _x('Reports', 'Post type general name', 'resplast'),
+        'singular_name'         => _x('Report', 'Post type singular name', 'resplast'),
+        'menu_name'             => _x('Reports', 'Admin Menu text', 'resplast'),
+        'name_admin_bar'        => _x('Report', 'Add New on Toolbar', 'resplast'),
+        'add_new'               => __('Add New', 'resplast'),
+        'add_new_item'          => __('Add New Report', 'resplast'),
+        'new_item'              => __('New Report', 'resplast'),
+        'edit_item'             => __('Edit Report', 'resplast'),
+        'view_item'             => __('View Report', 'resplast'),
+        'all_items'             => __('All Reports', 'resplast'),
+        'search_items'          => __('Search Reports', 'resplast'),
+        'parent_item_colon'     => __('Parent Reports:', 'resplast'),
+        'not_found'             => __('No reports found.', 'resplast'),
+        'not_found_in_trash'    => __('No reports found in Trash.', 'resplast'),
+        'featured_image'        => _x('Report Featured Image', 'Overrides the "Featured Image" phrase', 'resplast'),
+        'set_featured_image'    => _x('Set featured image', 'Overrides the "Set featured image" phrase', 'resplast'),
+        'remove_featured_image' => _x('Remove featured image', 'Overrides the "Remove featured image" phrase', 'resplast'),
+        'use_featured_image'    => _x('Use as featured image', 'Overrides the "Use as featured image" phrase', 'resplast'),
+        'archives'              => _x('Report archives', 'The post type archive label', 'resplast'),
+        'insert_into_item'      => _x('Insert into report', 'Overrides the "Insert into post" phrase', 'resplast'),
+        'uploaded_to_this_item' => _x('Uploaded to this report', 'Overrides the "Uploaded to this post" phrase', 'resplast'),
+        'filter_items_list'     => _x('Filter reports list', 'Screen reader text for the filter links', 'resplast'),
+        'items_list_navigation' => _x('Reports list navigation', 'Screen reader text for the pagination', 'resplast'),
+        'items_list'            => _x('Reports list', 'Screen reader text for the items list', 'resplast'),
+    );
+
+    $args = array(
+        'labels'             => $labels,
+        'public'             => true,
+        'publicly_queryable' => true,
+        'show_ui'            => true,
+        'show_in_menu'       => true,
+        'show_in_nav_menus'  => true,
+        'show_in_admin_bar'  => true,
+        'query_var'          => true,
+        'rewrite'            => array('slug' => 'reports'),
+        'capability_type'    => 'post',
+        'has_archive'        => true,
+        'hierarchical'       => false,
+        'menu_position'      => 6,
+        'menu_icon'          => 'dashicons-media-document',
+        'supports'           => array('title', 'editor', 'thumbnail', 'excerpt', 'author', 'revisions', 'custom-fields'),
+        'show_in_rest'       => true,
+        'rest_base'          => 'reports',
+        'rest_controller_class' => 'WP_REST_Posts_Controller',
+    );
+
+    register_post_type('reports', $args);
+}
+add_action('init', 'register_reports_post_type');
+
+/**
+ * Register Report Categories Taxonomy
+ */
+function register_report_category_taxonomy()
+{
+    $labels = array(
+        'name'                       => _x('Report Categories', 'Taxonomy General Name', 'resplast'),
+        'singular_name'              => _x('Report Category', 'Taxonomy Singular Name', 'resplast'),
+        'menu_name'                  => __('Categories', 'resplast'),
+        'all_items'                  => __('All Categories', 'resplast'),
+        'parent_item'                => __('Parent Category', 'resplast'),
+        'parent_item_colon'          => __('Parent Category:', 'resplast'),
+        'new_item_name'              => __('New Category Name', 'resplast'),
+        'add_new_item'               => __('Add New Category', 'resplast'),
+        'edit_item'                  => __('Edit Category', 'resplast'),
+        'update_item'                => __('Update Category', 'resplast'),
+        'view_item'                  => __('View Category', 'resplast'),
+        'separate_items_with_commas' => __('Separate categories with commas', 'resplast'),
+        'add_or_remove_items'        => __('Add or remove categories', 'resplast'),
+        'choose_from_most_used'      => __('Choose from the most used', 'resplast'),
+        'popular_items'              => __('Popular Categories', 'resplast'),
+        'search_items'               => __('Search Categories', 'resplast'),
+        'not_found'                  => __('Not Found', 'resplast'),
+        'no_terms'                   => __('No categories', 'resplast'),
+        'items_list'                 => __('Categories list', 'resplast'),
+        'items_list_navigation'      => __('Categories list navigation', 'resplast'),
+    );
+
+    $args = array(
+        'labels'                     => $labels,
+        'hierarchical'               => true,
+        'public'                     => true,
+        'show_ui'                    => true,
+        'show_admin_column'          => true,
+        'show_in_nav_menus'          => true,
+        'show_tagcloud'              => false,
+        'show_in_rest'               => true,
+        'rest_base'                  => 'report-categories',
+        'rest_controller_class'      => 'WP_REST_Terms_Controller',
+    );
+
+    register_taxonomy('report_category', array('reports'), $args);
+}
+add_action('init', 'register_report_category_taxonomy');
+
+/**
+ * Register Financial Year Taxonomy
+ */
+function register_financial_year_taxonomy()
+{
+    $labels = array(
+        'name'                       => _x('Financial Years', 'Taxonomy General Name', 'resplast'),
+        'singular_name'              => _x('Financial Year', 'Taxonomy Singular Name', 'resplast'),
+        'menu_name'                  => __('Financial Years', 'resplast'),
+        'all_items'                  => __('All Financial Years', 'resplast'),
+        'parent_item'                => __('Parent Financial Year', 'resplast'),
+        'parent_item_colon'          => __('Parent Financial Year:', 'resplast'),
+        'new_item_name'              => __('New Financial Year Name', 'resplast'),
+        'add_new_item'               => __('Add New Financial Year', 'resplast'),
+        'edit_item'                  => __('Edit Financial Year', 'resplast'),
+        'update_item'                => __('Update Financial Year', 'resplast'),
+        'view_item'                  => __('View Financial Year', 'resplast'),
+        'separate_items_with_commas' => __('Separate financial years with commas', 'resplast'),
+        'add_or_remove_items'        => __('Add or remove financial years', 'resplast'),
+        'choose_from_most_used'      => __('Choose from the most used', 'resplast'),
+        'popular_items'              => __('Popular Financial Years', 'resplast'),
+        'search_items'               => __('Search Financial Years', 'resplast'),
+        'not_found'                  => __('Not Found', 'resplast'),
+        'no_terms'                   => __('No financial years', 'resplast'),
+        'items_list'                 => __('Financial Years list', 'resplast'),
+        'items_list_navigation'      => __('Financial Years list navigation', 'resplast'),
+    );
+
+    $args = array(
+        'labels'                     => $labels,
+        'hierarchical'               => false,
+        'public'                     => true,
+        'show_ui'                    => true,
+        'show_admin_column'          => true,
+        'show_in_nav_menus'          => false,
+        'show_tagcloud'              => false,
+        'show_in_rest'               => true,
+        'rest_base'                  => 'financial-years',
+        'rest_controller_class'      => 'WP_REST_Terms_Controller',
+    );
+
+    register_taxonomy('financial_year', array('reports'), $args);
+}
+add_action('init', 'register_financial_year_taxonomy');
+
+/**
+ * Register Quarter Taxonomy
+ */
+function register_quarter_taxonomy()
+{
+    $labels = array(
+        'name'                       => _x('Quarters', 'Taxonomy General Name', 'resplast'),
+        'singular_name'              => _x('Quarter', 'Taxonomy Singular Name', 'resplast'),
+        'menu_name'                  => __('Quarters', 'resplast'),
+        'all_items'                  => __('All Quarters', 'resplast'),
+        'parent_item'                => __('Parent Quarter', 'resplast'),
+        'parent_item_colon'          => __('Parent Quarter:', 'resplast'),
+        'new_item_name'              => __('New Quarter Name', 'resplast'),
+        'add_new_item'               => __('Add New Quarter', 'resplast'),
+        'edit_item'                  => __('Edit Quarter', 'resplast'),
+        'update_item'                => __('Update Quarter', 'resplast'),
+        'view_item'                  => __('View Quarter', 'resplast'),
+        'separate_items_with_commas' => __('Separate quarters with commas', 'resplast'),
+        'add_or_remove_items'        => __('Add or remove quarters', 'resplast'),
+        'choose_from_most_used'      => __('Choose from the most used', 'resplast'),
+        'popular_items'              => __('Popular Quarters', 'resplast'),
+        'search_items'               => __('Search Quarters', 'resplast'),
+        'not_found'                  => __('Not Found', 'resplast'),
+        'no_terms'                   => __('No quarters', 'resplast'),
+        'items_list'                 => __('Quarters list', 'resplast'),
+        'items_list_navigation'      => __('Quarters list navigation', 'resplast'),
+    );
+
+    $args = array(
+        'labels'                     => $labels,
+        'hierarchical'               => false,
+        'public'                     => true,
+        'show_ui'                    => true,
+        'show_admin_column'          => true,
+        'show_in_nav_menus'          => false,
+        'show_tagcloud'              => false,
+        'show_in_rest'               => true,
+        'rest_base'                  => 'quarters',
+        'rest_controller_class'      => 'WP_REST_Terms_Controller',
+    );
+
+    register_taxonomy('quarter', array('reports'), $args);
+}
+add_action('init', 'register_quarter_taxonomy');
+
+/**
+ * Insert default taxonomy terms on theme activation
+ */
+function insert_default_report_terms()
+{
+    // Only run once
+    if (get_option('resplast_default_report_terms_inserted')) {
+        return;
+    }
+
+    // Default report categories
+    $default_categories = array(
+        'Annual Reports',
+        'Quarterly Results',
+        'Investor Presentations',
+        'Financial Statements',
+        'Corporate Governance',
+        'Sustainability Reports',
+        'Regulatory Filings',
+        'Press Releases',
+        'Notices & Disclosures',
+        'Policies & Guidelines'
+    );
+
+    foreach ($default_categories as $category) {
+        if (!term_exists($category, 'report_category')) {
+            wp_insert_term($category, 'report_category');
+        }
+    }
+
+    // Default financial years (last 3 years + current + next 2)
+    $current_year = date('Y');
+    $default_years = array();
+
+    for ($i = -3; $i <= 2; $i++) {
+        $year = $current_year + $i;
+        $next_year = $year + 1;
+        $fy_label = 'FY' . $year . '-' . substr($next_year, 2);
+        $default_years[] = $fy_label;
+    }
+
+    foreach ($default_years as $year) {
+        if (!term_exists($year, 'financial_year')) {
+            wp_insert_term($year, 'financial_year');
+        }
+    }
+
+    // Default quarters
+    $default_quarters = array('Q1', 'Q2', 'Q3', 'Q4');
+
+    foreach ($default_quarters as $quarter) {
+        if (!term_exists($quarter, 'quarter')) {
+            wp_insert_term($quarter, 'quarter');
+        }
+    }
+
+    // Mark as completed
+    update_option('resplast_default_report_terms_inserted', true);
+}
+add_action('init', 'insert_default_report_terms');
+
+/**
+ * Customize Reports admin columns
+ */
+function add_reports_admin_columns($columns)
+{
+    // Remove date column and add it back at the end
+    $date_column = $columns['date'];
+    unset($columns['date']);
+
+    // Add custom columns
+    $columns['report_category'] = __('Category', 'resplast');
+    $columns['financial_year'] = __('Financial Year', 'resplast');
+    $columns['quarter'] = __('Quarter', 'resplast');
+    $columns['published_date'] = __('Published', 'resplast');
+    $columns['featured'] = __('Featured', 'resplast');
+    $columns['document_file'] = __('Document', 'resplast');
+
+    // Add date column back at the end
+    $columns['date'] = $date_column;
+
+    return $columns;
+}
+add_filter('manage_reports_posts_columns', 'add_reports_admin_columns');
+
+/**
+ * Populate custom admin columns
+ */
+function populate_reports_admin_columns($column, $post_id)
+{
+    switch ($column) {
+        case 'report_category':
+            $terms = get_the_terms($post_id, 'report_category');
+            if ($terms && !is_wp_error($terms)) {
+                $category_names = wp_list_pluck($terms, 'name');
+                echo implode(', ', $category_names);
+            } else {
+                echo '<span style="color: #999;">—</span>';
+            }
+            break;
+
+        case 'financial_year':
+            $terms = get_the_terms($post_id, 'financial_year');
+            if ($terms && !is_wp_error($terms)) {
+                $year_names = wp_list_pluck($terms, 'name');
+                echo implode(', ', $year_names);
+            } else {
+                echo '<span style="color: #999;">—</span>';
+            }
+            break;
+
+        case 'quarter':
+            $terms = get_the_terms($post_id, 'quarter');
+            if ($terms && !is_wp_error($terms)) {
+                $quarter_names = wp_list_pluck($terms, 'name');
+                echo implode(', ', $quarter_names);
+            } else {
+                echo '<span style="color: #999;">—</span>';
+            }
+            break;
+
+        case 'published_date':
+            $published_date = get_post_meta($post_id, 'published_date', true);
+            if ($published_date) {
+                echo esc_html($published_date);
+            } else {
+                echo '<span style="color: #999;">—</span>';
+            }
+            break;
+
+        case 'featured':
+            $featured = get_post_meta($post_id, 'featured_report', true);
+            if ($featured) {
+                echo '<span style="color: #d63638;">⭐ Featured</span>';
+            } else {
+                echo '<span style="color: #999;">—</span>';
+            }
+            break;
+
+        case 'document_file':
+            $document_file = get_post_meta($post_id, 'document_file', true);
+            $download_link = get_post_meta($post_id, 'download_link', true);
+
+            if (!empty($document_file) && is_array($document_file) && isset($document_file['url'])) {
+                echo '<a href="' . esc_url($document_file['url']) . '" target="_blank" title="Download file">📄 ' . basename($document_file['filename']) . '</a>';
+            } elseif ($download_link) {
+                echo '<a href="' . esc_url($download_link) . '" target="_blank" title="External download link">🔗 External</a>';
+            } else {
+                echo '<span style="color: #999;">No file</span>';
+            }
+            break;
+    }
+}
+add_action('manage_reports_posts_custom_column', 'populate_reports_admin_columns', 10, 2);
+
+/**
+ * Add admin filters for reports
+ */
+function add_reports_admin_filters()
+{
+    global $typenow;
+
+    if ($typenow === 'reports') {
+        // Category filter
+        $categories = get_terms(array(
+            'taxonomy' => 'report_category',
+            'hide_empty' => false,
+        ));
+
+        if ($categories && !is_wp_error($categories)) {
+            echo '<select name="report_category" id="report_category">';
+            echo '<option value="">All Categories</option>';
+
+            $selected_category = isset($_GET['report_category']) ? $_GET['report_category'] : '';
+
+            foreach ($categories as $category) {
+                printf(
+                    '<option value="%s"%s>%s</option>',
+                    $category->slug,
+                    selected($selected_category, $category->slug, false),
+                    $category->name
+                );
+            }
+
+            echo '</select>';
+        }
+
+        // Financial Year filter
+        $financial_years = get_terms(array(
+            'taxonomy' => 'financial_year',
+            'hide_empty' => false,
+            'orderby' => 'name',
+            'order' => 'DESC'
+        ));
+
+        if ($financial_years && !is_wp_error($financial_years)) {
+            echo '<select name="financial_year" id="financial_year">';
+            echo '<option value="">All Financial Years</option>';
+
+            $selected_year = isset($_GET['financial_year']) ? $_GET['financial_year'] : '';
+
+            foreach ($financial_years as $year) {
+                printf(
+                    '<option value="%s"%s>%s</option>',
+                    $year->slug,
+                    selected($selected_year, $year->slug, false),
+                    $year->name
+                );
+            }
+
+            echo '</select>';
+        }
+
+        // Featured filter
+        echo '<select name="featured_filter" id="featured_filter">';
+        echo '<option value="">All Reports</option>';
+
+        $featured_filter = isset($_GET['featured_filter']) ? $_GET['featured_filter'] : '';
+
+        echo '<option value="featured"' . selected($featured_filter, 'featured', false) . '>Featured Only</option>';
+        echo '<option value="not_featured"' . selected($featured_filter, 'not_featured', false) . '>Not Featured</option>';
+        echo '</select>';
+    }
+}
+add_action('restrict_manage_posts', 'add_reports_admin_filters');
+
+/**
+ * Handle admin filtering
+ */
+function handle_reports_admin_filtering($query)
+{
+    global $pagenow, $typenow;
+
+    if ($pagenow === 'edit.php' && $typenow === 'reports' && $query->is_admin && $query->is_main_query()) {
+        // Category filtering
+        if (!empty($_GET['report_category'])) {
+            $query->set('tax_query', array(
+                array(
+                    'taxonomy' => 'report_category',
+                    'field'    => 'slug',
+                    'terms'    => $_GET['report_category'],
+                )
+            ));
+        }
+
+        // Financial year filtering
+        if (!empty($_GET['financial_year'])) {
+            $existing_tax_query = $query->get('tax_query') ?: array();
+            $existing_tax_query[] = array(
+                'taxonomy' => 'financial_year',
+                'field'    => 'slug',
+                'terms'    => $_GET['financial_year'],
+            );
+            $query->set('tax_query', $existing_tax_query);
+        }
+
+        // Featured filtering
+        if (!empty($_GET['featured_filter'])) {
+            $meta_query = array();
+
+            if ($_GET['featured_filter'] === 'featured') {
+                $meta_query[] = array(
+                    'key'     => 'featured_report',
+                    'value'   => '1',
+                    'compare' => '='
+                );
+            } elseif ($_GET['featured_filter'] === 'not_featured') {
+                $meta_query[] = array(
+                    'relation' => 'OR',
+                    array(
+                        'key'     => 'featured_report',
+                        'value'   => '1',
+                        'compare' => '!='
+                    ),
+                    array(
+                        'key'     => 'featured_report',
+                        'compare' => 'NOT EXISTS'
+                    )
+                );
+            }
+
+            $query->set('meta_query', $meta_query);
+        }
+    }
+}
+add_action('pre_get_posts', 'handle_reports_admin_filtering');
+
+/**
+ * Make custom columns sortable
+ */
+function make_reports_columns_sortable($columns)
+{
+    $columns['published_date'] = 'published_date';
+    $columns['featured'] = 'featured';
+    return $columns;
+}
+add_filter('manage_edit-reports_sortable_columns', 'make_reports_columns_sortable');
+
+/**
+ * Handle custom column sorting
+ */
+function handle_reports_column_sorting($query)
+{
+    if (!is_admin() || !$query->is_main_query()) {
+        return;
+    }
+
+    $orderby = $query->get('orderby');
+
+    if ($orderby === 'published_date') {
+        $query->set('meta_key', 'published_date');
+        $query->set('orderby', 'meta_value');
+    } elseif ($orderby === 'featured') {
+        $query->set('meta_key', 'featured_report');
+        $query->set('orderby', 'meta_value_num');
+    }
+}
+add_action('pre_get_posts', 'handle_reports_column_sorting');
+
+
+
+// add_action('wp_enqueue_scripts', function () {
+//     wp_enqueue_style('formidable-intl-tel-input', plugins_url('formidable-pro/images/intl-tel-input/flags.png', __FILE__));
+// });

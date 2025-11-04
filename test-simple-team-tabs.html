@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Team Tabs Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <style>
+        /* Copy the simple team tabs CSS here for testing */
+        .tab {
+          cursor: pointer !important;
+          pointer-events: auto !important;
+          position: relative !important;
+          z-index: 10 !important;
+          user-select: none;
+        }
+
+        .tab:hover {
+          opacity: 0.8;
+          transform: translateY(-1px);
+        }
+
+        .tab.active {
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Use swiper for both desktop and mobile */
+        .team-desktop-layout {
+          display: none !important;
+        }
+        
+        .team-mobile-layout {
+          display: block !important;
+        }
+
+        .swiper {
+          overflow: visible;
+          padding-bottom: 50px;
+        }
+
+        .swiper-slide {
+          height: auto;
+        }
+
+        .team-category-wrapper {
+          display: none;
+        }
+
+        .team-category-wrapper.active {
+          display: block;
+        }
+
+        .swiper-btn-prev,
+        .swiper-btn-next {
+          width: 44px;
+          height: 44px;
+          background: #fff;
+          border: 2px solid #e5e7eb;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          z-index: 10;
+        }
+
+        .swiper-controls {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 20px;
+          margin-top: 30px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto py-8" data-component="SimpleTeamTabs">
+        <h1 class="text-3xl font-bold text-center mb-8">Simple Team Tabs Test - Swiper Grid for Desktop</h1>
+        <p class="text-center mb-8 text-gray-600">Desktop: Grid layout with swiper | Mobile: Regular swiper slider</p>
+        
+        <!-- Tabs -->
+        <div class="team-tabs flex justify-center mb-12">
+            <div class="inline-flex bg-gray-100 p-1 rounded-full">
+                <button class="tab px-8 py-3 rounded-full font-medium transition-all duration-300 bg-blue-500 text-white active" data-filter="executives">
+                    Executives (2)
+                </button>
+                <button class="tab px-8 py-3 rounded-full font-medium transition-all duration-300 text-gray-600" data-filter="board-members">
+                    Board Members (3)
+                </button>
+            </div>
+        </div>
+
+        <!-- Content Wrappers -->
+        <div class="team-members-wrapper">
+            <!-- Executives Content -->
+            <div class="team-category-wrapper active" data-category="executives" style="display: block;">
+                <!-- Desktop Layout -->
+                <div class="team-desktop-layout hidden lg:block">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="bg-white p-6 rounded-lg shadow-md">
+                            <h3 class="text-xl font-bold">John Doe</h3>
+                            <p class="text-gray-600">CEO</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-md">
+                            <h3 class="text-xl font-bold">Jane Smith</h3>
+                            <p class="text-gray-600">CTO</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mobile Layout -->
+                <div class="team-mobile-layout block lg:hidden">
+                    <div class="swiper" data-category="executives">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <div class="bg-white p-6 rounded-lg shadow-md">
+                                    <h3 class="text-xl font-bold">John Doe</h3>
+                                    <p class="text-gray-600">CEO</p>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="bg-white p-6 rounded-lg shadow-md">
+                                    <h3 class="text-xl font-bold">Jane Smith</h3>
+                                    <p class="text-gray-600">CTO</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="btn-wrap">
+                            <div class="swiper-controls">
+                                <div class="swiper-btn-prev"></div>
+                                <div class="swiper-pagination"></div>
+                                <div class="swiper-btn-next"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Board Members Content -->
+            <div class="team-category-wrapper" data-category="board-members" style="display: none;">
+                <!-- Desktop Layout -->
+                <div class="team-desktop-layout hidden lg:block">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="bg-white p-6 rounded-lg shadow-md">
+                            <h3 class="text-xl font-bold">Alice Johnson</h3>
+                            <p class="text-gray-600">Board Chair</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-md">
+                            <h3 class="text-xl font-bold">Bob Wilson</h3>
+                            <p class="text-gray-600">Board Member</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-md">
+                            <h3 class="text-xl font-bold">Carol Davis</h3>
+                            <p class="text-gray-600">Board Member</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mobile Layout -->
+                <div class="team-mobile-layout block lg:hidden">
+                    <div class="swiper" data-category="board-members">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <div class="bg-white p-6 rounded-lg shadow-md">
+                                    <h3 class="text-xl font-bold">Alice Johnson</h3>
+                                    <p class="text-gray-600">Board Chair</p>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="bg-white p-6 rounded-lg shadow-md">
+                                    <h3 class="text-xl font-bold">Bob Wilson</h3>
+                                    <p class="text-gray-600">Board Member</p>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="bg-white p-6 rounded-lg shadow-md">
+                                    <h3 class="text-xl font-bold">Carol Davis</h3>
+                                    <p class="text-gray-600">Board Member</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="btn-wrap">
+                            <div class="swiper-controls">
+                                <div class="swiper-btn-prev"></div>
+                                <div class="swiper-pagination"></div>
+                                <div class="swiper-btn-next"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        // Simple implementation of the team tabs functionality
+        class SimpleTeamTabs {
+            constructor(root = document) {
+                console.log('[SimpleTeamTabs] Starting initialization...');
+                
+                this.root = root.querySelector('[data-component="SimpleTeamTabs"]') || root;
+                if (!this.root) {
+                    console.log('[SimpleTeamTabs] No component found');
+                    return;
+                }
+
+                this.tabs = this.root.querySelectorAll('.tab');
+                this.wrappers = this.root.querySelectorAll('.team-category-wrapper');
+                this.swipers = [];
+                
+                console.log('[SimpleTeamTabs] Found:', {
+                    tabs: this.tabs.length,
+                    wrappers: this.wrappers.length
+                });
+
+                this.init();
+            }
+
+            init() {
+                // Set up tab clicks
+                this.tabs.forEach((tab, index) => {
+                    console.log(`[SimpleTeamTabs] Setting up tab ${index}: ${tab.textContent.trim()}`);
+                    
+                    tab.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        console.log(`[SimpleTeamTabs] Tab ${index} clicked`);
+                        this.switchTab(index);
+                    });
+                });
+
+                // Initialize all swipers
+                this.initAllSwipers();
+                
+                // Set first tab active
+                if (this.tabs.length > 0) {
+                    this.switchTab(0);
+                }
+
+                window.simpleTeamDebug = this;
+                console.log('[SimpleTeamTabs] Initialization complete');
+            }
+
+            switchTab(activeIndex) {
+                console.log(`[SimpleTeamTabs] Switching to tab ${activeIndex}`);
+                
+                // Update tab states
+                this.tabs.forEach((tab, index) => {
+                    if (index === activeIndex) {
+                        tab.classList.add('active', 'bg-blue-500', 'text-white');
+                        tab.classList.remove('text-gray-600');
+                    } else {
+                        tab.classList.remove('active', 'bg-blue-500', 'text-white');
+                        tab.classList.add('text-gray-600');
+                    }
+                });
+
+                // Update wrapper visibility
+                this.wrappers.forEach((wrapper, index) => {
+                    if (index === activeIndex) {
+                        wrapper.classList.add('active');
+                        wrapper.style.display = 'block';
+                    } else {
+                        wrapper.classList.remove('active');
+                        wrapper.style.display = 'none';
+                    }
+                });
+
+                // Update swipers
+                if (this.swipers[activeIndex]) {
+                    setTimeout(() => {
+                        this.swipers[activeIndex].update();
+                    }, 100);
+                }
+            }
+
+            initAllSwipers() {
+                console.log('[SimpleTeamTabs] Initializing all swipers...');
+                
+                this.wrappers.forEach((wrapper, index) => {
+                    const swiperEl = wrapper.querySelector('.swiper');
+                    if (!swiperEl) {
+                        console.log(`[SimpleTeamTabs] No swiper found in wrapper ${index}`);
+                        return;
+                    }
+
+                    const slides = swiperEl.querySelectorAll('.swiper-slide');
+                    console.log(`[SimpleTeamTabs] Wrapper ${index}: ${slides.length} slides`);
+
+                    if (slides.length === 0) {
+                        console.log(`[SimpleTeamTabs] No slides in wrapper ${index}`);
+                        return;
+                    }
+
+                    try {
+                        const swiperInstance = new Swiper(swiperEl, {
+                            slidesPerView: 1,
+                            spaceBetween: 20,
+                            loop: false,
+                            navigation: {
+                                nextEl: wrapper.querySelector('.swiper-btn-next'),
+                                prevEl: wrapper.querySelector('.swiper-btn-prev'),
+                            },
+                            pagination: {
+                                el: wrapper.querySelector('.swiper-pagination'),
+                                clickable: true,
+                            },
+                            breakpoints: {
+                                640: {
+                                    slidesPerView: 1.2,
+                                    spaceBetween: 20,
+                                },
+                                768: {
+                                    slidesPerView: 1.5,
+                                    spaceBetween: 24,
+                                }
+                            },
+                            on: {
+                                init: () => {
+                                    console.log(`[SimpleTeamTabs] Swiper ${index} initialized`);
+                                }
+                            }
+                        });
+
+                        this.swipers[index] = swiperInstance;
+                        console.log(`[SimpleTeamTabs] Swiper ${index} created successfully`);
+                        
+                    } catch (error) {
+                        console.error(`[SimpleTeamTabs] Error creating swiper ${index}:`, error);
+                    }
+                });
+            }
+
+            debug() {
+                console.log('[SimpleTeamTabs] DEBUG:', {
+                    tabs: this.tabs.length,
+                    wrappers: this.wrappers.length,
+                    swipers: this.swipers.length,
+                    activeSwipers: this.swipers.filter(s => s).length
+                });
+
+                this.wrappers.forEach((wrapper, i) => {
+                    const swiper = wrapper.querySelector('.swiper');
+                    const slides = swiper?.querySelectorAll('.swiper-slide');
+                    console.log(`Wrapper ${i}:`, {
+                        display: wrapper.style.display,
+                        hasSwiper: !!swiper,
+                        slides: slides?.length || 0,
+                        swiperInstance: !!this.swipers[i]
+                    });
+                });
+            }
+
+            testTabs() {
+                console.log('[SimpleTeamTabs] Testing tabs...');
+                this.tabs.forEach((tab, i) => {
+                    setTimeout(() => {
+                        console.log(`Testing tab ${i}`);
+                        this.switchTab(i);
+                    }, i * 1500);
+                });
+            }
+        }
+
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            new SimpleTeamTabs();
+        });
+    </script>
+    
+    <div class="fixed bottom-4 right-4 bg-white p-4 rounded shadow-lg">
+        <p class="text-sm mb-2">Debug Commands:</p>
+        <button onclick="simpleTeamDebug.debug()" class="block w-full text-left bg-blue-500 text-white px-2 py-1 rounded mb-1">Debug</button>
+        <button onclick="simpleTeamDebug.testTabs()" class="block w-full text-left bg-green-500 text-white px-2 py-1 rounded">Test Tabs</button>
+    </div>
+</body>
+</html>

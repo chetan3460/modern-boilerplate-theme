@@ -1,0 +1,250 @@
+/* News Detail Page Styles */
+.single-news {
+  /* Hero Section */
+
+  /* Prose Styling for Article Content */
+  .prose {
+    /* line-height: 1.8; */
+  }
+  /* .blog-banner-content h1 {
+  @apply font-medium tracking-[-0.36px];
+
+  @media (max-width: theme('screens.md')) {
+    @apply text-2xl;
+  }
+} */
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply mb-2 font-semibold;
+  }
+
+  .blog-banner-content h1 {
+    color: var(--Neutral-Neutral-2, #fff);
+    font-family: 'Instrument Sans';
+    font-weight: 500;
+    line-height: 110%;
+    letter-spacing: clamp(-0.36px, -0.1vw, -0.84px);
+    font-size: clamp(1.5rem, 2vw + 1rem, 3.5rem); /* 24px → 56px */
+  }
+
+  .prose p {
+    @apply mt-0 mb-4 leading-relaxed text-black last:mb-0;
+  }
+  .prose strong {
+    @apply font-semibold;
+  }
+  .prose ul,
+  .prose ol {
+    @apply my-4 mt-0 ml-0 pl-4 text-black last:mb-0;
+  }
+
+  .prose li {
+    @apply mt-0 mb-2 pl-0 text-black;
+  }
+  .prose li::marker {
+    @apply text-grey-1;
+  }
+  .prose blockquote {
+    @apply border-primary my-8 rounded-r-lg border-l-4 bg-gray-50 py-4 pl-6 text-gray-600 italic;
+  }
+
+  .prose a {
+    @apply text-primary underline transition-colors hover:text-red-700;
+  }
+
+  .prose img {
+    @apply w-full;
+  }
+
+  .prose code {
+    @apply rounded bg-gray-100 px-2 py-1 font-mono text-sm;
+  }
+
+  .prose pre {
+    @apply overflow-x-auto rounded-lg bg-gray-900 p-4 text-gray-100;
+  }
+
+  .prose table {
+    @apply my-8 w-full border-collapse;
+  }
+
+  .prose th,
+  .prose td {
+    @apply border border-gray-300 px-4 py-2 text-left;
+  }
+
+  .prose th {
+    @apply bg-gray-50 font-semibold;
+  }
+
+  /* Custom Styles for News Categories/Tags */
+  .news-category-pill {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+  }
+
+  .news-category-pill:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+
+  /* Related Posts Styling */
+  .related-post-card {
+    transition: all 0.3s ease;
+  }
+
+  .related-post-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Social Share Buttons */
+  .social-share-btn {
+    transition: all 0.3s ease;
+  }
+
+  .social-share-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .prose {
+      font-size: 16px;
+    }
+
+    .prose h2 {
+      font-size: 1.5rem;
+    }
+
+    .prose h3 {
+      font-size: 1.25rem;
+    }
+  }
+
+  /* Custom scrollbar for sidebar */
+  .sidebar-content {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e0 #f7fafc;
+  }
+
+  .sidebar-content::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .sidebar-content::-webkit-scrollbar-track {
+    background: #f7fafc;
+  }
+
+  .sidebar-content::-webkit-scrollbar-thumb {
+    background-color: #cbd5e0;
+    border-radius: 2px;
+  }
+
+  /* Breadcrumb hover effects */
+  .breadcrumb-link {
+    position: relative;
+    transition: color 0.3s ease;
+  }
+
+  .breadcrumb-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: -2px;
+    left: 0;
+    background-color: currentColor;
+    transition: width 0.3s ease;
+  }
+
+  .breadcrumb-link:hover::after {
+    width: 100%;
+  }
+
+  /* Animation for hero content */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .hero-content {
+    animation: fadeInUp 0.8s ease-out;
+  }
+
+  .hero-content > * {
+    animation: fadeInUp 0.8s ease-out backwards;
+  }
+
+  .hero-content > *:nth-child(2) {
+    animation-delay: 0.1s;
+  }
+
+  .hero-content > *:nth-child(3) {
+    animation-delay: 0.2s;
+  }
+
+  .hero-content > *:nth-child(4) {
+    animation-delay: 0.3s;
+  }
+
+  /* Vision section background animation */
+  .vision-section {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .vision-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      45deg,
+      transparent 25%,
+      rgba(255, 255, 255, 0.02) 25%,
+      rgba(255, 255, 255, 0.02) 75%,
+      transparent 75%
+    );
+    background-size: 60px 60px;
+    animation: move-bg 20s linear infinite;
+  }
+
+  @keyframes move-bg {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(60px);
+    }
+  }
+
+  /* Enhance image loading */
+  .lazy-image {
+    transition: opacity 0.3s ease;
+  }
+
+  .lazy-image.loading {
+    opacity: 0.7;
+    filter: blur(2px);
+  }
+
+  .lazy-image.loaded {
+    opacity: 1;
+    filter: blur(0);
+  }
+}

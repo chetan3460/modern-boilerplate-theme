@@ -1,0 +1,138 @@
+/**
+ * Milestones Timeline Slider Styles - Tailwind CSS
+ * Matches the design from the provided image
+ */
+
+/* Swiper Container */
+.milestones-swiper {
+  @apply relative z-10;
+}
+
+.milestone-slide {
+  @apply h-auto;
+}
+
+/* Milestone Card */
+.milestone-card {
+  @apply relative text-center opacity-100;
+  transform: translateY(0);
+  /* Image Wrapper */
+  .image-wrapper {
+    @apply mx-auto mb-5 overflow-hidden transition-all duration-300 ease-in-out md:w-[216px];
+  }
+
+  .image-wrapper img {
+    @apply h-full w-full object-cover transition-transform duration-300 ease-in-out;
+  }
+
+  /* .image-wrapper:hover img {
+    @apply scale-105;
+  } */
+}
+
+/* Timeline Ruler */
+
+/* Milestone Year */
+.milestone-year {
+  @apply relative mt-4 mb-1 inline-block text-red-600;
+}
+
+/* Milestone Content */
+.milestone-content p {
+  @apply text-grey-2 mx-auto max-w-[222px] text-sm leading-relaxed font-normal;
+}
+
+.milestone-content p {
+  @apply mb-2.5;
+}
+
+.milestone-content p:last-child {
+  @apply mb-0;
+}
+
+/* Timeline Dot */
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideHighlight {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* Static layout for 5 or fewer slides on desktop */
+.swiper-wrapper.static-layout {
+  @apply flex justify-center;
+  transform: none !important;
+  transition: none !important;
+}
+
+.swiper-wrapper.static-layout .swiper-slide {
+  @apply w-auto flex-none;
+}
+
+/* Loading states */
+.milestones-timeline.loading .milestone-card {
+  @apply pointer-events-none opacity-50;
+}
+
+/* Mobile Navigation Visibility Fix */
+.milestones_block .swiper-navigation {
+  @apply relative z-20;
+}
+
+.milestones_block .swiper-btn-prev,
+.milestones_block .swiper-btn-next {
+  @apply relative z-20;
+  pointer-events: auto !important;
+}
+
+/* Disabled state for navigation buttons */
+.milestones_block .swiper-btn-prev.swiper-button-disabled,
+.milestones_block .swiper-btn-next.swiper-button-disabled {
+  @apply cursor-not-allowed opacity-30;
+  pointer-events: none !important;
+}
+
+/* Show navigation below 1280px (tablets and mobile) */
+@media (max-width: 1279px) {
+  .milestones_block .swiper-navigation {
+    @apply flex;
+  }
+
+  /* .milestones_block .swiper-btn-prev,
+  .milestones_block .swiper-btn-next,
+  .milestones_block .swiper-pagination-custom {
+    display: flex;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  } */
+}
+
+/* On desktop (≥1280px), hide navigation when 5 or fewer slides */
+@media (min-width: 1280px) {
+  .milestones_block[data-slide-count='1'] .swiper-navigation,
+  .milestones_block[data-slide-count='2'] .swiper-navigation,
+  .milestones_block[data-slide-count='3'] .swiper-navigation,
+  .milestones_block[data-slide-count='4'] .swiper-navigation,
+  .milestones_block[data-slide-count='5'] .swiper-navigation {
+    display: none !important;
+  }
+}

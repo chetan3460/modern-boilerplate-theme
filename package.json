@@ -1,0 +1,51 @@
+{
+  "name": "modern-boilerplate-theme",
+  "version": "1.0.0",
+  "description": "Modern WordPress theme with Vite, Tailwind CSS, and performance optimizations",
+  "main": "postcss.config.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:production": "npm version patch && npm run build",
+    "clean": "rm -rf dist .vite",
+    "sw:generate": "node scripts/generate-sw.js",
+    "format": "prettier --write \"**/*.{js,ts,jsx,tsx,css,scss,md,html,php}\"",
+    "format:check": "prettier --check \"**/*.{js,ts,jsx,tsx,css,scss,md,html,php}\"",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@prettier/plugin-php": "^0.22.2",
+    "@tailwindcss/postcss": "^4.1.11",
+    "@tailwindcss/typography": "^0.5.16",
+    "autoprefixer": "^10.4.21",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.6",
+    "postcss": "^8.5.6",
+    "postcss-import": "^16.1.1",
+    "prettier": "^3.3.3",
+    "prettier-plugin-tailwindcss": "^0.6.8",
+    "rollup-plugin-visualizer": "^6.0.5",
+    "tailwind": "^4.0.0",
+    "tailwindcss": "4.1",
+    "terser": "^5.43.1",
+    "vite": "^7.1.1",
+    "vite-plugin-compression2": "^2.3.1",
+    "vite-plugin-full-reload": "^1.2.0",
+    "vite-plugin-live-reload": "^3.0.5"
+  },
+  "dependencies": {
+    "@iconscout/unicons": "^4.2.0",
+    "@tailwindcss/vite": "^4.1.11",
+    "gsap": "^3.13.0",
+    "jquery": "^3.7.1",
+    "swiper": "^11.2.10"
+  },
+  "lint-staged": {
+    "**/*.{js,ts,jsx,tsx,css,scss,md,html,php}": "prettier --write"
+  }
+}

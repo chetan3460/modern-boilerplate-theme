@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vite Badge Position Test</title>
+</head>
+<body>
+    <h1>Quick Vite Badge Test</h1>
+    <p>Open browser console and run this JavaScript to test the badge positioning:</p>
+    
+    <pre>
+// Test Vite badge positioning
+const badge = document.getElementById('vite-dev-badge');
+if (badge) {
+    const styles = window.getComputedStyle(badge);
+    console.log('🔍 Vite Badge Position Check:');
+    console.log('Position:', styles.position);
+    console.log('Right:', styles.right);  
+    console.log('Bottom:', styles.bottom);
+    console.log('Z-Index:', styles.zIndex);
+    console.log('Display:', styles.display);
+    console.log('Visibility:', styles.visibility);
+    
+    if (styles.position === 'fixed') {
+        console.log('✅ Badge is FLOATING correctly!');
+    } else {
+        console.log('❌ Badge is NOT floating - position is:', styles.position);
+    }
+} else {
+    console.log('❌ Vite badge not found');
+}
+    </pre>
+
+    <p><strong>Expected Results:</strong></p>
+    <ul>
+        <li>Position: fixed</li>
+        <li>Right: 16px</li>
+        <li>Bottom: 16px</li>
+        <li>Badge should appear floating in bottom-right corner</li>
+    </ul>
+</body>
+</html>
