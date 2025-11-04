@@ -1,16 +1,15 @@
    <?php
-    // Footer fields
-    $footer_logo = get_field('footer_logo', 'option');
-    $contact_title = get_field('contact_title', 'option');
-    $phone_no = get_field('phone_no', 'option');
-    $email = get_field('email', 'option');
-    $page_links = get_field('page_links', 'option');
-    $follow_us = get_field('follow_us', 'option');
+   // Footer fields
+   $footer_logo = get_field('footer_logo', 'option');
+   $contact_title = get_field('contact_title', 'option');
+   $phone_no = get_field('phone_no', 'option');
+   $email = get_field('email', 'option');
+   $page_links = get_field('page_links', 'option');
+   $follow_us = get_field('follow_us', 'option');
 
-    $social_links = isset($follow_us['social_links']) ? $follow_us['social_links'] : null;
-    $policy = get_field('policy', 'option');
-
-    ?>
+   $social_links = isset($follow_us['social_links']) ? $follow_us['social_links'] : null;
+   $policy = get_field('policy', 'option');
+   ?>
    <footer class="footer text-black relative border-t border-[#F1F3F7]">
      <div class="container-fluid xl:px-24 lg:px-14 px-5">
        <div class="grid grid-cols-12">
@@ -19,19 +18,22 @@
              <div class="flex md:flex-row flex-col justify-between gap-5 md:gap-7">
                <!-- Logo Section -->
                <div class="lg:col-span-4 md:col-span-6">
-                 <a href="<?= get_home_url(); ?>" class="text-[22px] focus:outline-none">
-                   <?php if ($footer_logo) : ?>
-                     <img loading="lazy" src="<?= $footer_logo; ?>" alt="<?php bloginfo('name'); ?>" class="">
+                 <a href="<?= get_home_url() ?>" class="text-[22px] focus:outline-none">
+                   <?php if ($footer_logo): ?>
+                     <img loading="lazy" src="<?= $footer_logo ?>" alt="<?php bloginfo(
+  'name'
+); ?>" class="">
                    <?php endif; ?>
                  </a>
                </div><!--end col-->
 
                <!-- Contact Section -->
-               <div class="lg:col-span-3 md:col-span-6 ">
+               <?php if ($phone_no || $email || $social_links || $contact_title): ?>
+               <div class="lg:col-span-3 md:col-span-6">
                  <?php if ($contact_title): ?>
-                   <div class="text-base text-black font-semibold"><?php echo esc_html($contact_title); ?></div>
-                 <?php else: ?>
-                   <div class="text-base text-black font-semibold">Contact us</div>
+                   <div class="text-base text-black font-semibold"><?php echo esc_html(
+                     $contact_title
+                   ); ?></div>
                  <?php endif; ?>
 
                  <ul class="list-none footer-list flex flex-col mt-4 gap-4">
@@ -40,7 +42,11 @@
                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="15" viewBox="0 0 16 15" fill="none">
                          <path d="M14.6466 11.5258C14.6466 11.7658 14.5933 12.0125 14.4799 12.2525C14.3666 12.4925 14.2199 12.7192 14.0266 12.9325C13.6999 13.2925 13.3399 13.5525 12.9333 13.7192C12.5333 13.8858 12.0999 13.9725 11.6333 13.9725C10.9533 13.9725 10.2266 13.8125 9.45992 13.4858C8.69325 13.1592 7.92658 12.7192 7.16658 12.1658C6.39992 11.6058 5.67325 10.9858 4.97992 10.2992C4.29325 9.60583 3.67325 8.87916 3.11992 8.11916C2.57325 7.35916 2.13325 6.59916 1.81325 5.84583C1.49325 5.08583 1.33325 4.35916 1.33325 3.66583C1.33325 3.21249 1.41325 2.77916 1.57325 2.37916C1.73325 1.97249 1.98659 1.59916 2.33992 1.26583C2.76659 0.845827 3.23325 0.63916 3.72659 0.63916C3.91325 0.63916 4.09992 0.67916 4.26659 0.75916C4.43992 0.83916 4.59325 0.95916 4.71325 1.13249L6.25992 3.31249C6.37992 3.47916 6.46658 3.63249 6.52658 3.77916C6.58658 3.91916 6.61992 4.05916 6.61992 4.18583C6.61992 4.34583 6.57325 4.50583 6.47992 4.65916C6.39325 4.81249 6.26658 4.97249 6.10658 5.13249L5.59992 5.65916C5.52658 5.73249 5.49325 5.81916 5.49325 5.92583C5.49325 5.97916 5.49992 6.02583 5.51325 6.07916C5.53325 6.13249 5.55325 6.17249 5.56659 6.21249C5.68659 6.43249 5.89325 6.71916 6.18658 7.06583C6.48658 7.41249 6.80658 7.76583 7.15325 8.11916C7.51325 8.47249 7.85992 8.79916 8.21325 9.09916C8.55992 9.39249 8.84658 9.59249 9.07325 9.71249C9.10658 9.72583 9.14658 9.74583 9.19325 9.76583C9.24658 9.78583 9.29992 9.79249 9.35992 9.79249C9.47325 9.79249 9.55992 9.75249 9.63325 9.67916L10.1399 9.17916C10.3066 9.01249 10.4666 8.88583 10.6199 8.80583C10.7733 8.71249 10.9266 8.66583 11.0933 8.66583C11.2199 8.66583 11.3533 8.69249 11.4999 8.75249C11.6466 8.81249 11.7999 8.89916 11.9666 9.01249L14.1733 10.5792C14.3466 10.6992 14.4666 10.8392 14.5399 11.0058C14.6066 11.1725 14.6466 11.3392 14.6466 11.5258Z" stroke="#292D32" stroke-miterlimit="10" />
                        </svg>
-                       <a href="tel:<?php echo esc_attr($phone_no); ?>" class="text-base font-normal text-[#333] hover:text-primary duration-500 ease-in-out"><?php echo esc_html($phone_no); ?></a>
+                       <a href="tel:<?php echo esc_attr(
+                         $phone_no
+                       ); ?>" class="text-base font-normal text-[#333] hover:text-primary duration-500 ease-in-out"><?php echo esc_html(
+  $phone_no
+); ?></a>
                      </li>
                    <?php endif; ?>
 
@@ -50,7 +56,11 @@
                          <path d="M11.3333 13.9735H4.66659C2.66659 13.9735 1.33325 12.9735 1.33325 10.6401V5.97347C1.33325 3.64014 2.66659 2.64014 4.66659 2.64014H11.3333C13.3333 2.64014 14.6666 3.64014 14.6666 5.97347V10.6401C14.6666 12.9735 13.3333 13.9735 11.3333 13.9735Z" stroke="#292D32" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
                          <path d="M11.3334 6.30664L9.24674 7.97331C8.56008 8.51997 7.43341 8.51997 6.74674 7.97331L4.66675 6.30664" stroke="#292D32" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
                        </svg>
-                       <a href="mailto:<?php echo esc_attr($email); ?>" class="text-base font-normal text-[#333] hover:text-primary duration-500 ease-in-out"><?php echo esc_html($email); ?></a>
+                       <a href="mailto:<?php echo esc_attr(
+                         $email
+                       ); ?>" class="text-base font-normal text-[#333] hover:text-primary duration-500 ease-in-out"><?php echo esc_html(
+  $email
+); ?></a>
                      </li>
                    <?php endif; ?>
                  </ul>
@@ -58,7 +68,10 @@
                  <!-- Social Media -->
                  <?php if ($social_links): ?>
                    <div class="mt-4 flex space-x-3">
-                     <?php if (isset($social_links['instagram']) && !empty($social_links['instagram'])): ?>
+                     <?php if (
+                       isset($social_links['instagram']) &&
+                       !empty($social_links['instagram'])
+                     ): ?>
                        <a href="<?php echo esc_url($social_links['instagram']); ?>"
                          class="inline-flex items-center justify-center w-8 h-8 bg-primary text-white rounded transition-all duration-300"
                          target="_blank" rel="noopener noreferrer" aria-label="Instagram (opens in new tab)">
@@ -68,7 +81,10 @@
                        </a>
                      <?php endif; ?>
 
-                     <?php if (isset($social_links['facebook']) && !empty($social_links['facebook'])): ?>
+                     <?php if (
+                       isset($social_links['facebook']) &&
+                       !empty($social_links['facebook'])
+                     ): ?>
                        <a href="<?php echo esc_url($social_links['facebook']); ?>"
                          class="inline-flex items-center justify-center  w-8 h-8 bg-primary  text-white rounded transition-colors duration-300"
                          target="_blank" rel="noopener noreferrer" aria-label="Facebook (opens in new tab)">
@@ -78,7 +94,10 @@
                        </a>
                      <?php endif; ?>
 
-                     <?php if (isset($social_links['linkedin']) && !empty($social_links['linkedin'])): ?>
+                     <?php if (
+                       isset($social_links['linkedin']) &&
+                       !empty($social_links['linkedin'])
+                     ): ?>
                        <a href="<?php echo esc_url($social_links['linkedin']); ?>"
                          class="inline-flex items-center justify-center w-8 h-8 bg-primary  text-white rounded transition-colors duration-300"
                          target="_blank" rel="noopener noreferrer" aria-label="LinkedIn (opens in new tab)">
@@ -88,7 +107,10 @@
                        </a>
                      <?php endif; ?>
 
-                     <?php if (isset($social_links['twitter']) && !empty($social_links['twitter'])): ?>
+                     <?php if (
+                       isset($social_links['twitter']) &&
+                       !empty($social_links['twitter'])
+                     ): ?>
                        <a href="<?php echo esc_url($social_links['twitter']); ?>"
                          class="inline-flex items-center justify-center w-8 h-8 bg-primary text-white rounded transition-colors duration-300"
                          target="_blank" rel="noopener noreferrer" aria-label="Twitter (opens in new tab)">
@@ -99,77 +121,66 @@
                      <?php endif; ?>
                    </div>
                  <?php endif; ?>
-
-
                </div><!--end col-->
+               <?php endif; ?>
 
-               <?php
-                // Get all page links
-                $all_links = [];
-                if ($page_links && have_rows('page_links', 'option')):
-                  while (have_rows('page_links', 'option')): the_row();
-                    $page_link = get_sub_field('page_link');
-                    if ($page_link):
-                      $all_links[] = $page_link;
-                    endif;
-                  endwhile;
-                endif;
+              <?php
+              // Get all page links from ACF
+              $all_links = [];
+              if ($page_links && have_rows('page_links', 'option')):
+                while (have_rows('page_links', 'option')):
+                  the_row();
+                  $page_link = get_sub_field('page_link');
+                  if ($page_link):
+                    $all_links[] = $page_link;
+                  endif;
+                endwhile;
+              endif;
 
-                // If no links, use fallback
-                if (empty($all_links)):
-                  $all_links = [
-                    ['url' => home_url('/about'), 'title' => 'About Us', 'target' => ''],
-                    ['url' => home_url('/vision-values'), 'title' => 'Vision & Values', 'target' => ''],
-                    ['url' => home_url('/leadership'), 'title' => 'Leadership', 'target' => ''],
-                    ['url' => home_url('/research'), 'title' => 'Research & Development', 'target' => ''],
-                    ['url' => home_url('/initiatives'), 'title' => 'Initiatives', 'target' => ''],
-                    ['url' => home_url('/news'), 'title' => 'News & Updates', 'target' => ''],
-                    ['url' => home_url('/products'), 'title' => 'Products', 'target' => ''],
-                    ['url' => home_url('/investors'), 'title' => 'Investor Relations', 'target' => ''],
-                    ['url' => home_url('/careers'), 'title' => 'Careers', 'target' => '']
-                  ];
-                endif;
-
+              // Only show footer link columns if links exist
+              if (!empty($all_links)):
                 // Split links into 2 groups for 2 page link columns
                 $links_per_column = ceil(count($all_links) / 2);
                 $column_1 = array_slice($all_links, 0, $links_per_column);
                 $column_2 = array_slice($all_links, $links_per_column);
+              endif;
+              ?>
 
-                // Column titles (you can make these ACF fields too if needed)
-                $column_titles = ['About Us', 'Products'];
-                ?>
+               <?php if (!empty($all_links)): ?>
+                 <!-- Page Links Column 1 -->
+                 <div class="lg:col-span-2 md:col-span-6">
+                   <ul class="list-none footer-list pt-4 md:pt-0 border-t md:border-t-0 border-black/10">
+                     <?php foreach ($column_1 as $index => $link): ?>
+                       <li class="<?php echo $index > 0 ? 'mt-[10px]' : ''; ?>">
+                         <a href="<?php echo esc_url($link['url']); ?>"
+                           class="text-sm md:text-base !hover:text-primary text-black font-semibold  duration-500 ease-in-out"
+                           <?php echo isset($link['target']) && $link['target']
+                             ? 'target="' . esc_attr($link['target']) . '"'
+                             : ''; ?>>
+                           <?php echo esc_html($link['title']); ?>
+                         </a>
+                       </li>
+                     <?php endforeach; ?>
+                   </ul>
+                 </div><!--end col-->
 
-               <!-- Page Links Column 1 -->
-               <div class="lg:col-span-2 md:col-span-6">
-                 <!-- <div class="text-base text-black font-semibold"><?php echo $column_titles[0]; ?></div> -->
-                 <ul class="list-none footer-list pt-4 md:pt-0 border-t md:border-t-0 border-black/10">
-                   <?php foreach ($column_1 as $index => $link): ?>
-                     <li class="<?php echo $index > 0 ? 'mt-[10px]' : ''; ?>">
-                       <a href="<?php echo esc_url($link['url']); ?>"
-                         class="text-sm md:text-base !hover:text-primary text-black font-semibold  duration-500 ease-in-out"
-                         <?php echo isset($link['target']) && $link['target'] ? 'target="' . esc_attr($link['target']) . '"' : ''; ?>>
-                         <?php echo esc_html($link['title']); ?>
-                       </a>
-                     </li>
-                   <?php endforeach; ?>
-                 </ul>
-               </div><!--end col-->
-
-               <!-- Page Links Column 2 -->
-               <div class="lg:col-span-3 md:col-span-6">
-                 <!-- <h5 class=" text-black font-semibold"><?php echo $column_titles[1]; ?></h5> -->
-                 <ul class="list-none footer-list pt-4 md:pt-0 border-t md:border-t-0 border-black/10">
-                   <?php foreach ($column_2 as $index => $link): ?>
-                     <li class="<?php echo $index > 0 ? 'mt-4' : ''; ?>">
-                       <a href="<?php echo esc_url($link['url']); ?>"
-                         class="text-sm md:text-base !hover:text-primary text-black font-semibold  duration-500 ease-in-out"
-                         <?php echo isset($link['target']) && $link['target'] ? 'target="' . esc_attr($link['target']) . '"' : ''; ?>>
-                         <?php echo esc_html($link['title']); ?>
-                       </a>
-                     </li>
-                   <?php endforeach; ?>
-                 </ul>
-               </div><!--end col-->
+                 <!-- Page Links Column 2 -->
+                 <div class="lg:col-span-3 md:col-span-6">
+                   <ul class="list-none footer-list pt-4 md:pt-0 border-t md:border-t-0 border-black/10">
+                     <?php foreach ($column_2 as $index => $link): ?>
+                       <li class="<?php echo $index > 0 ? 'mt-4' : ''; ?>">
+                         <a href="<?php echo esc_url($link['url']); ?>"
+                           class="text-sm md:text-base !hover:text-primary text-black font-semibold  duration-500 ease-in-out"
+                           <?php echo isset($link['target']) && $link['target']
+                             ? 'target="' . esc_attr($link['target']) . '"'
+                             : ''; ?>>
+                           <?php echo esc_html($link['title']); ?>
+                         </a>
+                       </li>
+                     <?php endforeach; ?>
+                   </ul>
+                 </div><!--end col-->
+               <?php endif; ?>
                <!--end col-->
              </div><!--end grid-->
            </div><!--end col-->
@@ -181,12 +192,19 @@
          <div class="flex md:flex-row flex-col items-start md:items-center justify-start md:justify-between gap-4">
            <!-- Policy Link -->
            <div>
-             <?php
-              $policy_link = $policy && !empty($policy['url']) ? $policy : ['url' => home_url('/privacy-policy'), 'title' => 'Legal & Privacy Policy', 'target' => ''];
-              ?>
+             <?php $policy_link =
+               $policy && !empty($policy['url'])
+                 ? $policy
+                 : [
+                   'url' => home_url('/privacy-policy'),
+                   'title' => 'Legal & Privacy Policy',
+                   'target' => '',
+                 ]; ?>
              <a href="<?php echo esc_url($policy_link['url']); ?>"
                class="text-sm md:text-base text-grey-3 hover:text-primary duration-500 ease-in-out"
-               <?php echo isset($policy_link['target']) && $policy_link['target'] ? 'target="' . esc_attr($policy_link['target']) . '"' : ''; ?>>
+               <?php echo isset($policy_link['target']) && $policy_link['target']
+                 ? 'target="' . esc_attr($policy_link['target']) . '"'
+                 : ''; ?>>
                <?php echo esc_html($policy_link['title']); ?>
              </a>
            </div>
@@ -212,18 +230,18 @@
    <!-- Footer End -->
 
    <?php
-    // 2025 Performance Optimizations - Prefetch likely next pages
-    if (function_exists('add_prefetch_hints')) {
-      add_prefetch_hints();
-    }
+   // 2025 Performance Optimizations - Prefetch likely next pages
+   if (function_exists('add_prefetch_hints')) {
+     add_prefetch_hints();
+   }
 
-    // Add intersection observer for lazy loading components
-    if (function_exists('add_intersection_observer_loader')) {
-      add_intersection_observer_loader();
-    }
+   // Add intersection observer for lazy loading components
+   if (function_exists('add_intersection_observer_loader')) {
+     add_intersection_observer_loader();
+   }
 
-    wp_footer();
-    ?>
+   wp_footer();
+   ?>
 
    <!-- Footer utilities: Vite badge, year updates, accessibility -->
    <script type="module" data-theme-url="<?php echo get_template_directory_uri(); ?>">
