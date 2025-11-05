@@ -221,16 +221,6 @@
       transparent 75%
     );
     background-size: 60px 60px;
-    animation: move-bg 20s linear infinite;
-  }
-
-  @keyframes move-bg {
-    0% {
-      transform: translateX(0);
-    }
-    100% {
-      transform: translateX(60px);
-    }
   }
 
   /* Enhance image loading */

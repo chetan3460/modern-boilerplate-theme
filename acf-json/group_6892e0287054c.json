@@ -29,7 +29,7 @@
                             "name": "hide_block",
                             "aria-label": "",
                             "type": "true_false",
-                            "instructions": "",
+                            "instructions": "🔒 Hide this block from the page.\r\nEnable this if you don’t want this block to appear on the frontend.",
                             "required": 0,
                             "conditional_logic": 0,
                             "wrapper": {
@@ -39,7 +39,7 @@
                             },
                             "message": "",
                             "default_value": 0,
-                            "allow_in_bindings": 0,
+                            "allow_in_bindings": 1,
                             "ui": 0,
                             "ui_on_text": "",
                             "ui_off_text": ""
@@ -50,7 +50,7 @@
                             "name": "banner_slider",
                             "aria-label": "",
                             "type": "repeater",
-                            "instructions": "",
+                            "instructions": "🎞️ Manage slider slides.\r\nClick “Add Banner” to add new slides. Drag to reorder. Each row represents one slide.",
                             "required": 0,
                             "conditional_logic": 0,
                             "wrapper": {
@@ -58,11 +58,11 @@
                                 "class": "",
                                 "id": ""
                             },
-                            "layout": "table",
+                            "layout": "block",
                             "min": 0,
                             "max": 0,
                             "collapsed": "",
-                            "button_label": "Add Row",
+                            "button_label": "Add Banner",
                             "rows_per_page": 20,
                             "sub_fields": [
                                 {
@@ -166,7 +166,7 @@
                             "name": "cta",
                             "aria-label": "",
                             "type": "link",
-                            "instructions": "",
+                            "instructions": "🔗 Set the Call-to-Action Button Link.\r\nSelect a page or enter a custom URL and text.",
                             "required": 0,
                             "conditional_logic": 0,
                             "wrapper": {
@@ -176,59 +176,6 @@
                             },
                             "return_format": "array",
                             "allow_in_bindings": 0
-                        },
-                        {
-                            "key": "field_68c2751730b97",
-                            "label": "Hide News",
-                            "name": "hide_news",
-                            "aria-label": "",
-                            "type": "true_false",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "",
-                                "class": "",
-                                "id": ""
-                            },
-                            "message": "",
-                            "default_value": 0,
-                            "allow_in_bindings": 0,
-                            "ui": 0,
-                            "ui_on_text": "",
-                            "ui_off_text": ""
-                        },
-                        {
-                            "key": "field_68bbd3c8d9a12",
-                            "label": "Select News",
-                            "name": "select_news",
-                            "aria-label": "",
-                            "type": "relationship",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "",
-                                "class": "",
-                                "id": ""
-                            },
-                            "post_type": [
-                                "news"
-                            ],
-                            "post_status": "",
-                            "taxonomy": "",
-                            "filters": [
-                                "search",
-                                "post_type",
-                                "taxonomy"
-                            ],
-                            "return_format": "object",
-                            "min": "",
-                            "max": "",
-                            "allow_in_bindings": 0,
-                            "elements": "",
-                            "bidirectional": 0,
-                            "bidirectional_target": []
                         }
                     ],
                     "min": "",
@@ -1634,5 +1581,5 @@
     "description": "",
     "show_in_rest": 0,
     "display_title": "",
-    "modified": 1759999812
+    "modified": 1762324723
 }

@@ -17,15 +17,15 @@
  */
 
 // Get ACF fields
-$slider_group   = get_sub_field('slider_group');
-$title          = get_sub_field('title');
-$description    = get_sub_field('description');
-$slider_items   = get_sub_field('slider_items');
-$cta            = get_sub_field('cta');
+$slider_group = get_sub_field('slider_group');
+$title = get_sub_field('title');
+$description = get_sub_field('description');
+$slider_items = get_sub_field('slider_items');
+$cta = get_sub_field('cta');
 
 // Hiding and spacing options
-$hide_block     = get_sub_field('hide_block');
-$padding_top    = get_sub_field('padding_top');
+$hide_block = get_sub_field('hide_block');
+$padding_top = get_sub_field('padding_top');
 $padding_bottom = get_sub_field('padding_bottom');
 ?>
 
@@ -40,11 +40,11 @@ $padding_bottom = get_sub_field('padding_bottom');
       <?php if ($title || $description): ?>
         <div class="section-heading text-center mb-4 md:mb-8">
           <?php if ($title): ?>
-            <h2 class="mb-1 fade-text"><?= esc_html($title); ?></h2>
+            <h2 class="mb-1 fade-text"><?= esc_html($title) ?></h2>
           <?php endif; ?>
           <?php if ($description): ?>
             <div class="anim-uni-in-up">
-              <?= wp_kses_post($description); ?>
+              <?= wp_kses_post($description) ?>
             </div>
           <?php endif; ?>
         </div>
@@ -52,40 +52,44 @@ $padding_bottom = get_sub_field('padding_bottom');
 
       <!-- Slider Section -->
       <?php if ($slider_items && count($slider_items) > 0): ?>
-        <div class="image-slider swiper overflow-hidden mb-8">
+        <div class="image-slider swiper overflow-hidden">
           <div class="swiper-wrapper">
 
             <?php foreach ($slider_items as $item):
-              $slide_title   = $item['slider_title'] ?? '';
-              $slide_content = $item['slider_description'] ?? '';
-              $slide_image   = $item['images'] ?? null;
 
-              if (!$slide_image) continue;
-            ?>
+              $slide_title = $item['slider_title'] ?? '';
+              $slide_content = $item['slider_description'] ?? '';
+              $slide_image = $item['images'] ?? null;
+
+              if (!$slide_image) {
+                continue;
+              }
+              ?>
               <div class="swiper-slide relative group">
-                <div class="relative overflow-hidden max-sm:aspect-square lg:aspect-auto long">
+                <div class="relative overflow-hidden aspect-[248/91] ">
 
                   <!-- Image -->
-                  <img src="<?= esc_url($slide_image['url']); ?>"
-                    alt="<?= esc_attr($slide_title ?: 'Slider image'); ?>"
-                    class="w-full h-full object-cover rounded-2xl md:rounded-[40px]"
+                  <img src="<?= esc_url($slide_image['url']) ?>"
+                    alt="<?= esc_attr($slide_title ?: 'Slider image') ?>"
+                    class="w-full h-full object-cover rounded-2xl"
                     loading="lazy">
 
-                  <!-- Curve Shape (nudged to avoid seam; no transforms) -->
-                  <div class="curve-shape absolute  w-[135px] sm:w-[185px] sl:w-auto pointer-events-none [backface-visibility:hidden]"></div>
+
 
                   <!-- Overlay -->
-                  <div class="absolute inset-0 bg-[linear-gradient(186deg,rgba(0,0,0,0)_17.36%,rgba(0,0,0,0.8)_95.64%)] lg:bg-[linear-gradient(180deg, rgba(0, 0, 0, 0.00) 55.77%, rgba(0, 0, 0, 0.50) 88.45%)] rounded-2xl md:rounded-[40px]"></div>
+                  <div class="absolute inset-0 bg-[linear-gradient(186deg,rgba(0,0,0,0)_17.36%,rgba(0,0,0,0.8)_95.64%)] lg:bg-[linear-gradient(180deg, rgba(0, 0, 0, 0.00) 55.77%, rgba(0, 0, 0, 0.50) 88.45%)] rounded-2xl"></div>
 
                   <!-- Slide Content -->
                   <?php if ($slide_title || $slide_content): ?>
-                    <div class="slide-content absolute bottom-0 left-0 right-0 px-6 lg:px-16 pb-12  opacity-0">
+                    <div class="slide-content absolute bottom-0 left-0 right-0 px-6 lg:px-10 pb-12  opacity-0">
                       <?php if ($slide_title): ?>
-                        <div class="slide-title h3 !text-white font-semibold mb-2"><?= esc_html($slide_title); ?></div>
+                        <div class="slide-title h3 !text-white font-semibold mb-2"><?= esc_html(
+                          $slide_title
+                        ) ?></div>
                       <?php endif; ?>
                       <?php if ($slide_content): ?>
                         <div class="slide-description prose prose-p:text-sm prose-p:lg:text-base prose-p:!text-white max-w-[559px] prose-p:leading-[19px]">
-                          <?= wp_kses_post($slide_content); ?>
+                          <?= wp_kses_post($slide_content) ?>
                         </div>
                       <?php endif; ?>
                     </div>
@@ -93,7 +97,8 @@ $padding_bottom = get_sub_field('padding_bottom');
 
                 </div>
               </div>
-            <?php endforeach; ?>
+            <?php
+            endforeach; ?>
 
           </div>
 
@@ -122,18 +127,17 @@ $padding_bottom = get_sub_field('padding_bottom');
       <!-- CTA Section -->
       <?php if ($cta && $cta['url']): ?>
         <div class="text-center anim-uni-in-up">
-          <a href="<?= esc_url($cta['url']); ?>"
+          <a href="<?= esc_url($cta['url']) ?>"
             class="btn"
-            <?php if (!empty($cta['target'])): ?> target="<?= esc_attr($cta['target']); ?>" <?php endif; ?>>
-            <?= esc_html($cta['title'] ?: 'Learn More'); ?>
+            <?php if (!empty($cta['target'])): ?> target="<?= esc_attr(
+   $cta['target']
+ ) ?>" <?php endif; ?>>
+            <?= esc_html($cta['title'] ?: 'Learn More') ?>
           </a>
         </div>
       <?php endif; ?>
 
-      <!-- Decorative Shape -->
-      <div class="md:block hidden absolute right-14 top-0 -z-1 pointer-none w-auto" data-speed="1.25">
-        <img src="<?= get_stylesheet_directory_uri(); ?>/assets/images/home/shapes/shape-4.webp" alt="">
-      </div>
+
 
     </div> <!-- end container-fluid -->
 

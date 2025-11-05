@@ -79,7 +79,7 @@ function my_acf_json_save_point($path)
 
 function custom_logo_with_class($html)
 {
-  $html = str_replace('custom-logo', 'max-lg:w-[225px] w-[250px] h-[40px]', $html);
+  $html = str_replace('custom-logo', 'h-10', $html);
   return $html;
 }
 add_filter('get_custom_logo', 'custom_logo_with_class');
@@ -96,3 +96,4 @@ function disable_gutenberg_for_template($use_block_editor, $post_type)
   return $use_block_editor;
 }
 add_filter('use_block_editor_for_post_type', 'disable_gutenberg_for_template', 10, 2);
+

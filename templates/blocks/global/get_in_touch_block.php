@@ -10,7 +10,10 @@ $form_id = get_sub_field('form_id') ?: '';
 
 include locate_template('templates/blocks/hide_block.php', false, false);
 
-if (!$hide_block && ($title || $description || $phone || $email || $country || $address || $form_id)): ?>
+if (
+  !$hide_block &&
+  ($title || $description || $phone || $email || $country || $address || $form_id)
+): ?>
   <section class="get-in-touch-block fade-in">
     <div class="container-fluid relative">
       <div class="section-heading text-center mb-8 relative !max-w-full">
@@ -23,7 +26,7 @@ if (!$hide_block && ($title || $description || $phone || $email || $country || $
             <?= wp_kses_post($description) ?>
           </div>
         <?php endif; ?>
-        <div class="contact-shape md:block hidden absolute left-0  md:top-[-70px] -z-1 pointer-none w-[73px] lg:w-[272px]" data-speed="1.25"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/home/shapes/shape-6.webp" alt="resins"></div>
+
       </div>
       <div class="flex md:flex-row flex-col gap-7 bg-sky-50 rounded-[36px] px-4 md:px-10  pt-4 md:pt-10 md:pb-16 pb-12 relative justify-between">
         <!-- Left: copy + contact info -->
@@ -37,10 +40,10 @@ if (!$hide_block && ($title || $description || $phone || $email || $country || $
                   </div>
                   <div>
                     <a class="text-grey-1 font-normal hover:text-primary transition-colors" href="tel:<?= preg_replace(
-                                                                                                        '/[^0-9+]/',
-                                                                                                        '',
-                                                                                                        esc_attr($phone)
-                                                                                                      ) ?>"><?= esc_html($phone) ?></a>
+                      '/[^0-9+]/',
+                      '',
+                      esc_attr($phone)
+                    ) ?>"><?= esc_html($phone) ?></a>
                   </div>
                 </div>
               <?php endif; ?>
@@ -52,8 +55,8 @@ if (!$hide_block && ($title || $description || $phone || $email || $country || $
                   </div>
                   <div>
                     <a class="text-grey-1 font-normal hover:text-primary transition-colors" href="mailto:<?= esc_attr(
-                                                                                                            $email
-                                                                                                          ) ?>"><?= esc_html($email) ?></a>
+                      $email
+                    ) ?>"><?= esc_html($email) ?></a>
                   </div>
                 </div>
               <?php endif; ?>
@@ -83,8 +86,8 @@ if (!$hide_block && ($title || $description || $phone || $email || $country || $
                   </div>
                   <div>
                     <div class="text-grey-1 font-normal hover:text-primary transition-colors md:max-w-[299px]"><?= wp_kses_post(
-                                                                                                                  $address
-                                                                                                                ) ?></div>
+                      $address
+                    ) ?></div>
                   </div>
                 </div>
               <?php endif; ?>
@@ -93,7 +96,7 @@ if (!$hide_block && ($title || $description || $phone || $email || $country || $
         </div>
 
         <!-- Right: form -->
-        <div class="w-full md:w-9/12 prose placeholder:!text-grey-3">
+        <div class="w-full md:w-8/12 prose placeholder:!text-grey-3">
           <?php if ($form_id): ?>
             <?php
             $form_html = '';
@@ -106,7 +109,9 @@ if (!$hide_block && ($title || $description || $phone || $email || $country || $
                 $attr = is_numeric($form_id)
                   ? 'id="' . esc_attr($form_id) . '"'
                   : 'key="' . esc_attr($form_id) . '"';
-                $form_html = do_shortcode('[formidable ' . $attr . ' title=true description=false]');
+                $form_html = do_shortcode(
+                  '[formidable ' . $attr . ' title=true description=false]'
+                );
                 // Then Gravity Forms
               } elseif (class_exists('WPCF7_ContactForm')) {
                 $form_html = do_shortcode('[contact-form-7 id="' . esc_attr($form_id) . '"]');
@@ -124,7 +129,6 @@ if (!$hide_block && ($title || $description || $phone || $email || $country || $
           <?php endif; ?>
 
         </div>
-        <div class="curve-shape absolute end-0 right-[-1px] bottom-0 "></div>
 
       </div>
 

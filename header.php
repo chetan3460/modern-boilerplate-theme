@@ -22,14 +22,16 @@
 
     // 2. Minimal critical CSS (only performance optimizations)
     if (function_exists('output_critical_css')) {
-        output_critical_css();
+      output_critical_css();
     }
 
-    // Note: Font loading and async CSS disabled to preserve existing layout
-    // Your existing CSS and fonts will load normally
-    ?>
+// Note: Font loading and async CSS disabled to preserve existing layout
+// Your existing CSS and fonts will load normally
+?>
 
-    <?php if (get_field('header_code', 'option')) echo the_field('header_code', 'option'); ?>
+    <?php if (get_field('header_code', 'option')) {
+      echo the_field('header_code', 'option');
+    } ?>
     <?php wp_head(); ?>
 </head>
 
@@ -66,8 +68,12 @@
             <div class="container-fluid relative flex items-center lg:justify-between gap-2">
 
                 <!-- Logo -->
-                <div class="site-logo">
-                    <?php if (function_exists('the_custom_logo')) the_custom_logo(); ?>
+                <div class="site-logo flex items-center gap-2">
+                    <?php if (function_exists('the_custom_logo')) {
+                      the_custom_logo();
+                    } ?>
+                    <span class="text-black font-semibold"> Vite
+                    </span>
                 </div>
 
                 <!-- Mobile Menu Toggle -->
@@ -81,91 +87,63 @@
 
                 <!-- Navigation (Desktop) -->
                 <div id="navigation" class="flex items-center justify-end">
-                    <?php
-                    wp_nav_menu([
-                        'theme_location' => 'primary',
-                        'menu_class'     => 'navigation-menu',
-                        'container'      => false,
-                        'walker'         => new Custom_Nav_Walker(),
-                        'fallback_cb'    => false,
-                    ]);
-                    ?>
+                    <?php wp_nav_menu([
+                      'theme_location' => 'primary',
+                      'menu_class' => 'navigation-menu',
+                      'container' => false,
+                      'walker' => new Custom_Nav_Walker(),
+                      'fallback_cb' => false,
+                    ]); ?>
                 </div>
 
-                <!-- Language Dropdown -->
-                <div class="language-dropdown relative max-sl:!hidden">
-                    <div class="language-toggle flex items-center gap-2 px-3 py-2 font-medium transition-colors cursor-pointer"
-                        style="color: var(--Grey-Grey-1, #222); font-family: 'Instrument Sans'; font-size: 16px; font-weight: 500; line-height: 130%;"
-                        aria-expanded="false">
-                        <span class="language-icon">🌐</span>
-                        <span class="language-text">EN</span>
-                        <svg class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                        </svg>
-                    </div>
-                    <div class="language-menu absolute right-0 top-full mt-1 w-32 bg-white/95 backdrop-blur-sm rounded-md shadow-lg border border-white/20 opacity-0 invisible transition-all duration-200 z-50">
-                        <a href="#" class="language-option flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-white/50 first:rounded-t-md last:rounded-b-md">
-                            <span class="flag-icon">🇺🇸</span>
-                            <span>English</span>
-                        </a>
-                        <a href="#" class="language-option flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-white/50 first:rounded-t-md last:rounded-b-md">
-                            <span class="flag-icon">🇪🇸</span>
-                            <span>Español</span>
-                        </a>
-                        <a href="#" class="language-option flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-white/50 first:rounded-t-md last:rounded-b-md">
-                            <span class="flag-icon">🇫🇷</span>
-                            <span>Français</span>
-                        </a>
-                        <a href="#" class="language-option flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-white/50 first:rounded-t-md last:rounded-b-md">
-                            <span class="flag-icon">🇩🇪</span>
-                            <span>Deutsch</span>
-                        </a>
-                    </div>
-                </div>
 
                 <?php
                 $contact_us = get_field('contact_us', 'option');
-                if ($contact_us) :
-                    $enquiry_target = !empty($contact_us['target']) ? $contact_us['target'] : '_self';
-                ?>
+                if ($contact_us):
+                  $enquiry_target = !empty($contact_us['target'])
+                    ? $contact_us['target']
+                    : '_self'; ?>
                     <a aria-label="Contact us"
-                        href="<?= esc_url($contact_us['url']); ?>"
-                        target="<?= esc_attr($enquiry_target); ?>"
-                        aria-label="<?= esc_attr($contact_us['title']); ?>"
+                        href="<?= esc_url($contact_us['url']) ?>"
+                        target="<?= esc_attr($enquiry_target) ?>"
+                        aria-label="<?= esc_attr($contact_us['title']) ?>"
                         class="max-sl:!hidden btn">
-                        <span class="z-10"><?= esc_html($contact_us['title']); ?></span>
+                        <span class="z-10"><?= esc_html($contact_us['title']) ?></span>
                     </a>
-                <?php endif; ?>
+                <?php
+                endif;
+                ?>
                 <!-- Navigation (Mobile) -->
                 <div id="navigation-mobile" aria-hidden="false">
                     <div class="mobile-header">
                         <div class="site-logo">
-                            <?php if (function_exists('the_custom_logo')) the_custom_logo(); ?>
+                            <?php if (function_exists('the_custom_logo')) {
+                              the_custom_logo();
+                            } ?>
                         </div>
                         <a class="navbar-toggle mobile-close" id="mobileClose">
                             <div class="lines"><span></span><span></span><span></span></div>
                         </a>
                     </div>
 
-                    <?php
-                    wp_nav_menu([
-                        'theme_location' => 'mobile',
-                        'menu_class'     => 'navigation-menu',
-                        'container'      => false,
-                        'walker'         => new Mobile_Nav_Walker(),
-                        'fallback_cb'    => false,
-                    ]);
-                    ?>
+                    <?php wp_nav_menu([
+                      'theme_location' => 'mobile',
+                      'menu_class' => 'navigation-menu',
+                      'container' => false,
+                      'walker' => new Mobile_Nav_Walker(),
+                      'fallback_cb' => false,
+                    ]); ?>
                     <?php
                     $contact_us = get_field('contact_us', 'option');
-                    if ($contact_us) :
-                        $enquiry_target = $contact_us['target'] ?: '_self';
-                    ?>
+                    if ($contact_us):
+                      $enquiry_target = $contact_us['target'] ?: '_self'; ?>
                         <button aria-label="Contact us"
                             class="my-6 ml-5 btn">
-                            <?= $contact_us['title']; ?>
+                            <?= $contact_us['title'] ?>
                         </button>
-                    <?php endif; ?>
+                    <?php
+                    endif;
+                    ?>
                 </div>
 
                 <!-- Mobile overlay -->

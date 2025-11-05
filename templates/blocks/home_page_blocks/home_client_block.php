@@ -17,18 +17,17 @@
 
 include locate_template('templates/blocks/hide_block.php', false, false);
 
-$title        = get_sub_field('title');
-$description  = get_sub_field('description');
+$title = get_sub_field('title');
+$description = get_sub_field('description');
 $client_items = get_sub_field('client_items');
 ?>
 
 <?php if (($title || $client_items) && !$hide_block):
 
   $client_count = is_array($client_items) ? count($client_items) : 0;
-  $use_slider   = $client_count >= 4; // Slider enabled for 4+ items
-  $block_id     = 'client-block-' . uniqid();
-
-?>
+  $use_slider = $client_count >= 4; // Slider enabled for 4+ items
+  $block_id = 'client-block-' . uniqid();
+  ?>
   <section class="home-client-block fade-in" data-component="ClientSlider" data-load="lazy">
     <div class="container-fluid">
 
@@ -36,10 +35,10 @@ $client_items = get_sub_field('client_items');
       <?php if ($title || $description): ?>
         <div class="section-heading text-center mb-8">
           <?php if ($title): ?>
-            <h2 class="mb-1 fade-text"><?= esc_html($title); ?></h2>
+            <h2 class="mb-1 fade-text"><?= esc_html($title) ?></h2>
           <?php endif; ?>
           <?php if ($description): ?>
-            <div class="anim-uni-in-up"><?= wp_kses_post($description); ?></div>
+            <div class="anim-uni-in-up"><?= wp_kses_post($description) ?></div>
           <?php endif; ?>
         </div>
       <?php endif; ?>
@@ -47,26 +46,27 @@ $client_items = get_sub_field('client_items');
       <!-- Client Items -->
       <?php if ($client_items && $client_count > 0): ?>
         <div class="client-slider-container"
-          data-slider-enabled="<?= $use_slider ? 'true' : 'false'; ?>"
-          data-client-count="<?= $client_count; ?>">
+          data-slider-enabled="<?= $use_slider ? 'true' : 'false' ?>"
+          data-client-count="<?= $client_count ?>">
 
           <div class="client-slider swiper">
             <div class="swiper-wrapper items-stretch">
 
               <?php foreach ($client_items as $item):
-                $image           = $item['image'] ?? null;
-                $item_title      = $item['title'] ?? '';
+
+                $image = $item['image'] ?? null;
+                $item_title = $item['title'] ?? '';
                 $item_description = $item['description'] ?? '';
-              ?>
+                ?>
                 <div class="swiper-slide client-item group h-full">
-                  <div class="client-item bg-light-blue px-5 sm:px-6 pt-6 pb-8 sm:pb-12 rounded-[20px] md:rounded-[40px] relative flex flex-col h-full animate-card-3">
+                  <div class="client-item bg-light-blue px-5 sm:px-6 pt-6 pb-8 sm:pb-12  rounded-2xl relative flex flex-col h-full animate-card-3">
 
                     <!-- Client Image -->
                     <?php if ($image && is_array($image) && !empty($image['url'])): ?>
                       <div class="client-image text-center mb-6">
                         <img
-                          src="<?= esc_url($image['url']); ?>"
-                          alt="<?= esc_attr($image['alt'] ?: 'Client Logo'); ?>"
+                          src="<?= esc_url($image['url']) ?>"
+                          alt="<?= esc_attr($image['alt'] ?: 'Client Logo') ?>"
                           class="mx-auto"
                           loading="lazy">
                       </div>
@@ -77,18 +77,18 @@ $client_items = get_sub_field('client_items');
                       <?php if ($item_description): ?>
                         <div class="flex items-start gap-6 flex-grow">
                           <img
-                            src="<?= get_vite_asset('images/home/quotes.svg'); ?>"
+                            src="<?= get_vite_asset('images/home/quotes.svg') ?>"
                             alt="Quote Icon"
                             class="shrink-0 mt-1 w-6 h-6 sm:w-8 sm:h-8">
 
                           <div class="testimonial-content flex flex-col gap-4 flex-grow">
                             <div class="prose prose-p:text-charcoal text-base leading-[22px]">
-                              <?= wp_kses_post($item_description); ?>
+                              <?= wp_kses_post($item_description) ?>
                             </div>
 
                             <?php if ($item_title): ?>
                               <div class="body-1 font-semibold mt-auto">
-                                <?= esc_html($item_title); ?>
+                                <?= esc_html($item_title) ?>
                               </div>
                             <?php endif; ?>
                           </div>
@@ -96,13 +96,12 @@ $client_items = get_sub_field('client_items');
                       <?php endif; ?>
                     </div>
 
-                    <!-- Decorative Shape -->
-                    <div class="curve-shape absolute end-0 right-[-1px] bottom-0 w-[60px]"></div>
                   </div>
                 </div>
 
 
-              <?php endforeach; ?>
+              <?php
+              endforeach; ?>
 
             </div>
           </div>
@@ -141,4 +140,5 @@ $client_items = get_sub_field('client_items');
 
         </div>
   </section>
-<?php endif; ?>
+<?php
+endif; ?>
