@@ -64,13 +64,14 @@ if (!$hide_block && ($title || $description || !empty($product_items))): ?>
         <?php if (!empty($product_items) && is_array($product_items)):
           // Display first 8 items in a responsive grid
 
+
           $display_items = array_slice($product_items, 0, 8);
           $delay = 0;
 
           // Initialize delay counter
           ?>
 
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6 w-full my-6 md:my-12 justify-items-center fade-up-stagger-wrap">
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6 w-full  justify-items-center fade-up-stagger-wrap">
             <?php foreach ($display_items as $item):
 
               $icon = $item['icon'] ?? null;

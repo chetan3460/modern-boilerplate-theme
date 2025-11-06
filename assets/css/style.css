@@ -8,58 +8,47 @@
 
 /* Base Styles */
 @import './base/utilities.css';
-
-/* // FONTS */
-@import './custom/_fonts.css';
-
-/* // general */
-@import './custom/_general.css';
-
-/* Buttons */
-@import './custom/_buttons.css';
+@import './base/typography.css';
+@import './base/reset.css';
+@import './base/buttons.css';
 
 /* Components */
-@import './components/scroll-to-top.css'; /* If you created this */
+@import './components/scroll-to-top.css';
 @import './components/mobile-filter-modal.css';
 @import './components/filter-accordion.css';
-@import './cookie-consent.css';
+@import './components/cookie-consent.css';
 
-/* // structure */
-@import './custom/structure/_topnav.css';
-@import './custom/structure/_footer.css';
+/* Layouts */
+@import './layouts/navbar.css';
+@import './layouts/footer.css';
 
-/* // pages */
-@import './custom/pages/_helper.css';
-@import './custom/pages/_hero.css';
-@import './custom/pages/_countdown.css';
-@import './custom/pages/_contact.css';
+@import './layouts/_helper.css';
+@import './layouts/_hero.css';
+@import './layouts/_countdown.css';
+@import './layouts/_contact.css';
+@import './layouts/news-detail.css';
 
-/* // blocks */
-/* Manual imports for existing blocks */
-@import './custom/blocks/homeTabBlock.css';
-@import './custom/blocks/distribution-map.css';
-@import './custom/blocks/accordion_block.css';
-@import './team-members-block.css';
-@import './custom/blocks/certificate_block.css';
-@import './custom/blocks/testimonials-block.css';
-@import './custom/blocks/global-banner-block.css';
-@import './custom/blocks/products.css';
-@import './custom/blocks/privacy_accordion_block.css';
-/* @import './sustainability-impact-block.css'; */
+/* Blocks */
+@import './blocks/homeTabBlock.css';
+@import './blocks/distribution-map.css';
+@import './blocks/accordion_block.css';
+@import './blocks/team-members-block.css';
+@import './blocks/certificate_block.css';
+@import './blocks/testimonials-block.css';
+@import './blocks/global-banner-block.css';
+@import './blocks/products.css';
+@import './blocks/privacy_accordion_block.css';
+@import './blocks/gallery-block.css';
+@import './blocks/milestones-timeline.css';
 
 /* AUTO-GENERATED BLOCKS - Add new imports below */
-@import './custom/blocks/service_block_css.css';
+@import './blocks/service_block_css.css';
 /* END AUTO-GENERATED BLOCKS */
 
-/* // Plugins */
-@import './custom/plugins/_swiper-slider.css';
-@import './custom/plugins/_datepicker.css';
-@import './custom/plugins/reports-filter.css';
-
-/* // News Detail Page */
-@import './news-detail.css';
-
-@import './milestones-timeline.css';
+/* Utilities */
+@import './utilities/_swiper-slider.css';
+@import './utilities/_datepicker.css';
+@import './utilities/reports-filter.css';
 /* Custom Swiper Button Disabled States */
 .swiper-btn-prev-pagination.swiper-button-disabled,
 .swiper-btn-next-pagination.swiper-button-disabled {
@@ -83,10 +72,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* Tailwind v4 Theme Configuration */
-html {
-  scrollbar-color: var(--scrollbar-color) transparent;
-}
-
+html,
 body {
   scrollbar-color: var(--scrollbar-color) transparent;
 }
@@ -101,55 +87,43 @@ body {
   --breakpoint-xl: 1280px;
   --breakpoint-2xl: 1440px;
 
-  /* Custom Colors (base) */
-  --color-primary: #da000e; /* Primary / Brand Red – #DA000E */
-  --color-black: #1c1c1c; /* Neutral 900 / Near Black – #1C1C1C */
-  --color-light-gray: #ccd9ef; /* Legacy light gray (check usage) – #CCD9EF */
-  --color-mid-gray: #f4f4f4; /* Neutral 100 – light gray – #F4F4F4 */
-  --color-gray-50: #d9d9d9;
-  --color-gray-150: #6c6c6c;
-
-  --color-light-blue: #dff2fd; /* Sky 50 / Very light blue – #DFF2FD */
-
-  --color-dark: #3c4858; /* Dark text – #3C4858 */
-  --color-dark-footer: #192132; /* Dark footer background – #192132 */
-  --color-white: #ffffff; /* White – #FFFFFF */
-  --color-charcoal: #111111; /* Charcoal – #111111 */
-  --color-dark-100: #010101; /* Charcoal – #111111 */
-
-  --color-pink-50: #ffb6b0;
-
-  /* New Color Palette */
+  /* Color Palette */
   /* Neutrals */
-  --color-neutral-1: #f4f4f4; /* Neutral 1 – #F4F4F4 */
-  --color-neutral-2: #ffffff; /* Neutral 2 – #FFFFFF */
+  --color-white: #ffffff;
+  --color-neutral-1: #f4f4f4;
+  --color-neutral-2: #ffffff;
+  --color-neutral-50: #f2f2f2;
+  --color-neutral-100: #f4f4f4;
+  --color-neutral-200: #f2f2f2; /* Consolidated with neutral-50 */
+  --color-neutral-300: #cbcbcb;
+  --color-neutral-500: #8f8f8f;
+  --color-neutral-900: #1c1c1c;
 
   /* Greys */
-  --color-grey-1: #222222; /* Grey 1 – #222222 */
-  --color-grey-2: #3d3d3d; /* Grey 2 – #3D3D3D */
-  --color-grey-3: #828282; /* Grey 3 – #828282 */
-  --color-grey-4: #bdbdbd; /* Grey 4 – #BDBDBD */
-  --color-grey-5: #e0e0e0; /* Grey 5 – #E0E0E0 */
-  --color-grey-6: #f2f2f2; /* Grey 6 – #F2F2F2 */
-  --color-grey-7: #333; /* Grey 6 – #F2F2F2 */
+  --color-grey-1: #222222;
+  --color-grey-2: #3d3d3d;
+  --color-grey-3: #828282;
+  --color-grey-4: #bdbdbd;
+  --color-grey-5: #e0e0e0;
+  --color-grey-6: #f2f2f2; /* Same as neutral-50/200 */
+  --color-grey-7: #333;
+  --color-charcoal: #111111;
+  --color-black: #1c1c1c;
 
-  /* Chip & Extended Colors */
-  --color-chip-stroke: #ba3333; /* Chip Stroke – #BA3333 */
-  --color-extended-1: linear-gradient(180deg, #dd575f 0%, #b02932 100%); /* Extended 1 gradient */
-  --color-extended-2: #dff2fd; /* Extended 2 – #DFF2FD */
-  --color-extended-3: #eef7e7; /* Extended 3 – #EEF7E7 */
+  /* Brand Colors */
+  --color-primary: #da000e;
+  --color-brand-red: #da000e;
+  --color-dark-red: #ba3333;
+  --color-chip-stroke: #ba3333;
 
-  /* Legacy palette additions (semantic) */
-  /* Usage examples: text-neutral-900, bg-neutral-50, border-neutral-300, text-brand-red, bg-sky-50 */
-  --color-neutral-900: #1c1c1c; /* Neutral 900 – near-black text – #1C1C1C */
-  --color-neutral-50: #f2f2f2; /* Neutral 50 – ultra light gray background – #F2F2F2 */
-  --color-brand-red: #da000e; /* Brand Red – actions/accents – #DA000E */
-  --color-dark-red: #ba3333; /* Brand Red – actions/accents – #DA000E */
-  --color-sky-50: #dff2fd; /* Sky 50 – pale blue background – #DFF2FD */
-  --color-neutral-100: #f4f4f4; /* Neutral 100 – light gray background – #F4F4F4 */
-  --color-neutral-200: #eaeaea; /* Neutral 200 – divider gray – #EAEAEA */
-  --color-neutral-300: #cbcbcb; /* Neutral 300 – border gray – #CBCBCB */
-  --color-neutral-500: #8f8f8f; /* Neutral 500 – medium gray text – #8F8F8F */
+  /* Accent Colors */
+  --color-sky-50: #dff2fd;
+  --color-extended-2: #dff2fd;
+  --color-extended-3: #eef7e7;
+  --color-extended-1: linear-gradient(180deg, #dd575f 0%, #b02932 100%);
+  --color-pink-50: #ffb6b0;
+  --color-timeline-accent: #ed8086;
+  --color-timeline-line: #d9d9d9;
 
   /* Custom Font Families */
   --font-instrument: 'Instrument Sans', sans-serif;
@@ -161,151 +135,10 @@ body {
   /* Custom border radius */
   --rounded-40: 40px;
   --rounded-20: 20px;
-  --spacing-3_25: 0.8125rem;
+
+  /* Scrollbar */
   --scrollbar-color: #da000e;
   --scrollbar-hover: #ba3333;
-}
-.text-black {
-  color: var(--color-black);
-}
-
-.bg-black {
-  background-color: var(--color-black);
-}
-
-.border-black {
-  border-color: var(--color-black);
-}
-
-/* Charcoal helpers */
-.text-charcoal {
-  color: var(--color-charcoal);
-}
-
-.bg-charcoal {
-  background-color: var(--color-charcoal);
-}
-
-.border-charcoal {
-  border-color: var(--color-charcoal);
-}
-
-/* New Color Palette Utility Classes */
-/* Neutrals */
-.text-neutral-1 {
-  color: var(--color-neutral-1);
-}
-.bg-neutral-1 {
-  background-color: var(--color-neutral-1);
-}
-.border-neutral-1 {
-  border-color: var(--color-neutral-1);
-}
-
-.text-neutral-2 {
-  color: var(--color-neutral-2);
-}
-.bg-neutral-2 {
-  background-color: var(--color-neutral-2);
-}
-.border-neutral-2 {
-  border-color: var(--color-neutral-2);
-}
-
-/* Greys */
-.text-grey-1 {
-  color: var(--color-grey-1);
-}
-.bg-grey-1 {
-  background-color: var(--color-grey-1);
-}
-.border-grey-1 {
-  border-color: var(--color-grey-1);
-}
-
-.text-grey-2 {
-  color: var(--color-grey-2);
-}
-.bg-grey-2 {
-  background-color: var(--color-grey-2);
-}
-.border-grey-2 {
-  border-color: var(--color-grey-2);
-}
-
-.text-grey-3 {
-  color: var(--color-grey-3);
-}
-.bg-grey-3 {
-  background-color: var(--color-grey-3);
-}
-.border-grey-3 {
-  border-color: var(--color-grey-3);
-}
-
-.text-grey-4 {
-  color: var(--color-grey-4);
-}
-.bg-grey-4 {
-  background-color: var(--color-grey-4);
-}
-.border-grey-4 {
-  border-color: var(--color-grey-4);
-}
-
-.text-grey-5 {
-  color: var(--color-grey-5);
-}
-.bg-grey-5 {
-  background-color: var(--color-grey-5);
-}
-.border-grey-5 {
-  border-color: var(--color-grey-5);
-}
-
-.text-grey-6 {
-  color: var(--color-grey-6);
-}
-.bg-grey-6 {
-  background-color: var(--color-grey-6);
-}
-.border-grey-6 {
-  border-color: var(--color-grey-6);
-}
-
-/* Chip & Extended Colors */
-.text-chip-stroke {
-  color: var(--color-chip-stroke);
-}
-.bg-chip-stroke {
-  background-color: var(--color-chip-stroke);
-}
-.border-chip-stroke {
-  border-color: var(--color-chip-stroke);
-}
-
-.bg-extended-1 {
-  background: var(--color-extended-1);
-}
-
-.text-extended-2 {
-  color: var(--color-extended-2);
-}
-.bg-extended-2 {
-  background-color: var(--color-extended-2);
-}
-.border-extended-2 {
-  border-color: var(--color-extended-2);
-}
-
-.text-extended-3 {
-  color: var(--color-extended-3);
-}
-.bg-extended-3 {
-  background-color: var(--color-extended-3);
-}
-.border-extended-3 {
-  border-color: var(--color-extended-3);
 }
 
 * {
@@ -348,10 +181,6 @@ body::-webkit-scrollbar-corner {
   background-color: var(--scrollbar-color);
 }
 
-body {
-  scrollbar-width: thin;
-  /* scrollbar-color: var(--scrollbar-color) var(--scrollbar-color); */
-}
 #smooth-wrapper {
   height: 100%;
   overflow: hidden;
@@ -418,32 +247,6 @@ body {
   @apply text-primary;
 }
 
-/* Global Banner Block  */
-.global_banner_block {
-}
-.inner_banner_image-wrapper {
-  .curve-shape {
-    content: url('../images/home/curve-long.svg');
-    cursor: none;
-    @media (max-width: 767px) {
-      content: url('../images/home/curve.svg');
-      width: 56px;
-    }
-  }
-}
-.feature_items-item {
-  .curve-shape {
-    content: url('../images/home/curve.svg');
-    cursor: none;
-  }
-}
-.top-curve-shape {
-  content: url('../images/values/top-curve.png');
-
-  @media (max-width: 767px) {
-  }
-}
-
 /*  */
 .custom-rounded {
   border-radius: var(--rounded-40) !important;
@@ -490,7 +293,7 @@ body.menu-open {
     }
   }
   input::placeholder {
-    color: var(--grey-3) !important;
+    color: var(--color-grey-3) !important;
   }
   .curve-shape {
     content: url('../images/home/curve-long.svg');
@@ -524,7 +327,7 @@ body.menu-open {
 
 .page-template-page-Initiatives {
   .feature_items-item {
-    background: #eef7e7;
+    background: var(--color-extended-3);
   }
 }
 .bottom-right {
@@ -570,12 +373,12 @@ body.menu-open {
       li {
         width: 1.5px;
         height: 12px;
-        background-color: #d9d9d9;
+        background-color: var(--color-timeline-line);
         top: 0;
         &:nth-child(3) {
           position: relative;
           &:before {
-            background: #ed8086;
+            background: var(--color-timeline-accent);
             width: 1.5px;
             height: 23px;
             position: absolute;
@@ -589,7 +392,7 @@ body.menu-open {
     }
   }
   .top-line {
-    background: #d9d9d9;
+    background: var(--color-timeline-line);
     width: 100%;
     height: 1px;
     z-index: 1;
@@ -600,7 +403,7 @@ body.menu-open {
     height: 12px;
     top: -5px;
     position: absolute;
-    background-color: #d9d9d9;
+    background-color: var(--color-timeline-line);
   }
   .milestone-card {
     .bottom-right {

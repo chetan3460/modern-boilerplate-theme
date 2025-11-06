@@ -20,7 +20,7 @@
     .certificate-slider[data-slides='3'] .swiper-wrapper {
       justify-content: flex-start;
     }
-    
+
     .certificate-slider[data-slides='1'] .swiper-slide,
     .certificate-slider[data-slides='2'] .swiper-slide,
     .certificate-slider[data-slides='3'] .swiper-slide {

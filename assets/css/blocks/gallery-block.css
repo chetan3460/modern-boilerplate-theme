@@ -38,7 +38,9 @@
   overflow: hidden !important;
   border-radius: 1rem !important;
   background: white !important;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
   transition: all 0.3s ease !important;
   height: 100% !important;
   width: 100% !important;
@@ -46,7 +48,9 @@
 
 .gallery_block .gallery_items-item:hover {
   transform: translateY(-4px) !important;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
 }
 
 .gallery_block .image-container {
@@ -69,7 +73,12 @@
 
 /* Overlay Styling */
 .gallery_block .gallery_items-item .absolute {
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.4), transparent) !important;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8),
+    rgba(0, 0, 0, 0.4),
+    transparent
+  ) !important;
 }
 
 .gallery_block .title {
@@ -105,7 +114,7 @@
 .gallery_block .swiper-btn-prev,
 .gallery_block .swiper-btn-next {
   @apply border-primary flex h-9 w-9 shrink-0 items-center justify-center rounded-full border p-[11px];
-  
+
   svg {
     @apply flex items-center justify-center gap-1;
   }
@@ -176,7 +185,7 @@
 .gallery_block .swiper-pagination-bullet-active {
   width: 12px !important;
   height: 12px !important;
-  background: #DA000E !important;
+  background: #da000e !important;
   border-color: rgba(218, 0, 14, 0.3) !important;
   transform: scale(1.2) !important;
 }
@@ -186,17 +195,17 @@
   .gallery_block .gallery-swiper-container {
     padding: 0 0.5rem;
   }
-  
+
   .gallery_block .swiper-navigation {
     gap: 1rem !important;
     margin-top: 1.5rem !important;
   }
-  
+
   .gallery_block .swiper-btn-prev,
   .gallery_block .swiper-btn-next {
     padding: 0.5rem !important;
   }
-  
+
   .gallery_block .swiper-btn-prev svg,
   .gallery_block .swiper-btn-next svg {
     width: 10px !important;
@@ -216,12 +225,24 @@
   animation: slideInUp 0.6s ease forwards;
 }
 
-.gallery_block .swiper-slide:nth-child(1) { animation-delay: 0.1s; }
-.gallery_block .swiper-slide:nth-child(2) { animation-delay: 0.2s; }
-.gallery_block .swiper-slide:nth-child(3) { animation-delay: 0.3s; }
-.gallery_block .swiper-slide:nth-child(4) { animation-delay: 0.4s; }
-.gallery_block .swiper-slide:nth-child(5) { animation-delay: 0.5s; }
-.gallery_block .swiper-slide:nth-child(6) { animation-delay: 0.6s; }
+.gallery_block .swiper-slide:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.gallery_block .swiper-slide:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.gallery_block .swiper-slide:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.gallery_block .swiper-slide:nth-child(4) {
+  animation-delay: 0.4s;
+}
+.gallery_block .swiper-slide:nth-child(5) {
+  animation-delay: 0.5s;
+}
+.gallery_block .swiper-slide:nth-child(6) {
+  animation-delay: 0.6s;
+}
 
 @keyframes slideInUp {
   to {

@@ -153,7 +153,6 @@
   }
 }
 
-
 @media (min-width: 1025px) {
   #topnav {
     .navigation-menu {
@@ -793,7 +792,6 @@
   }
 }
 
-
 /* Mobile arrow positioning */
 #navigation-mobile li.has-submenu {
   position: relative;
@@ -884,7 +882,6 @@
     @apply block;
   }
 }
-
 
 @media (max-width: 991px) {
   .submenu {

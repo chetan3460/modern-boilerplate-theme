@@ -57,7 +57,7 @@ $cta = get_sub_field('cta');
           // initialize delay
           ?>
           <div class="mt-4 md:mt-0 w-full  fade-up-stagger-wrap">
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-8 md:gap-10">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-8 md:gap-10">
 
               <?php foreach ($feature_items as $item):
 

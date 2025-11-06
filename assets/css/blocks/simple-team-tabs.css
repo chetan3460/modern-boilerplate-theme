@@ -3,7 +3,7 @@
 /* Sliding Toggle Tab Styles - Similar to Sustainability Impact Block */
 .team-tabs .relative.inline-flex {
   background: transparent;
-  border: 2px solid #DA000E;
+  border: 2px solid #da000e;
   border-radius: 9999px;
   position: relative;
   overflow: hidden;
@@ -13,7 +13,7 @@
   position: absolute;
   top: 2px;
   bottom: 2px;
-  background-color: #DA000E;
+  background-color: #da000e;
   border-radius: 9999px;
   transition: all 0.3s ease-out;
   width: calc(50% - 4px);
@@ -51,12 +51,12 @@
 
 /* Inactive tab - primary color text and normal font */
 .team_members_block .team-slide-tab:not(.active) {
-  color: #DA000E !important;
+  color: #da000e !important;
   font-weight: 400 !important;
 }
 
 .team_members_block .team-tabs .team-slide-tab:not(.active) {
-  color: #DA000E !important;
+  color: #da000e !important;
   font-weight: normal !important;
 }
 
@@ -93,7 +93,7 @@
 }
 
 /* Swiper styling */
-.swiper {
+/* .swiper {
   overflow: visible;
   padding-bottom: 60px;
 }
@@ -102,22 +102,22 @@
   height: auto;
   display: flex;
   flex-direction: column;
-}
+} */
 
 /* Desktop: Grid-style swiper */
 @media (min-width: 1024px) {
-  .swiper {
+  /* .swiper {
     padding-bottom: 80px;
   }
-  
+
   .swiper-wrapper {
     align-items: stretch;
   }
-  
+
   .swiper-slide {
-    margin-bottom: 32px; /* Space between rows in grid */
-  }
-  
+    margin-bottom: 32px; 
+  } */
+
   /* Ensure team member cards fill the slide height */
   .swiper-slide .team-member-card {
     height: 100%;
@@ -214,7 +214,6 @@
     min-width: auto;
   }
 }
-
 
 /* Debug styles (remove in production) */
 .debug .tab.active {
