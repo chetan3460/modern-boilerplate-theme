@@ -212,7 +212,7 @@
            <!-- Copyright -->
            <div>
              <p class="mb-0 text-sm md:text-base text-grey-3">
-               © <span id="current-year"></span> Resins & Plastics. All rights reserved
+               © <span id="current-year"></span> <?php bloginfo('name'); ?>. All rights reserved
              </p>
            </div>
 
