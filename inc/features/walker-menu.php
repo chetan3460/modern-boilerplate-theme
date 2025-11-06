@@ -116,10 +116,10 @@ class Custom_Nav_Walker extends Base_Nav_Walker
       // Left column: title/desc/image
       $output .= "      <div class=\"mega-left md:col-span-6 flex flex-col gap-2\">\n";
       $output .=
-        "        <h3 class=\"text-2xl font-semibold text-black\">" . esc_html($title) . "</h3>\n";
+        "        <h3 class=\"text-2xl font-semibold text-grey-1\">" . esc_html($title) . "</h3>\n";
       if (!empty($desc)) {
         $output .=
-          "        <p class=\"text-neutral-900 text-sm font-normal leading-normal\">" .
+          "        <p class=\"text-grey-2 text-sm font-normal leading-relaxed\">" .
           esc_html($desc) .
           "</p>\n";
       }
@@ -127,12 +127,14 @@ class Custom_Nav_Walker extends Base_Nav_Walker
         $output .=
           "        <img src=\"" .
           esc_url($image) .
-          "\" alt=\"\" class=\"rounded-xl mt-3\" loading=\"lazy\" decoding=\"async\" />\n";
+          "\" alt=\"" .
+          esc_attr($title) .
+          "\" class=\"w-full rounded-xl mt-4 object-cover\" loading=\"lazy\" decoding=\"async\" />\n";
       }
       $output .= "      </div>\n";
       // Right column: submenu list starts here
       $output .= "      <div class=\"mega-right md:col-span-6\">\n";
-      $output .= "        <ul class=\"submenu grid\">\n";
+      $output .= "        <ul class=\"submenu grid gap-4\">\n";
     } else {
       $output .= "\n<ul class=\"submenu\">\n";
     }
@@ -160,13 +162,20 @@ class Custom_Nav_Walker extends Base_Nav_Walker
     $class_names = join(' ', array_unique(array_filter($classes)));
     $output .= '<li class="' . esc_attr($class_names) . '">';
 
-    // Build link attributes
+    // Build link attributes with Tailwind classes
+    $link_classes = 'block transition-colors duration-200';
+    if ($has_children && $depth === 0) {
+      $link_classes .= ' hover:text-primary';
+    } else {
+      $link_classes .= ' hover:text-primary';
+    }
+
     $atts = [
       'title' => $item->attr_title ?: '',
       'target' => $item->target ?: '',
       'rel' => $item->xfn ?: '',
       'href' => $has_children && $depth === 0 ? '#' : ($item->url ?: '#'),
-      'class' => 'sub-menu-item',
+      'class' => $link_classes,
     ];
 
     if ($has_children && $depth === 0) {
@@ -234,25 +243,33 @@ class Mobile_Nav_Walker extends Base_Nav_Walker
 
     $output .= '<li class="' . esc_attr($class_names) . '">';
 
-    // Build link attributes
+    // Build link attributes with Tailwind classes
+    $link_classes =
+      'block text-lg font-medium text-black transition-colors duration-200 hover:text-primary';
+
     $atts = [
       'title' => $item->attr_title ?: '',
       'target' => $item->target ?: '',
       'rel' => $item->xfn ?: '',
       'href' => $item->url ?: '#',
-      'class' => 'sub-menu-item',
+      'class' => $link_classes,
     ];
+
+    if ($has_children) {
+      $atts['class'] .= ' flex items-center justify-between';
+    }
 
     $output .= '<a' . $this->build_attributes($atts) . '>';
     $output .= apply_filters('the_title', $item->title, $item->ID);
 
     // Add dropdown arrow for items with children
     if ($has_children) {
-      $output .= '<span class="menu-arrow" aria-hidden="true">
-   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="9" viewBox="0 0 14 9" fill="none">
-<path d="M13.25 1.5L7 7.75L0.75 1.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
-  </span>';
+      $svg =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="9" viewBox="0 0 14 9" fill="none"><path d="M13.25 1.5L7 7.75L0.75 1.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      $output .=
+        '<span class="menu-arrow inline-flex items-center justify-center w-5 h-5 transition-transform duration-300 group-hover:rotate-180" aria-hidden="true">' .
+        $svg .
+        '</span>';
     }
 
     $output .= '</a>';
