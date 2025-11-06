@@ -216,14 +216,14 @@
 /* Mega panel custom card */
 .mega-panel .mega-card {
   display: grid;
-  width: 667px;
+  width: auto;
   max-width: calc(100vw - 24px);
-  padding: 32px;
+  padding: 16px;
   align-items: flex-start;
-  gap: 40px;
-  border-radius: 16px;
+  gap: 16px;
+  border-radius: 12px;
   background: #fff;
-  box-shadow: 0 14px 20px 0 rgba(0, 0, 0, 0.25);
+  box-shadow: 0 10px 25px 0 rgba(0, 0, 0, 0.15);
 }
 /* Ensure submenu inside mega panel is visible and not absolutely positioned */
 .mega-panel .submenu {
@@ -241,26 +241,32 @@
     position: relative;
   }
   #navigation .navigation-menu > li.has-mega {
-    position: static;
+    position: relative; /* Position relative to parent menu item */
   }
   #navigation .navigation-menu > li.has-mega > .mega-panel {
     position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    top: calc(100% + 10px); /* directly under nav UL */
-    width: 667px; /* fixed width */
+    left: 0;
+    transform: none;
+    top: 100%; /* directly under menu item */
+    width: auto;
     pointer-events: none; /* enable only inside content */
   }
   .mega-panel > .container {
-    max-width: 667px;
-    margin-inline: auto;
-    padding-inline: 0;
+    max-width: 100%;
+    width: auto;
+    margin: 0;
+    padding: 0;
     pointer-events: auto;
   }
-  .mega-panel .mega-card {
-    width: 667px; /* fixed */
-    max-width: 100%;
-    margin-inline: auto;
+  /* Single column: narrow dropdown like reference */
+  .mega-panel .mega-card-single {
+    width: 280px;
+    max-width: calc(100vw - 48px);
+  }
+  /* Two column: wider dropdown with image/desc */
+  .mega-panel .mega-card-two-col {
+    width: 667px;
+    max-width: calc(100vw - 48px);
   }
 }
 

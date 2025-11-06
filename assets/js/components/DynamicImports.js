@@ -3,7 +3,12 @@ import { max1200 } from '../utils';
 
 // Dynamically import all components except those that are statically imported elsewhere
 // Exclude GSAPAnimations (used in main.js and HeroSlider), NewsListingDropdowns (auto-init), and DynamicImports itself
-const components = import.meta.glob(['./*.js', '!./GSAPAnimations.js', '!./NewsListingDropdowns.js', '!./DynamicImports.js']);
+const components = import.meta.glob([
+  './*.js',
+  '!./GSAPAnimations.js',
+  '!./NewsListingDropdowns.js',
+  '!./DynamicImports.js',
+]);
 
 export default class DynamicImports {
   constructor() {
@@ -56,21 +61,23 @@ export default class DynamicImports {
     if (!className) return;
 
     const componentConfig = componentMap[className];
-    if (!componentConfig) {
-      return;
-    }
+    if (!componentConfig) return;
 
     const { mobile, config } = componentConfig;
+    // Skip mobile-disabled components on small screens
     if (!mobile && max1200.matches) return;
 
     const path = `./${className}.js`;
-    if (components[path]) {
-      try {
-        const module = await components[path]();
-        new module.default(el, config);
-      } catch (error) {
-      }
-    } else {
+    if (!components[path]) return;
+
+    try {
+      const module = await components[path]();
+      if (!module.default) return;
+
+      new module.default(el, config);
+    } catch (error) {
+      // Remove init class so it can be retried if needed
+      el.classList.remove('init');
     }
   };
 }

@@ -100,9 +100,13 @@ class Custom_Nav_Walker extends Base_Nav_Walker
     if ($depth === 0 && $this->current_parent_item) {
       $label = $this->current_parent_item->title ?: '';
       $panel_id = 'mega-' . $this->current_parent_item->ID;
-      $title = $this->current_parent_meta['title'] ?: $label;
+      $title = $this->current_parent_meta['title'] ?: '';
       $desc = $this->current_parent_meta['desc'] ?: '';
       $image = $this->current_parent_meta['image'] ?: '';
+
+      // Check if user added any custom content (title different from label, desc, or image)
+      $hasCustomTitle = !empty($title) && $title !== $label;
+      $hasCustomContent = $hasCustomTitle || !empty($desc) || !empty($image);
 
       $output .=
         "\n<div class=\"mega-panel absolute left-0 right-0 top-full z-50 md:block\" id=\"" .
@@ -111,30 +115,43 @@ class Custom_Nav_Walker extends Base_Nav_Walker
         esc_attr($label) .
         "\">\n";
       $output .= "  <div class=\"container mx-auto\">\n";
-      $output .=
-        "    <div class=\"mega-card bg-white rounded-2xl shadow-xl ring-1 ring-black/5 p-6 grid md:grid-cols-12 gap-6\">\n";
-      // Left column: title/desc/image
-      $output .= "      <div class=\"mega-left md:col-span-6 flex flex-col gap-2\">\n";
-      $output .=
-        "        <h3 class=\"text-2xl font-semibold text-grey-1\">" . esc_html($title) . "</h3>\n";
-      if (!empty($desc)) {
+
+      // Use 2-column layout only if custom content exists, otherwise single column
+      if ($hasCustomContent) {
         $output .=
-          "        <p class=\"text-grey-2 text-sm font-normal leading-relaxed\">" .
-          esc_html($desc) .
-          "</p>\n";
-      }
-      if (!empty($image)) {
+          "    <div class=\"mega-card mega-card-two-col bg-white rounded-2xl shadow-xl ring-1 ring-black/5 p-6 grid md:grid-cols-12 gap-6\">\n";
+        // Left column: title/desc/image
+        $output .= "      <div class=\"mega-left md:col-span-6 flex flex-col gap-2\">\n";
+        if ($hasCustomTitle) {
+          $output .=
+            "        <h3 class=\"text-2xl font-semibold text-grey-1\">" .
+            esc_html($title) .
+            "</h3>\n";
+        }
+        if (!empty($desc)) {
+          $output .=
+            "        <p class=\"text-grey-2 text-sm font-normal leading-relaxed\">" .
+            esc_html($desc) .
+            "</p>\n";
+        }
+        if (!empty($image)) {
+          $output .=
+            "        <img src=\"" .
+            esc_url($image) .
+            "\" alt=\"" .
+            esc_attr($title ?: $label) .
+            "\" class=\"w-full rounded-xl mt-4 object-cover\" loading=\"lazy\" decoding=\"async\" />\n";
+        }
+        $output .= "      </div>\n";
+        // Right column: submenu list
+        $output .= "      <div class=\"mega-right md:col-span-6\">\n";
+        $output .= "        <ul class=\"submenu grid gap-4\">\n";
+      } else {
+        // No custom content - use single column full width
         $output .=
-          "        <img src=\"" .
-          esc_url($image) .
-          "\" alt=\"" .
-          esc_attr($title) .
-          "\" class=\"w-full rounded-xl mt-4 object-cover\" loading=\"lazy\" decoding=\"async\" />\n";
+          "    <div class=\"mega-card mega-card-single bg-white rounded-2xl shadow-xl ring-1 ring-black/5 p-6\">\n";
+        $output .= "      <ul class=\"submenu !py-0 grid gap-0\">\n";
       }
-      $output .= "      </div>\n";
-      // Right column: submenu list starts here
-      $output .= "      <div class=\"mega-right md:col-span-6\">\n";
-      $output .= "        <ul class=\"submenu grid gap-4\">\n";
     } else {
       $output .= "\n<ul class=\"submenu\">\n";
     }
@@ -204,8 +221,23 @@ class Custom_Nav_Walker extends Base_Nav_Walker
   function end_lvl(&$output, $depth = 0, $args = null)
   {
     if ($depth === 0 && $this->current_parent_item) {
-      // Close mega panel wrappers opened in start_lvl
-      $output .= "        </ul>\n      </div>\n    </div>\n  </div>\n</div>\n";
+      $title = $this->current_parent_meta['title'] ?: '';
+      $desc = $this->current_parent_meta['desc'] ?: '';
+      $image = $this->current_parent_meta['image'] ?: '';
+      $label = $this->current_parent_item->title ?: '';
+
+      $hasCustomTitle = !empty($title) && $title !== $label;
+      $hasCustomContent = $hasCustomTitle || !empty($desc) || !empty($image);
+
+      // Close wrappers based on layout type
+      if ($hasCustomContent) {
+        // Close 2-column layout
+        $output .= "        </ul>\n      </div>\n    </div>\n  </div>\n</div>\n";
+      } else {
+        // Close single column layout
+        $output .= "      </ul>\n    </div>\n  </div>\n</div>\n";
+      }
+
       // Reset context
       $this->current_parent_item = null;
       $this->current_parent_meta = ['title' => '', 'desc' => '', 'image' => ''];

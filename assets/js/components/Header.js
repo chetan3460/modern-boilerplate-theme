@@ -2,7 +2,7 @@ export default class Header {
   constructor(element) {
     this.header = element;
     this.htmlBody = document.body;
-    
+
     // Ensure DOM is ready before initializing
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => this.init());
@@ -22,7 +22,7 @@ export default class Header {
     this.setupMegaMenus();
   }
 
-  bindEvents = () => { };
+  bindEvents = () => {};
 
   //Sticky Menu
   stickyMenu = () => {
@@ -52,7 +52,8 @@ export default class Header {
   toggleMenu = () => {
     const toggleBtn = document.getElementById('isToggle');
     const mobileCloseBtn = document.getElementById('mobileClose');
-    const nav = document.getElementById('navigation-mobile') || document.getElementById('navigation');
+    const nav =
+      document.getElementById('navigation-mobile') || document.getElementById('navigation');
     const overlay = document.getElementById('nav-overlay');
 
     // Add defensive check for required elements
@@ -80,7 +81,7 @@ export default class Header {
       if (overlay) overlay.classList.toggle('active', open);
       // Ensure no inline display interferes with transform animation
       nav.style.removeProperty('display');
-      
+
       // Add first-time class only on first open
       if (open && !hasBeenOpened) {
         nav.classList.add('first-open');
@@ -105,7 +106,7 @@ export default class Header {
         e.preventDefault();
         setOpen(!nav.classList.contains('open'));
       });
-      
+
       // Also handle mobile close button
       if (mobileCloseBtn) {
         mobileCloseBtn.addEventListener('click', (e) => {
@@ -131,66 +132,63 @@ export default class Header {
   // Language dropdown functionality
   languageDropdown = () => {
     const dropdown = document.querySelector('.language-dropdown');
-    const toggle = dropdown?.querySelector('.language-toggle');
-    const menu = dropdown?.querySelector('.language-menu');
-    const options = dropdown?.querySelectorAll('.language-option');
+    if (!dropdown) return;
 
-    if (!dropdown || !toggle || !menu) return;
+    const toggle = dropdown.querySelector('.language-toggle');
+    const menu = dropdown.querySelector('.language-menu');
+    const options = dropdown.querySelectorAll('.language-option');
 
-    // Toggle dropdown
+    if (!toggle || !menu) return;
+
+    const langMap = {
+      English: 'EN',
+      Español: 'ES',
+      Français: 'FR',
+      Deutsch: 'DE',
+    };
+
+    const toggleDropdown = (isOpen) => {
+      toggle.setAttribute('aria-expanded', String(isOpen));
+      const svg = toggle.querySelector('svg');
+      if (svg) svg.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+      menu.classList.toggle('opacity-100', isOpen);
+      menu.classList.toggle('visible', isOpen);
+      menu.classList.toggle('opacity-0', !isOpen);
+      menu.classList.toggle('invisible', !isOpen);
+    };
+
+    const closeDropdown = () => toggleDropdown(false);
+
+    // Toggle on click
     toggle.addEventListener('click', (e) => {
       e.preventDefault();
       const isOpen = toggle.getAttribute('aria-expanded') === 'true';
-      
-      toggle.setAttribute('aria-expanded', !isOpen);
-      toggle.querySelector('svg').style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
-      
-      if (isOpen) {
-        menu.classList.add('opacity-0', 'invisible');
-        menu.classList.remove('opacity-100', 'visible');
-      } else {
-        menu.classList.remove('opacity-0', 'invisible');
-        menu.classList.add('opacity-100', 'visible');
-      }
+      toggleDropdown(!isOpen);
     });
 
     // Language selection
-    options?.forEach(option => {
+    options.forEach((option) => {
       option.addEventListener('click', (e) => {
         e.preventDefault();
         const selectedText = option.textContent.trim();
-        const langCode = selectedText === 'English' ? 'EN' : 
-                        selectedText === 'Español' ? 'ES' :
-                        selectedText === 'Français' ? 'FR' :
-                        selectedText === 'Deutsch' ? 'DE' : 'EN';
-        
-        toggle.querySelector('.language-text').textContent = langCode;
-        
-        // Close dropdown
-        toggle.setAttribute('aria-expanded', 'false');
-        toggle.querySelector('svg').style.transform = 'rotate(0deg)';
-        menu.classList.add('opacity-0', 'invisible');
-        menu.classList.remove('opacity-100', 'visible');
+        const langCode = langMap[selectedText] || 'EN';
+
+        const langText = toggle.querySelector('.language-text');
+        if (langText) langText.textContent = langCode;
+
+        closeDropdown();
       });
     });
 
     // Close on click outside
     document.addEventListener('click', (e) => {
-      if (!dropdown.contains(e.target)) {
-        toggle.setAttribute('aria-expanded', 'false');
-        toggle.querySelector('svg').style.transform = 'rotate(0deg)';
-        menu.classList.add('opacity-0', 'invisible');
-        menu.classList.remove('opacity-100', 'visible');
-      }
+      if (!dropdown.contains(e.target)) closeDropdown();
     });
 
     // Close on Escape key
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
-        toggle.setAttribute('aria-expanded', 'false');
-        toggle.querySelector('svg').style.transform = 'rotate(0deg)';
-        menu.classList.add('opacity-0', 'invisible');
-        menu.classList.remove('opacity-100', 'visible');
+        closeDropdown();
       }
     });
   };
@@ -254,7 +252,8 @@ export default class Header {
         const isMobileNav = nav.id === 'navigation-mobile';
         if (!isMobileViewport && !isMobileNav) return;
 
-        const submenu = li.querySelector(':scope > .submenu') || li.querySelector(':scope > .mega-panel');
+        const submenu =
+          li.querySelector(':scope > .submenu') || li.querySelector(':scope > .mega-panel');
         if (!submenu) return;
 
         e.preventDefault();
@@ -272,97 +271,57 @@ export default class Header {
     });
   };
 
-  // Mega menu hover/focus for desktop, click for mobile
+  // Mega menu: CSS-powered hover on desktop, click toggle on mobile
   setupMegaMenus = () => {
     const nav = document.getElementById('navigation');
     if (!nav) return;
 
-    // Ensure no lingering 'open' classes affect desktop hover-only behavior
+    const isDesktop = () => window.matchMedia('(min-width: 992px)').matches;
+
+    // Clear open classes on desktop resize
     const clearOpensIfDesktop = () => {
-      const isDesktop = window.matchMedia('(min-width: 992px)').matches;
-      if (!isDesktop) return;
-      nav.querySelectorAll('li.open').forEach((li) => li.classList.remove('open'));
-    };
-    clearOpensIfDesktop();
-    window.addEventListener('resize', () => {
-      clearOpensIfDesktop();
-    }, { passive: true });
-
-    const parents = nav.querySelectorAll(':scope > ul > li.has-mega');
-    parents.forEach((li) => {
-      const trigger = li.querySelector(':scope > a');
-      const panel = li.querySelector(':scope > .mega-panel');
-      if (!trigger || !panel) return;
-
-      // CSS-centered mega panel (old JS centering disabled)
-      const positionCard = () => {
-        /* no-op: handled via CSS fixed centering */
-      };
-
-      // CSS-centered mega panel; previous JS fixed positioning disabled
-      const fixPanelToViewport = () => {
-        /* no-op: handled via CSS */
-      };
-
-      const open = () => {
-        li.classList.add('open');
-        trigger.setAttribute('aria-expanded', 'true');
-        fixPanelToViewport();
-        requestAnimationFrame(positionCard);
-      };
-      const close = () => {
-        li.classList.remove('open');
-        trigger.setAttribute('aria-expanded', 'false');
-        // Reset any fixed positioning applied to the panel
-        panel.style.position = '';
-        panel.style.left = '';
-        panel.style.right = '';
-        panel.style.top = '';
-        panel.style.width = '';
-        panel.style.zIndex = '';
-      };
-
-      // Desktop hover/focus (devices that support hover)
-      // Use pure CSS (:hover / :focus-within) for show/hide. JS centering is disabled.
-      // Keep a lightweight listener to reposition if needed in the future (currently no-op).
-      const prefersHover = window.matchMedia('(hover: hover)').matches;
-      if (prefersHover) {
-        // No show/hide via JS — CSS controls visibility on hover
-        // Optional: listen to resize/scroll in case future logic needs it
-        const onResize = () => { /* no-op */ };
-        const onScroll = () => { /* no-op */ };
-        window.addEventListener('resize', onResize, { passive: true });
-        window.addEventListener('scroll', onScroll, { passive: true });
+      if (isDesktop()) {
+        nav.querySelectorAll('li.open').forEach((li) => li.classList.remove('open'));
       }
+    };
 
-      // Mobile/tablet: toggle on click (accordion: only one open at a time)
+    clearOpensIfDesktop();
+    window.addEventListener('resize', clearOpensIfDesktop, { passive: true });
+
+    const megaItems = nav.querySelectorAll(':scope > ul > li.has-mega');
+
+    megaItems.forEach((li) => {
+      const trigger = li.querySelector(':scope > a');
+      if (!trigger) return;
+
+      const toggleMega = (open) => {
+        li.classList.toggle('open', open);
+        trigger.setAttribute('aria-expanded', String(open));
+      };
+
+      // Mobile/tablet: click to toggle (accordion behavior)
       trigger.addEventListener('click', (e) => {
-        const isDesktop = window.matchMedia('(min-width: 992px)').matches;
-        if (!isDesktop) {
-          e.preventDefault();
+        if (isDesktop()) return; // Let CSS handle desktop hover
 
-          // Close any other open mega menus first
-          const openItems = nav.querySelectorAll(':scope > ul > li.has-mega.open');
-          openItems.forEach((item) => {
-            if (item === li) return;
+        e.preventDefault();
+        const isOpen = li.classList.contains('open');
+
+        // Close other mega menus
+        megaItems.forEach((item) => {
+          if (item !== li && item.classList.contains('open')) {
+            item.classList.remove('open');
             const otherTrigger = item.querySelector(':scope > a');
             if (otherTrigger) otherTrigger.setAttribute('aria-expanded', 'false');
-            item.classList.remove('open');
-          });
-
-          // Toggle current
-          if (li.classList.contains('open')) {
-            close();
-          } else {
-            open();
           }
-        }
+        });
+
+        toggleMega(!isOpen);
       });
 
-      // Escape closes when focused inside
+      // Escape key closes mega menu
       li.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-          close();
+        if (e.key === 'Escape' && li.classList.contains('open')) {
+          toggleMega(false);
           trigger.focus();
         }
       });
