@@ -14,10 +14,6 @@
   cursor: pointer;
   z-index: 999;
   transition: 0.5s ease all;
-  /* @media #{$md,$sm,$xs} {
-        height: 40px;
-        width: 40px;    
-    } */
 }
 .scrollToTop.active-progress {
   display: block !important;

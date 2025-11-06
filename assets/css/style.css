@@ -141,46 +141,6 @@ body {
   --scrollbar-hover: #ba3333;
 }
 
-* {
-  scrollbar-width: thin;
-}
-body {
-  @apply font-instrument text-grey-2;
-}
-html,
-body {
-  /* height: 100%; */
-  overflow-x: hidden;
-}
-@media (max-width: 768px) {
-  html,
-  body {
-    overflow-x: auto !important;
-  }
-}
-body::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
-}
-
-body::-webkit-scrollbar-thumb {
-  background-color: var(--scrollbar-color);
-  border-radius: 10px;
-}
-
-body::-webkit-scrollbar-thumb:hover {
-  background-color: var(--scrollbar-hover);
-}
-
-body::-webkit-scrollbar-track {
-  background-color: var(--scrollbar-color);
-  border-radius: 10px;
-}
-
-body::-webkit-scrollbar-corner {
-  background-color: var(--scrollbar-color);
-}
-
 #smooth-wrapper {
   height: 100%;
   overflow: hidden;

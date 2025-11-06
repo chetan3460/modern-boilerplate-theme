@@ -158,11 +158,6 @@ input[type='checkbox'].custom-checkbox:checked {
   background-size: 10px 8px !important;
 }
 
-/* input[type='checkbox'].custom-checkbox:focus {
-  outline: 2px solid #da000e !important;
-  outline-offset: 2px !important;
-} */
-
 /* Loading State Enhancements */
 .products-loading .product-card,
 .products-loading .product-card-list {
