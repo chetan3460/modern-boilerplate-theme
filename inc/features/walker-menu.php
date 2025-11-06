@@ -3,23 +3,33 @@
 add_action('after_setup_theme', function () {
   register_nav_menus([
     'primary' => __('Primary Menu', 'vite-base-theme'),
-    'mobile'  => __('Mobile Menu', 'vite-base-theme'),
+    'mobile' => __('Mobile Menu', 'vite-base-theme'),
   ]);
 });
 
-class Custom_Nav_Walker extends Walker_Nav_Menu
+/**
+ * Base Nav Walker - Shared logic for desktop and mobile menus
+ */
+abstract class Base_Nav_Walker extends Walker_Nav_Menu
 {
   /**
-   * Hold context for the current top-level parent when rendering its submenu.
+   * Build HTML attributes for menu links
    */
-  private $current_parent_item = null;
-  private $current_parent_meta = [
-    'title' => '',
-    'desc' => '',
-    'image' => '',
-  ];
+  protected function build_attributes($atts)
+  {
+    $attributes = '';
+    foreach ($atts as $attr => $value) {
+      if (!empty($value)) {
+        $attributes .= ' ' . $attr . '="' . esc_attr($value) . '"';
+      }
+    }
+    return $attributes;
+  }
 
-  private function get_menu_item_field($key, $item_id)
+  /**
+   * Get ACF field value for menu item
+   */
+  protected function get_menu_item_field($key, $item_id)
   {
     if (function_exists('get_field')) {
       $val = get_field($key, 'menu_item_' . $item_id);
@@ -30,6 +40,58 @@ class Custom_Nav_Walker extends Walker_Nav_Menu
       return $val;
     }
     return null;
+  }
+
+  /**
+   * Check if item has children
+   */
+  protected function has_children($item)
+  {
+    $classes = empty($item->classes) ? [] : (array) $item->classes;
+    return in_array('menu-item-has-children', $classes);
+  }
+}
+
+/**
+ * Desktop Menu Walker with Mega Menu Support
+ */
+class Custom_Nav_Walker extends Base_Nav_Walker
+{
+  private $current_parent_item = null;
+  private $current_parent_meta = [
+    'title' => '',
+    'desc' => '',
+    'image' => '',
+  ];
+
+  private function get_parent_meta($item)
+  {
+    $title = $this->get_menu_item_field('mega_title', $item->ID) ?: $item->title;
+    $desc = $this->get_menu_item_field('mega_description', $item->ID) ?: ($item->description ?: '');
+    $image = $this->get_menu_item_field('mega_image', $item->ID) ?: '';
+
+    // Fallbacks from the linked object (e.g., Page) if fields are empty
+    $object_id = isset($item->object_id) ? intval($item->object_id) : 0;
+    if ($object_id) {
+      if (empty($desc)) {
+        $maybe_excerpt = get_the_excerpt($object_id);
+        if (!empty($maybe_excerpt) && !is_wp_error($maybe_excerpt)) {
+          $desc = wp_strip_all_tags($maybe_excerpt);
+        }
+      }
+      if (empty($image)) {
+        $thumb = get_the_post_thumbnail_url($object_id, 'large');
+        if (!empty($thumb)) {
+          $image = $thumb;
+        }
+      }
+    }
+
+    return [
+      'title' => $title,
+      'desc' => $desc,
+      'image' => $image,
+    ];
   }
 
   function start_lvl(&$output, $depth = 0, $args = null)
@@ -56,7 +118,10 @@ class Custom_Nav_Walker extends Walker_Nav_Menu
       $output .=
         "        <h3 class=\"text-2xl font-semibold text-black\">" . esc_html($title) . "</h3>\n";
       if (!empty($desc)) {
-        $output .= "        <p class=\"text-neutral-900 text-sm font-normal leading-normal\">" . esc_html($desc) . "</p>\n";
+        $output .=
+          "        <p class=\"text-neutral-900 text-sm font-normal leading-normal\">" .
+          esc_html($desc) .
+          "</p>\n";
       }
       if (!empty($image)) {
         $output .=
@@ -75,61 +140,32 @@ class Custom_Nav_Walker extends Walker_Nav_Menu
 
   function start_el(&$output, $item, $depth = 0, $args = null, $id = 0)
   {
+    $has_children = $this->has_children($item);
     $classes = empty($item->classes) ? [] : (array) $item->classes;
-    $has_children = in_array('menu-item-has-children', $classes);
 
-    // Append your custom classes
+    // Build classes
     if ($has_children) {
       $classes[] = 'has-submenu flex items-center gap-1';
       $classes[] = $depth === 0 ? 'parent-menu-item' : 'child-menu-item';
     }
 
-    // Mark top-level parents with mega menu capability
+    // Handle mega menu for top-level parents
     if ($has_children && $depth === 0) {
-      $classes[] = 'has-mega';
-      $classes[] = 'group'; // for CSS hover control
-
-      // Stash context for the upcoming submenu rendering
+      $classes[] = 'has-mega group';
       $this->current_parent_item = $item;
-      $title = $this->get_menu_item_field('mega_title', $item->ID) ?: $item->title;
-      $desc =
-        $this->get_menu_item_field('mega_description', $item->ID) ?: ($item->description ?: '');
-      $image = $this->get_menu_item_field('mega_image', $item->ID) ?: '';
-
-      // Fallbacks from the linked object (e.g., Page) if fields are empty
-      $object_id = isset($item->object_id) ? intval($item->object_id) : 0;
-      if ($object_id) {
-        if (empty($desc)) {
-          $maybe_excerpt = get_the_excerpt($object_id);
-          if (!empty($maybe_excerpt) && !is_wp_error($maybe_excerpt)) {
-            $desc = wp_strip_all_tags($maybe_excerpt);
-          }
-        }
-        if (empty($image)) {
-          $thumb = get_the_post_thumbnail_url($object_id, 'large');
-          if (!empty($thumb)) {
-            $image = $thumb;
-          }
-        }
-      }
-
-      $this->current_parent_meta = [
-        'title' => $title,
-        'desc' => $desc,
-        'image' => $image,
-      ];
+      $this->current_parent_meta = $this->get_parent_meta($item);
     }
 
     $classes[] = 'sub-menu-item';
-
     $class_names = join(' ', array_unique(array_filter($classes)));
     $output .= '<li class="' . esc_attr($class_names) . '">';
 
+    // Build link attributes
     $atts = [
       'title' => $item->attr_title ?: '',
       'target' => $item->target ?: '',
       'rel' => $item->xfn ?: '',
-      'href' => ($has_children && $depth === 0) ? '#' : ($item->url ?: '#'),
+      'href' => $has_children && $depth === 0 ? '#' : ($item->url ?: '#'),
       'class' => 'sub-menu-item',
     ];
 
@@ -139,17 +175,11 @@ class Custom_Nav_Walker extends Walker_Nav_Menu
       $atts['aria-controls'] = 'mega-' . $item->ID;
     }
 
-    $attributes = '';
-    foreach ($atts as $attr => $value) {
-      if (!empty($value)) {
-        $attributes .= ' ' . $attr . '="' . esc_attr($value) . '"';
-      }
-    }
-
-    $output .= '<a' . $attributes . '>';
+    $output .= '<a' . $this->build_attributes($atts) . '>';
     $output .= apply_filters('the_title', $item->title, $item->ID);
     $output .= '</a>';
 
+    // Add dropdown arrow for top-level items with children
     if ($has_children && $depth === 0) {
       $output .= '<span class="menu-arrow w-4 h-4 flex items-center justify-center" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="7" viewBox="0 0 12 7" fill="none">
   <path d="M11.3538 1.35403L6.35378 6.35403C6.30735 6.40052 6.2522 6.4374 6.1915 6.46256C6.13081 6.48772 6.06574 6.50067 6.00003 6.50067C5.93433 6.50067 5.86926 6.48772 5.80856 6.46256C5.74786 6.4374 5.69272 6.40052 5.64628 6.35403L0.646284 1.35403C0.552464 1.26021 0.499756 1.13296 0.499756 1.00028C0.499756 0.867596 0.552464 0.740348 0.646284 0.646528C0.740104 0.552707 0.867352 0.5 1.00003 0.5C1.13272 0.5 1.25996 0.552707 1.35378 0.646528L6.00003 5.2934L10.6463 0.646528C10.6927 0.600073 10.7479 0.563222 10.8086 0.538081C10.8693 0.51294 10.9343 0.5 11 0.5C11.0657 0.5 11.1308 0.51294 11.1915 0.538081C11.2522 0.563222 11.3073 0.600073 11.3538 0.646528C11.4002 0.692983 11.4371 0.748133 11.4622 0.80883C11.4874 0.869526 11.5003 0.934581 11.5003 1.00028C11.5003 1.06598 11.4874 1.13103 11.4622 1.19173C11.4371 1.25242 11.4002 1.30757 11.3538 1.35403Z" fill="black"/>
@@ -177,13 +207,13 @@ class Custom_Nav_Walker extends Walker_Nav_Menu
 }
 
 /**
- * Simple Mobile Walker: outputs a plain nested list suitable for accordion behavior on mobile
+ * Mobile Menu Walker: outputs a plain nested list suitable for accordion behavior on mobile
  */
-class Mobile_Nav_Walker extends Walker_Nav_Menu
+class Mobile_Nav_Walker extends Base_Nav_Walker
 {
   public function start_lvl(&$output, $depth = 0, $args = null)
   {
-    $output .= "\n<ul class=\"submenu \">\n";
+    $output .= "\n<ul class=\"submenu\">\n";
   }
 
   public function end_lvl(&$output, $depth = 0, $args = null)
@@ -193,16 +223,18 @@ class Mobile_Nav_Walker extends Walker_Nav_Menu
 
   public function start_el(&$output, $item, $depth = 0, $args = null, $id = 0)
   {
+    $has_children = $this->has_children($item);
     $classes = empty($item->classes) ? [] : (array) $item->classes;
-    $has_children = in_array('menu-item-has-children', $classes);
+
     if ($has_children) {
-      $classes[] = 'has-submenu ';
+      $classes[] = 'has-submenu';
     }
-    $classes[] = 'sub-menu-item !mr-0  px-2 py-5   border-b border-neutral-900/10 last:border-0';
+    $classes[] = 'sub-menu-item !mr-0 px-2 py-5 border-b border-neutral-900/10 last:border-0';
     $class_names = join(' ', array_unique(array_filter($classes)));
 
     $output .= '<li class="' . esc_attr($class_names) . '">';
 
+    // Build link attributes
     $atts = [
       'title' => $item->attr_title ?: '',
       'target' => $item->target ?: '',
@@ -210,16 +242,11 @@ class Mobile_Nav_Walker extends Walker_Nav_Menu
       'href' => $item->url ?: '#',
       'class' => 'sub-menu-item',
     ];
-    $attributes = '';
-    foreach ($atts as $attr => $value) {
-      if (!empty($value)) {
-        $attributes .= ' ' . $attr . '="' . esc_attr($value) . '"';
-      }
-    }
 
-    $output .= '<a' . $attributes . '>';
+    $output .= '<a' . $this->build_attributes($atts) . '>';
     $output .= apply_filters('the_title', $item->title, $item->ID);
 
+    // Add dropdown arrow for items with children
     if ($has_children) {
       $output .= '<span class="menu-arrow" aria-hidden="true">
    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="9" viewBox="0 0 14 9" fill="none">
