@@ -1,5 +1,5 @@
 /* All styling moved to Tailwind utilities in the markup for HomeTabBlock. */
-section.product-block .products.active {
+section.tabs-block .tab-item.active {
   .elementor-icon-wrapper {
     padding: 20px 0 0 20px;
     /* position: relative; */

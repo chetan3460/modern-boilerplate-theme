@@ -72,8 +72,7 @@
                     <?php if (function_exists('the_custom_logo')) {
                       the_custom_logo();
                     } ?>
-                    <span class="text-black font-semibold"> Vite
-                    </span>
+
                 </div>
 
                 <!-- Mobile Menu Toggle -->
@@ -136,10 +135,18 @@
                     <?php
                     $contact_us = get_field('contact_us', 'option');
                     if ($contact_us):
-                      $enquiry_target = $contact_us['target'] ?: '_self'; ?>
-                        <button aria-label="Contact us"
-                            class="my-6 ml-5 btn">
-                            <?= $contact_us['title'] ?>
+
+                      $enquiry_target = !empty($contact_us['target'])
+                        ? $contact_us['target']
+                        : '_self';
+                      $contact_url = esc_url($contact_us['url']);
+                      $contact_title = esc_html($contact_us['title']);
+                      ?>
+                        <button type="button"
+                            aria-label="Contact us"
+                            class="my-6 ml-5 btn"
+                            onclick="window.location.href='<?php echo $contact_url; ?>'">
+                            <span class="z-10"><?php echo $contact_title; ?></span>
                         </button>
                     <?php
                     endif;

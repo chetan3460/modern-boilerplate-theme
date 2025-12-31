@@ -8,7 +8,7 @@ $cta_target = !empty($button_link['target']) ? $button_link['target'] : '_self';
 include locate_template('templates/blocks/hide_block.php', false, false);
 
 if ($tabs_items && !$hide_block): ?>
-  <section class="product-block overflow-hidden fade-in" data-component="HomeTabBlock" data-load="lazy">
+  <section class="tabs-block overflow-hidden fade-in" data-component="HomeTabBlock" data-load="lazy">
     <div class="container-fluid xl:px-24 lg:px-14 px-5">
 
       <?php if ($title || $description): ?>
@@ -41,7 +41,7 @@ if ($tabs_items && !$hide_block): ?>
               $imageMobile = $tab_mobile_image;
               $active_class = $i === 0 ? ' active' : '';
               ?>
-              <div class="product-items products tab-item group relative w-full h-[100px] lg:max-h-none lg:w-[221px] lg:h-[400px] rounded-[20px] md:rounded-[24px] lg:rounded-[16px] overflow-hidden cursor-pointer transition-[max-height,transform,opacity] lg:transition-[width,transform,opacity] duration-700 ease-in-out bg-[#eaf3ff] shadow-[inset_0_0_1px_rgba(0,0,0,0.03)] will-change-[transform,opacity] lg:p-0  lg:[&.active]:max-h-none lg:[&.active]:w-[60vw]<?= $active_class ?>" role="button" aria-expanded="<?= $active_class
+              <div class="tab-items tab-item group relative w-full h-[100px] lg:max-h-none lg:w-[221px] lg:h-[400px] rounded-[20px] md:rounded-[24px] lg:rounded-[16px] overflow-hidden cursor-pointer transition-[max-height,transform,opacity] lg:transition-[width,transform,opacity] duration-700 ease-in-out bg-[#eaf3ff] shadow-[inset_0_0_1px_rgba(0,0,0,0.03)] will-change-[transform,opacity] lg:p-0  lg:[&.active]:max-h-none lg:[&.active]:w-[60vw]<?= $active_class ?>" role="button" aria-expanded="<?= $active_class
   ? 'true'
   : 'false' ?>">
 

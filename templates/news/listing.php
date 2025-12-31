@@ -31,7 +31,7 @@ if ($sort === 'oldest') {
 } elseif ($sort === 'newest') {
   $sort_label = 'Newest';
 }
-$cat_label  = 'All Categories';
+$cat_label = 'All Categories';
 if ($selected_cat !== 'all') {
   $sel_term = is_numeric($selected_cat)
     ? get_term_by('id', (int) $selected_cat, $taxonomy)
@@ -43,14 +43,14 @@ if ($selected_cat !== 'all') {
 
 // Build initial query
 $args = [
-  'post_type'      => 'news',
-  'post_status'    => 'publish',
-  'orderby'        => 'date',
-  'order'          => $order,
+  'post_type' => 'news',
+  'post_status' => 'publish',
+  'orderby' => 'date',
+  'order' => $order,
   'posts_per_page' => $ppp,
-  'paged'          => 1,
-  'no_found_rows'  => false,
-  's'              => $search_q,
+  'paged' => 1,
+  'no_found_rows' => false,
+  's' => $search_q,
 ];
 
 if (!empty($selected_cat) && $selected_cat !== 'all') {
@@ -61,8 +61,8 @@ if (!empty($selected_cat) && $selected_cat !== 'all') {
     $args['tax_query'] = [
       [
         'taxonomy' => $taxonomy,
-        'field'    => 'term_id',
-        'terms'    => (int) $term->term_id,
+        'field' => 'term_id',
+        'terms' => (int) $term->term_id,
       ],
     ];
   }
@@ -71,9 +71,16 @@ if (!empty($selected_cat) && $selected_cat !== 'all') {
 $q = new WP_Query($args);
 $max_pages = (int) $q->max_num_pages;
 $nonce = wp_create_nonce('resplast_news_nonce');
-
 ?>
-<section id="<?php echo esc_attr($section_id); ?>" class="news-list-block fade-in" data-component="NewsListing" data-load="eager" data-ajax-url="<?php echo esc_url(admin_url('admin-ajax.php')); ?>" data-nonce="<?php echo esc_attr($nonce); ?>" data-taxonomy="<?php echo esc_attr($taxonomy); ?>" data-initial-ppp="<?php echo esc_attr($ppp); ?>" data-load-ppp="3">
+<section id="<?php echo esc_attr(
+  $section_id
+); ?>" class="news-list-block fade-in" data-component="NewsListing" data-load="eager" data-ajax-url="<?php echo esc_url(
+  admin_url('admin-ajax.php')
+); ?>" data-nonce="<?php echo esc_attr($nonce); ?>" data-taxonomy="<?php echo esc_attr(
+  $taxonomy
+); ?>" data-initial-ppp="<?php echo esc_attr(
+  $ppp
+); ?>" data-load-ppp="3" data-initial-count="<?php echo esc_attr($q->post_count); ?>">
   <div class="container-fluid relative overflow-hidden">
 
     <!-- Section Heading -->
@@ -81,10 +88,15 @@ $nonce = wp_create_nonce('resplast_news_nonce');
       <?php
       // Get ACF fields from the current page (since archive is disabled)
       $queried_object = get_queried_object();
-      $current_page_id = is_object($queried_object) && isset($queried_object->ID) ? $queried_object->ID : get_the_ID();
+      $current_page_id =
+        is_object($queried_object) && isset($queried_object->ID)
+          ? $queried_object->ID
+          : get_the_ID();
 
       $section_title = get_field('news_listing_title', $current_page_id) ?: 'Driving what\'s next';
-      $section_description = get_field('news_listing_description', $current_page_id) ?: 'A look at our innovations, research milestones, and events that keep us ahead in a changing world.';
+      $section_description =
+        get_field('news_listing_description', $current_page_id) ?:
+        'A look at our innovations, research milestones, and events that keep us ahead in a changing world.';
       ?>
       <?php if ($section_title): ?>
         <h2 class="mb-1 fade-text"><?php echo esc_html($section_title); ?></h2>
@@ -96,22 +108,34 @@ $nonce = wp_create_nonce('resplast_news_nonce');
 
     <!-- Filters row -->
     <div class="flex items-center justify-between gap-4 flex-wrap mb-8">
-      <span id="<?php echo esc_attr($section_id); ?>-results-text" class="text-sm text-black font-semibold" data-base-text="Showing all results">
-        <?php
-        if ($selected_cat !== 'all' && !empty($cat_label) && $cat_label !== 'All Categories') {
+      <span id="<?php echo esc_attr(
+        $section_id
+      ); ?>-results-text" class="text-sm text-black font-semibold" data-base-text="Showing all results">
+        <?php if (
+          $selected_cat !== 'all' &&
+          !empty($cat_label) &&
+          $cat_label !== 'All Categories'
+        ) {
           echo 'Showing all results ' . esc_html($cat_label);
         } else {
           echo 'Showing all results';
-        }
-        ?>
+        } ?>
       </span>
 
       <div class="flex items-center gap-3 flex-wrap">
         <!-- Search -->
         <div class="hidden">
-          <label class="sr-only" for="<?php echo esc_attr($section_id); ?>-search">Search news</label>
+          <label class="sr-only" for="<?php echo esc_attr(
+            $section_id
+          ); ?>-search">Search news</label>
           <form id="<?php echo esc_attr($section_id); ?>-search-form" class="relative">
-            <input id="<?php echo esc_attr($section_id); ?>-search" type="search" placeholder="Search news..." value="<?php echo isset($_GET['s']) ? esc_attr($_GET['s']) : ''; ?>" class="border border-gray-200 rounded-full px-4 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-red-200 w-64 max-w-full" />
+            <input id="<?php echo esc_attr(
+              $section_id
+            ); ?>-search" type="search" placeholder="Search news..." value="<?php echo isset(
+  $_GET['s']
+)
+  ? esc_attr($_GET['s'])
+  : ''; ?>" class="border border-gray-200 rounded-full px-4 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-red-200 w-64 max-w-full" />
           </form>
         </div>
 
@@ -127,12 +151,16 @@ $nonce = wp_create_nonce('resplast_news_nonce');
             <li class="dd-item px-3 py-2 rounded-md md:text-base text-sm text-black hover:!text-primary hover:bg-[#CCD9EF]/20 cursor-pointer hover:font-semibold" data-value="all">All Categories</li>
             <?php
             $terms = get_terms([
-              'taxonomy'   => $taxonomy,
+              'taxonomy' => $taxonomy,
               'hide_empty' => true,
             ]);
             if (!is_wp_error($terms)) {
               foreach ($terms as $t) {
-                printf('<li class="dd-item px-3 py-2 rounded-md md:text-base text-sm text-black hover:!text-primary hover:bg-[#CCD9EF]/20 cursor-pointer hover:font-semibold" data-value="%s">%s</li>', esc_attr($t->slug), esc_html($t->name));
+                printf(
+                  '<li class="dd-item px-3 py-2 rounded-md md:text-base text-sm text-black hover:!text-primary hover:bg-[#CCD9EF]/20 cursor-pointer hover:font-semibold" data-value="%s">%s</li>',
+                  esc_attr($t->slug),
+                  esc_html($t->name)
+                );
               }
             }
             ?>
@@ -142,7 +170,12 @@ $nonce = wp_create_nonce('resplast_news_nonce');
           <option value="all" <?php selected('all', $selected_cat); ?>>All Categories</option>
           <?php if (!is_wp_error($terms)) {
             foreach ($terms as $t) {
-              printf('<option value="%s" %s>%s</option>', esc_attr($t->slug), selected($selected_cat, $t->slug, false), esc_html($t->name));
+              printf(
+                '<option value="%s" %s>%s</option>',
+                esc_attr($t->slug),
+                selected($selected_cat, $t->slug, false),
+                esc_html($t->name)
+              );
             }
           } ?>
         </select>
@@ -171,7 +204,9 @@ $nonce = wp_create_nonce('resplast_news_nonce');
     </div>
 
     <!-- Loader -->
-    <div id="<?php echo esc_attr($section_id); ?>-loader" class="hidden flex justify-center items-center py-6">
+    <div id="<?php echo esc_attr(
+      $section_id
+    ); ?>-loader" class="hidden flex justify-center items-center py-6">
       <svg class="animate-spin h-10 w-10 text-red-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
@@ -179,9 +214,10 @@ $nonce = wp_create_nonce('resplast_news_nonce');
     </div>
 
     <!-- Grid -->
-    <div id="<?php echo esc_attr($section_id); ?>-grid" class="grid gap-6 sm:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 fade-up-stagger-wrap">
-      <?php
-      if ($q->have_posts()) {
+    <div id="<?php echo esc_attr(
+      $section_id
+    ); ?>-grid" class="grid gap-6 sm:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 fade-up-stagger-wrap">
+      <?php if ($q->have_posts()) {
         while ($q->have_posts()) {
           $q->the_post();
           // Use the same card template as latest_news.php for consistent styling
@@ -190,13 +226,24 @@ $nonce = wp_create_nonce('resplast_news_nonce');
         wp_reset_postdata();
       } else {
         echo '<div class="col-span-full text-center text-gray-500 py-10">No news found. Try adjusting your filters or search.</div>';
-      }
-      ?>
+      } ?>
     </div>
 
     <!-- Pagination: View More -->
-    <div id="<?php echo esc_attr($section_id); ?>-load-container" class="mt-10 flex justify-center">
-      <button id="<?php echo esc_attr($section_id); ?>-load" class="inline-flex items-center justify-center gap-2 rounded-full border-2 border-primary text-red-600 px-6 py-2 text-sm font-medium hover:bg-red-600 hover:text-white transition <?php echo $max_pages > 1 ? '' : 'hidden'; ?>">
+    <?php
+    $total_posts = $q->found_posts;
+    $show_button = $total_posts > $ppp;
+    ?>
+    <div id="<?php echo esc_attr(
+      $section_id
+    ); ?>-load-container" class="mt-10 flex justify-center <?php echo $show_button
+  ? ''
+  : 'hidden'; ?>">
+      <button id="<?php echo esc_attr(
+        $section_id
+      ); ?>-load" class="inline-flex items-center justify-center gap-2 rounded-full border-2 border-primary text-red-600 px-6 py-2 text-sm font-medium hover:bg-red-600 hover:text-white transition <?php echo $show_button
+  ? ''
+  : 'hidden'; ?>">
         <svg class="hidden animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
@@ -206,7 +253,9 @@ $nonce = wp_create_nonce('resplast_news_nonce');
     </div>
 
     <!-- End-of-list message (shown after loading the last batch) -->
-    <div id="<?php echo esc_attr($section_id); ?>-end" class="hidden mt-6 text-center text-gray-500">You're all caught up</div>
+    <div id="<?php echo esc_attr(
+      $section_id
+    ); ?>-end" class="hidden mt-6 text-center text-gray-500">You're all caught up</div>
   </div>
 
 

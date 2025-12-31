@@ -1,5 +1,5 @@
 {
-  "name": "modern-boilerplate-theme",
+  "name": "Bhailal-Hospital-theme",
   "version": "1.0.0",
   "description": "Modern WordPress theme with Vite, Tailwind CSS, and performance optimizations",
   "main": "postcss.config.js",
@@ -8,7 +8,6 @@
     "build": "vite build",
     "build:production": "npm version patch && npm run build",
     "clean": "rm -rf dist .vite",
-    "sw:generate": "node scripts/generate-sw.js",
     "format": "prettier --write \"**/*.{js,ts,jsx,tsx,css,scss,md,html,php}\"",
     "format:check": "prettier --check \"**/*.{js,ts,jsx,tsx,css,scss,md,html,php}\"",
     "test": "echo \"Error: no test specified\" && exit 1",

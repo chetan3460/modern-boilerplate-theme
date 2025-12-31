@@ -14,7 +14,7 @@
 
 //   setDomMap = () => {
 //     this.containers = $(this.root)
-//       .find('.tabs-container, .products-container')
+//       .find('.tabs-container, .tabs-container')
 //       .filter(function () {
 //         const already = $(this).hasClass('js-initialized');
 //         if (!already) $(this).addClass('js-initialized');
@@ -34,7 +34,7 @@
 
 //   enableMobile = (container) => {
 //     const $c = $(container);
-//     const items = $c.find('.tab-item, .products');
+//     const items = $c.find('.tab-item');
 //     items.off('.desktop');
 
 //     // Reset all items
@@ -99,10 +99,10 @@
 
 //   enableDesktop = (container) => {
 //     const $c = $(container);
-//     const items = $c.find('.tab-item, .products');
+//     const items = $c.find('.tab-item');
 
 //     // Clear mobile styles
-//     items.each(function () { 
+//     items.each(function () {
 //       this.style.removeProperty('height');
 //       this.style.removeProperty('max-height');
 //       this.style.removeProperty('min-height');
@@ -177,10 +177,8 @@ export default class HomeTabBlock {
   }
 
   setDomMap() {
-    // pick up any .tabs-container or .products-container that hasn’t been initialized yet
-    this.containers = Array.from(
-      this.root.querySelectorAll('.tabs-container, .products-container')
-    ).filter((el) => {
+    // pick up any .tabs-container that hasn’t been initialized yet
+    this.containers = Array.from(this.root.querySelectorAll('.tabs-container')).filter((el) => {
       if (el.classList.contains('js-initialized')) return false;
       el.classList.add('js-initialized');
       return true;
@@ -202,7 +200,7 @@ export default class HomeTabBlock {
   }
 
   enableMobile(container) {
-    const items = container.querySelectorAll('.tab-item, .products');
+    const items = container.querySelectorAll('.tab-item');
 
     // reset
     items.forEach((item) => {
@@ -214,7 +212,7 @@ export default class HomeTabBlock {
       item.replaceWith(item.cloneNode(true));
     });
 
-    const freshItems = container.querySelectorAll('.tab-item, .products');
+    const freshItems = container.querySelectorAll('.tab-item');
 
     freshItems.forEach((item, i) => {
       // first item open by default
@@ -256,7 +254,7 @@ export default class HomeTabBlock {
   }
 
   enableDesktop(container) {
-    const items = container.querySelectorAll('.tab-item, .products');
+    const items = container.querySelectorAll('.tab-item');
 
     // reset styles and remove previous event listeners
     items.forEach((item) => {
@@ -267,7 +265,7 @@ export default class HomeTabBlock {
       item.replaceWith(item.cloneNode(true));
     });
 
-    const freshItems = container.querySelectorAll('.tab-item, .products');
+    const freshItems = container.querySelectorAll('.tab-item');
 
     freshItems.forEach((item, i) => {
       if (i === 0) {
@@ -302,5 +300,3 @@ export default class HomeTabBlock {
     });
   };
 }
-
-

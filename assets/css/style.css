@@ -14,7 +14,6 @@
 
 /* Components */
 @import './components/scroll-to-top.css';
-@import './components/mobile-filter-modal.css';
 @import './components/filter-accordion.css';
 @import './components/cookie-consent.css';
 
@@ -30,25 +29,18 @@
 
 /* Blocks */
 @import './blocks/homeTabBlock.css';
-@import './blocks/distribution-map.css';
 @import './blocks/accordion_block.css';
 @import './blocks/team-members-block.css';
-@import './blocks/certificate_block.css';
 @import './blocks/testimonials-block.css';
 @import './blocks/global-banner-block.css';
-@import './blocks/products.css';
 @import './blocks/privacy_accordion_block.css';
 @import './blocks/gallery-block.css';
-@import './blocks/milestones-timeline.css';
 
 /* AUTO-GENERATED BLOCKS - Add new imports below */
-@import './blocks/service_block_css.css';
 /* END AUTO-GENERATED BLOCKS */
 
 /* Utilities */
 @import './utilities/_swiper-slider.css';
-@import './utilities/_datepicker.css';
-@import './utilities/reports-filter.css';
 /* Custom Swiper Button Disabled States */
 .swiper-btn-prev-pagination.swiper-button-disabled,
 .swiper-btn-next-pagination.swiper-button-disabled {
